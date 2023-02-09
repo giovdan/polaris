@@ -54,6 +54,7 @@ namespace UnitTests
                         .Setup()
                         .UseMySql();
                 services.AddSingleton<IUnitOfWorkFactory<IRepoDbDatabaseContext>, RepoDbUnitOfWorkFactory>();
+                services.AddTransient<IDatabaseContext, RepoDbContext>();
                 services.AddTransient<IRepoDbDatabaseContext, RepoDbContext>();
                 services.AddTransient<IUnitOfWork<IRepoDbDatabaseContext>, RepoDbUnitOfWork>();
             }

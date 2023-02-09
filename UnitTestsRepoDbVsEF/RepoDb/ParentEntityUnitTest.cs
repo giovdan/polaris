@@ -107,14 +107,13 @@
             else
             {
                 var attributeDefinitionRepository = scope.ServiceProvider.GetRequiredService<IRepoDbAttributeDefinitionRepository>();
-                attributeDefinitionRepository.Attach(unitOfWork);
                 attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum);
                 AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
             }
 
             return new EntityToCreate
             {
-                DisplayName = DomainExtensions.RandomString(32),
+                DisplayName = $"REPODB_{DomainExtensions.RandomString(20)}",
                 EntityType = entityTypeEnum,
                 Attributes = GenerateAttributes(attributeDefinitions)
             };
@@ -235,6 +234,7 @@
             services.AddScoped<IRepoDbEntityRepository>(service => new RepoDbEntityRepository(ConnectionString));
             services.AddScoped<IRepoDbAttributeDefinitionRepository, RepoDbAttributeDefinitionRepository>(service => new RepoDbAttributeDefinitionRepository(ConnectionString));
             services.AddScoped<IRepoDbAttributeValueRepository, RepoDbAttributeValueRepository>(service => new RepoDbAttributeValueRepository(ConnectionString));
+            services.AddScoped<IChildLinkRepository, RepoDbChildLinkRepository>(service => new RepoDbChildLinkRepository(ConnectionString));
             base.Setup(services);
         }
 
@@ -442,12 +442,13 @@
                     attributeRepository.BatchUpdate(attributes);
                     latest = repository.Update(latest);
                     factory.CommitTransaction(uow);
+                    latest = repository.Get(latest.Id);
                     Assert.IsTrue(latest.RowVersion != oldRowVersion);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     factory.RollBackTransaction(uow);
-                    throw;
+                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
 
 
@@ -517,12 +518,14 @@
                     var oldRowVersion = latest.RowVersion;
                     attributeRepository.BulkUpdate(attributes);
                     var count = repository.RawUpdate(latest);
+                    factory.CommitTransaction(uow);
+
                     if (count > 0)
                     {
                         latest = repository.Get(latest.Id);
                     }
 
-                    factory.CommitTransaction(uow);
+                    
                     Assert.IsTrue(latest.RowVersion != oldRowVersion);
                 }
                 catch (Exception)

@@ -1,5 +1,6 @@
 ﻿namespace RepoDbVsEF.RepoDb.Data.Repositories
 {
+    using global::RepoDb;
     using RepoDbVsEF.Data.Interfaces;
     using RepoDbVsEF.Data.Repositories;
     using RepoDbVsEF.Domain.Interfaces;
@@ -69,9 +70,9 @@
             return Task.Factory.StartNew(() => Get(id));
         }
 
-        public long RawUpdate(Entity entity)
+        public int RawUpdate(Entity entity)
         {
-            throw new NotImplementedException();
+            return UnitOfWork.Context.Connection.ExecuteNonQuery($"UPDATE entity SET DisplayName = '{entity.DisplayName}' WHERE Id = {entity.Id}");
         }
 
         public void Remove(Entity entity)

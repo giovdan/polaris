@@ -21,17 +21,24 @@
 
         public int BulkInsert(IEnumerable<AttributeValue> items)
         {
-            StringBuilder insertQuery = new($"REPLACE INTO `AttributeValue` (`EntityId`, `AttributeDefinitionId`, `Value`, `TextValue`) VALUES ");
-
-            foreach (var item in items)
+            try
             {
-                insertQuery.Append($"({item.EntityId},{item.AttributeDefinitionId}, {item.Value ?? 0}, '{item.TextValue}'),");
+                StringBuilder insertQuery = new($"REPLACE INTO `AttributeValue` (`EntityId`, `AttributeDefinitionId`, `Value`, `TextValue`) VALUES ");
+
+                foreach (var item in items)
+                {
+                    insertQuery.Append($"({item.EntityId},{item.AttributeDefinitionId}, {item.Value ?? 0}, '{item.TextValue}'),");
+                }
+
+                insertQuery.Length -= 1;
+
+                var result = UnitOfWork.Context.Database.ExecuteSqlRaw(insertQuery.ToString());
+                return result;
             }
-
-            insertQuery.Length -= 1;
-
-            var result = UnitOfWork.Context.Database.ExecuteSqlRaw(insertQuery.ToString());
-            return result;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
 

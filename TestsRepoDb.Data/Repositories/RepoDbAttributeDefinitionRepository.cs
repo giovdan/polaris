@@ -46,27 +46,27 @@
 
         public IEnumerable<AttributeDefinition> FindBy(Expression<Func<AttributeDefinition, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Query(predicate);
         }
 
         public Task<IEnumerable<AttributeDefinition>> FindByAsync(Expression<Func<AttributeDefinition, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
         public AttributeDefinition Get(ulong id)
         {
-            throw new NotImplementedException();
+            return Get(id);
         }
 
         public IEnumerable<AttributeDefinition> GetAll()
         {
-            throw new NotImplementedException();
+            return GetAll();
         }
 
         public Task<AttributeDefinition> GetAsync(ulong id)
         {
-            throw new NotImplementedException();
+            return Task.Factory.StartNew(() => Get(id));
         }
 
         public void Remove(AttributeDefinition entity)

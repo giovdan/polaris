@@ -6,6 +6,6 @@
 
     public interface IRepoDbEntityRepository: IRepository<Entity, IRepoDbDatabaseContext>
     {
-        long RawUpdate(Entity entity);
+        int RawUpdate(Entity entity);
     }
 }

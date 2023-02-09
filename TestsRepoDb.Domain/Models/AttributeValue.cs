@@ -6,7 +6,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("AttributeValue")]
-    public class AttributeValue: BaseEntity, IHasRowVersion, IAuditableEntity
+    public class AttributeValue: BaseEntityWithRowVersion, IAuditableEntity
     {
         public ulong AttributeDefinitionId { get; set; }
         public ulong EntityId { get; set; }
@@ -16,10 +16,7 @@
         public DateTime CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
-
         public virtual AttributeDefinition AttributeDefinition { get; set; }
         public virtual Entity Entity { get; set; }
-      [ConcurrencyCheck, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public long RowVersion { get; set; }
     }
 }

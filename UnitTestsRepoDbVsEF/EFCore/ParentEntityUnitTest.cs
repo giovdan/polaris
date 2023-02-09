@@ -64,13 +64,13 @@ namespace UnitTests.EFCore
             {
                 var attributeDefinitionRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeDefinitionRepository>();
                 attributeDefinitionRepository.Attach(unitOfWork);
-                attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum);
+                attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum).ToHashSet();
                 AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
             }
 
             return new EntityToCreate
             {
-                DisplayName = $"REPODB_{DomainExtensions.RandomString(20)}",
+                DisplayName = $"EFCORE_{DomainExtensions.RandomString(20)}",
                 EntityType = entityTypeEnum,
                 Attributes = GenerateAttributes(attributeDefinitions)
             };
@@ -179,10 +179,9 @@ namespace UnitTests.EFCore
                 else
                 {
                     unitOfWork.Commit();
-                    attributes = attributes.Select(a => { a.EntityId = dbEntity.Id; return a; });
+                    attributes = attributes.Select(a => { a.EntityId = dbEntity.Id; return a; }).ToHashSet();
                     attributeRepository.BulkInsert(attributes);
                 }
-                    
 
                 return dbEntity;
             }
@@ -289,7 +288,7 @@ namespace UnitTests.EFCore
                     int rowsNumber = 0;
                     foreach(var entity in entities)
                     {
-                        rowsNumber += CreateEntity(entity, scope, uow).Id > 0 ? 1: 0;
+                        rowsNumber += CreateEntity(entity, scope, uow) != null ? 1: 0;
                     }
 
                     uow.Commit();
@@ -517,6 +516,7 @@ namespace UnitTests.EFCore
 
         [Test()]
         [Order(6)]
+        [TestCase(2)]
         [TestCase(5)]
         [TestCase(100)]
         [TestCase(500)]
@@ -559,9 +559,14 @@ namespace UnitTests.EFCore
         [Test()]
         [Order(7)]
         [TestCase(5)]
+        [TestCase(10)]
+        [TestCase(50)]
         [TestCase(100)]
         [TestCase(500)]
         [TestCase(1000)]
+        [TestCase(5000)]
+        [TestCase(10000)]
+        [TestCase(20000)]
         public void BulkCreateEntityWithChildrenReturnsSomething(int childrenCount)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
