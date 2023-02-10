@@ -8,6 +8,6 @@ namespace RepoDbVsEF.Domain.Interfaces
 {
     public interface IHasRowVersion
     {
-        long RowVersion { get; set; }
+        string RowVersion { get; set; }
     }
 }

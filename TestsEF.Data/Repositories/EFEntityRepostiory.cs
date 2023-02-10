@@ -86,9 +86,10 @@ namespace RepoDbVsEF.EF.Data.Repositories
             return UnitOfWork.Context.Entities.Update(entity).Entity;
         }
 
-        public void RawUpdate(Entity entity)
+        public Entity RawUpdate(Entity entity)
         {
             UnitOfWork.Context.Database.ExecuteSqlRaw($"UPDATE entity SET DisplayName = '{entity.DisplayName}' WHERE Id = {entity.Id}");
+            return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == entity.Id);
         }
 
     }

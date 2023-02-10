@@ -7,6 +7,6 @@
     public class BaseEntityWithRowVersion : BaseEntity, IHasRowVersion
     {
         [ConcurrencyCheck()]
-        public long RowVersion { get; set; }
+        public string RowVersion { get; set; }
     }
 }

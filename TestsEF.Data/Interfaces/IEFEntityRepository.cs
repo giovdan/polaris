@@ -5,6 +5,6 @@
 
     public interface IEFEntityRepository : IRepository<Entity, IEFDatabaseContext>
     {
-        void RawUpdate(Entity entity);
+        Entity RawUpdate(Entity entity);
     }
 }
