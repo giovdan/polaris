@@ -6,6 +6,7 @@
     using System.Data;
     using RepoDbVsEF.EF.Data.Interfaces;
     using RepoDbVsEF.Domain.Interfaces;
+    using Microsoft.EntityFrameworkCore.Storage;
 
     public class EFUnitOfWork : IUnitOfWork<IEFDatabaseContext>
     {
@@ -102,6 +103,23 @@
         public void Dispose()
         {
             Context?.Dispose();
+            CurrentTransaction?.Dispose();
+        }
+
+        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            CurrentTransaction = Context.Database.BeginTransaction(isolationLevel).GetDbTransaction();
+            return CurrentTransaction;
+        }
+
+        public void CommitTransaction()
+        {
+            CurrentTransaction.Commit();
+        }
+
+        public void RollBackTransaction()
+        {
+            CurrentTransaction.Rollback();
         }
     }
 }

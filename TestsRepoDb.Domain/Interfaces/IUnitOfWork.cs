@@ -14,5 +14,8 @@
         string Id { get; }
         IUserSession UserSession { get; set; }
         IDbTransaction CurrentTransaction { get; set; }
+        IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+        void CommitTransaction();
+        void RollBackTransaction();
     }
 }

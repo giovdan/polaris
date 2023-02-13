@@ -60,7 +60,7 @@ namespace UnitTests
             }
             else
             {
-                services.AddSingleton<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
+                services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
                 services.AddTransient<IDatabaseContext, EFDatabaseContext>();
                 services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
                 services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();

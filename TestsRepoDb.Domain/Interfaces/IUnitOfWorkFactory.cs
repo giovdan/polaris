@@ -5,10 +5,6 @@
 
     public interface IUnitOfWorkFactory<T>: IDisposable
     {
-        IUnitOfWork<T> Create();
-        void Commit(IUnitOfWork<T> unitOfWork);
-        void RollBackTransaction(IUnitOfWork<T> unitOfWork);
-        void CommitTransaction(IUnitOfWork<T> unitOfWork);
-        void BeginTransaction(IUnitOfWork<T> unitOfWork, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+        IUnitOfWork<T> GetOrCreate(IUserSession userSession);
     }
 }

@@ -254,18 +254,18 @@
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 var sw = new Stopwatch();
                 sw.Start();
                 try
                 {
                     CreateEntity(GenerateEntity(entityType, scope, uow), scope, uow);
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
 
@@ -298,9 +298,9 @@
 
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                using var uow = factory.Create();
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
                 var entities = GenerateEntities(recordsNumber, scope, uow).ToHashSet();
-                factory.BeginTransaction(uow);
+                uow.BeginTransaction();
                 try
                 {
                     var sw = new Stopwatch();
@@ -311,7 +311,7 @@
                         rowsNumber += CreateEntity(entity, scope, uow).Id > 0 ? 1: 0;
                     }
 
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                     sw.Stop();
                     Trace.WriteLine($"EF Core - Batch Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
                     AttributeDefinitionsDictionary.Clear();
@@ -319,7 +319,7 @@
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }
@@ -352,9 +352,9 @@
 
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                var uow = factory.Create();
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
                 var entities = GenerateEntities(recordsNumber, scope, uow).ToHashSet();
-                factory.BeginTransaction(uow);
+                uow.BeginTransaction();
                 try
                 {
                     var sw = new Stopwatch();
@@ -365,7 +365,7 @@
                         rowsNumber += CreateEntity(entity, scope, uow, withBatch: false).Id > 0 ? 1: 0;
                     }
 
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                     sw.Stop();
                     Trace.WriteLine($"EF Core - Bulk Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
                     AttributeDefinitionsDictionary.Clear();
@@ -373,7 +373,7 @@
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }
@@ -389,8 +389,8 @@
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var repository = scope.ServiceProvider.GetRequiredService<IRepoDbEntityRepository>();
@@ -441,13 +441,13 @@
                     var oldRowVersion = latest.RowVersion;
                     attributeRepository.BatchUpdate(attributes);
                     latest = repository.Update(latest);
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                     latest = repository.Get(latest.Id);
                     Assert.IsTrue(latest.RowVersion != oldRowVersion);
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
 
@@ -466,8 +466,8 @@
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var repository = scope.ServiceProvider.GetRequiredService<IRepoDbEntityRepository>();
@@ -518,7 +518,7 @@
                     var oldRowVersion = latest.RowVersion;
                     attributeRepository.BulkUpdate(attributes);
                     var count = repository.RawUpdate(latest);
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
 
                     if (count > 0)
                     {
@@ -530,7 +530,7 @@
                 }
                 catch (Exception)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     throw;
                 }
 
@@ -553,8 +553,8 @@
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var entities = new List<EntityToCreate>();
@@ -569,13 +569,13 @@
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
                                                 .Select(child => child.Id), scope, uow);
                         uow.Commit();
-                        factory.CommitTransaction(uow);
+                        uow.CommitTransaction();
                     }
                     Assert.IsTrue(parentId > 0);
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }
@@ -594,8 +594,8 @@
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var entities = new List<EntityToCreate>();
@@ -610,13 +610,13 @@
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
                                                 .Select(child => child.Id), scope, uow);
                         uow.Commit();
-                        factory.CommitTransaction(uow);
+                        uow.CommitTransaction();
                     }
                     Assert.IsTrue(parentId > 0);
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }

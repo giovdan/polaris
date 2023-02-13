@@ -1,12 +1,14 @@
 ﻿namespace RepoDbVsEF.Domain
 {
+    using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Storage;
     using Microsoft.Extensions.Configuration;
     using RepoDbVsEF.Domain.Enums;
     using RepoDbVsEF.Domain.Interfaces;
     using RepoDbVsEF.Domain.Models;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -203,6 +205,11 @@
                 auditableEntity.UpdatedOn = DateTime.UtcNow;
 
             }
+        }
+
+        public static IDbTransaction GetDbTransaction(this IDbContextTransaction source)
+        {
+            return (source as IInfrastructure<IDbTransaction>).Instance;
         }
     }
 }

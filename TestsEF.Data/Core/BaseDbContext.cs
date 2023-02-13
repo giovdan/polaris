@@ -88,17 +88,40 @@
         /// <returns></returns>
         public override int SaveChanges()
         {
-            try
+            var saved = false;
+            int result = 0;
+            while (! saved)
             {
-                ApplyAuditableLogic();
-                var result = base.SaveChanges();
-                ChangeTracker.Clear();
-                return result;
+                try
+                {
+                    ApplyAuditableLogic();
+                    result = base.SaveChanges();
+                    ChangeTracker.Clear();
+                    saved = true;
+                }
+                catch (DbUpdateConcurrencyException dce)
+                {
+                    foreach(var entry in dce.Entries)
+                    {
+                        var proposedValues = entry.CurrentValues;
+                        var databaseValues = entry.GetDatabaseValues();
+
+                        foreach (var property in proposedValues.Properties)
+                        {
+                            var proposedValue = proposedValues[property];
+                            var databaseValue = databaseValues[property];
+                        }
+
+                        entry.OriginalValues.SetValues(databaseValues);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+
+            return result;
         }
 
         /// <summary>

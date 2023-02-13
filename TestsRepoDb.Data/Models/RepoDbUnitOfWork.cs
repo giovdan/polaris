@@ -42,5 +42,20 @@
         {
             
         }
+
+        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CommitTransaction()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RollBackTransaction()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -55,8 +55,7 @@ namespace UnitTests.EFCore
             }
         }
 
-        private EntityToCreate GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope
-                                                    , IUnitOfWork<IEFDatabaseContext> unitOfWork)
+        private EntityToCreate GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope)
         {
             var attributeDefinitions = Enumerable.Empty<AttributeDefinition>();
             if (AttributeDefinitionsDictionary.ContainsKey(entityTypeEnum))
@@ -66,7 +65,8 @@ namespace UnitTests.EFCore
             else
             {
                 var attributeDefinitionRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeDefinitionRepository>();
-                attributeDefinitionRepository.Attach(unitOfWork);
+                var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>().GetOrCreate(NullUserSession.Instance);
+                attributeDefinitionRepository.Attach(uow);
                 attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum).ToHashSet();
                 AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
             }
@@ -121,7 +121,6 @@ namespace UnitTests.EFCore
         /// <returns></returns>
         private IEnumerable<EntityToCreate> GenerateEntities(int recordsNumber
                                     , IServiceScope scope
-                                    , IUnitOfWork<IEFDatabaseContext> unitOfWork
                                     , EntityTypeEnum entityTypeEnum = EntityTypeEnum.None)
         {
             var rnd = new Random();
@@ -142,7 +141,7 @@ namespace UnitTests.EFCore
 
             for (int i = 1; i <= recordsNumber; i++)
             {
-                yield return GenerateEntity(entityTypeEnum, scope, unitOfWork);
+                yield return GenerateEntity(entityTypeEnum, scope);
             }
 
             
@@ -154,7 +153,7 @@ namespace UnitTests.EFCore
         /// <param name="scope"></param>
         /// <param name="unitOfWork"></param>
         /// <returns></returns>
-        private Entity CreateEntity(EntityToCreate entity, IServiceScope scope, IUnitOfWork<IEFDatabaseContext> unitOfWork
+        private Entity CreateEntity(EntityToCreate entity, IServiceScope scope
                             , bool withBatch = true)
         {
             var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
@@ -163,6 +162,8 @@ namespace UnitTests.EFCore
 
             try
             {
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
+                                        .GetOrCreate(NullUserSession.Instance);
                 repository.Attach(unitOfWork);
                 attributeRepository.Attach(unitOfWork);
                 dbEntity = repository.Add(dbEntity);
@@ -195,6 +196,86 @@ namespace UnitTests.EFCore
             
         }
 
+        private void UpdateEntity(IServiceScope scope)
+        {
+            var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork<IEFDatabaseContext>>();
+            var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
+            var attributeRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeValueRepository>();
+
+            repository.Attach(uow);
+            attributeRepository.Attach(uow);
+
+            var latest = repository.GetAll()
+                            .OrderBy(e => e.UpdatedOn)
+                            .LastOrDefault();
+
+            Assert.IsTrue(latest != null);
+
+            var rnd = new Random();
+            var attributes = attributeRepository.FindBy(a => a.EntityId == latest.Id)
+                .Select(a =>
+                {
+                    var attributeInfo = a.AttributeDefinition.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                    switch (attributeInfo.AttributeKind)
+                    {
+                        case AttributeKindEnum.Number:
+                        case AttributeKindEnum.Enum:
+                        case AttributeKindEnum.Bool:
+                            {
+                                a.Value = Convert.ToDecimal(rnd.NextDouble());
+                                a.TextValue = string.Empty;
+                            }
+                            break;
+                        case AttributeKindEnum.String:
+                            {
+                                a.TextValue = DomainExtensions.RandomString(20);
+                                a.Value = 0;
+                            }
+                            break;
+                        case AttributeKindEnum.Date:
+                            {
+                                a.Value = DateTime.UtcNow.AddDays(rnd.Next(-2, 5)).Ticks;
+                                a.Value = 0;
+                            }
+                            break;
+                    }
+
+                    return a;
+                });
+
+            var oldRowVersion = latest.RowVersion;
+            attributeRepository.BatchUpdate(attributes);
+            uow.Commit();
+        }
+
+        private void InnerUpdateEntities(int recordsNumber)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
+                
+                uow.BeginTransaction();
+                try
+                {
+                    var sw = new Stopwatch();
+                    sw.Start();
+                    for (int i = 0; i <= recordsNumber; i++)
+                    {
+                        UpdateEntity(scope);
+                    }
+                    uow.CommitTransaction();
+                    sw.Stop();
+                    Trace.WriteLine($"EF Core - Updated {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
+                }
+                catch (Exception ex)
+                {
+                    uow.RollBackTransaction();
+                }
+            }
+        }
+
         private int InnerCreateEntities(int recordsNumber)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -203,9 +284,9 @@ namespace UnitTests.EFCore
 
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
-                var uow = factory.Create();
-                var entities = GenerateEntities(recordsNumber, scope, uow).ToHashSet();
-                factory.BeginTransaction(uow);
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
+                var entities = GenerateEntities(recordsNumber, scope).ToHashSet();
+                uow.BeginTransaction();
                 try
                 {
                     var sw = new Stopwatch();
@@ -213,11 +294,11 @@ namespace UnitTests.EFCore
                     int rowsNumber = 0;
                     foreach (var entity in entities)
                     {
-                        rowsNumber += CreateEntity(entity, scope, uow) != null ? 1 : 0;
+                        rowsNumber += CreateEntity(entity, scope) != null ? 1 : 0;
                     }
 
                     uow.Commit();
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                     sw.Stop();
                     Trace.WriteLine($"EF Core - Batch Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
                     AttributeDefinitionsDictionary.Clear();
@@ -225,7 +306,7 @@ namespace UnitTests.EFCore
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     return -1;
                 }
             }
@@ -238,20 +319,20 @@ namespace UnitTests.EFCore
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
-                var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 var sw = new Stopwatch();
                 sw.Start();
                 try
                 {
-                    var entity = CreateEntity(GenerateEntity(entityType, scope, uow), scope, uow);
+                    var entity = CreateEntity(GenerateEntity(entityType, scope), scope);
                     uow.Commit();
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                     return entity;
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     return null;
                 }
 
@@ -265,6 +346,7 @@ namespace UnitTests.EFCore
         [OneTimeSetUp()]
         public void Setup()
         {
+            CancellationTokenSource = new CancellationTokenSource();
             AttributeDefinitionsDictionary = new Dictionary<EntityTypeEnum, IEnumerable<AttributeDefinition>>();
             Trace.Listeners.Add(new ConsoleTraceListener());
             var services = new ServiceCollection();
@@ -290,7 +372,7 @@ namespace UnitTests.EFCore
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
-                var uow = factory.Create();
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
                 var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
                 repository.Attach(uow);
                 var suppliers = repository.GetAll();
@@ -341,10 +423,10 @@ namespace UnitTests.EFCore
 
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>();
-            using (var uow = factory.Create())
+            using (var uow = factory.GetOrCreate(NullUserSession.Instance))
             {
-                var entities = GenerateEntities(recordsNumber,  scope, uow).ToHashSet();
-                factory.BeginTransaction(uow);
+                var entities = GenerateEntities(recordsNumber,  scope).ToHashSet();
+                uow.BeginTransaction();
                 try
                 {
                     var sw = new Stopwatch();
@@ -352,11 +434,11 @@ namespace UnitTests.EFCore
                     int rowsNumber = 0;
                     foreach (var entity in entities)
                     {
-                        rowsNumber += CreateEntity(entity, scope, uow, withBatch: false).Id > 0 ? 1: 0;
+                        rowsNumber += CreateEntity(entity, scope, withBatch: false).Id > 0 ? 1: 0;
                     }
 
                     uow.Commit();
-                    factory.CommitTransaction(uow);
+                    uow.CommitTransaction();
                     sw.Stop();
                     Trace.WriteLine($"EF Core - Bulk Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
                     AttributeDefinitionsDictionary.Clear();
@@ -364,7 +446,7 @@ namespace UnitTests.EFCore
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }
@@ -379,8 +461,8 @@ namespace UnitTests.EFCore
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
@@ -429,15 +511,15 @@ namespace UnitTests.EFCore
 
                     var oldRowVersion = latest.RowVersion;
                     attributeRepository.BatchUpdate(attributes);
-                    repository.Update(latest);
                     uow.Commit();
-                    factory.CommitTransaction(uow);
+                    latest = repository.Get(latest.Id);
+                    uow.CommitTransaction();
                     Assert.IsTrue(latest.RowVersion != oldRowVersion);
                 }
-                catch (Exception )
+                catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
-                    throw;
+                    uow.RollBackTransaction();
+                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
                 
 
@@ -454,8 +536,8 @@ namespace UnitTests.EFCore
 
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>();
-            using var uow = factory.Create();
-            factory.BeginTransaction(uow, System.Data.IsolationLevel.ReadUncommitted);
+            using var uow = factory.GetOrCreate(NullUserSession.Instance);
+            uow.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
             try
             {
                 var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
@@ -500,28 +582,27 @@ namespace UnitTests.EFCore
                         }
 
                         return a;
-                    });
+                    })
+                    .ToList();
 
                 var affectedRows = attributeRepository.BulkUpdate(attributes);
-                factory.CommitTransaction(uow);
-                var newLatest = repository.Get(latest.Id);
+                uow.CommitTransaction();
 
                 Assert.IsTrue(attributes.Count() == affectedRows);
             }
             catch (Exception ex)
             {
-                factory.RollBackTransaction(uow);
+                uow.RollBackTransaction();
                 Assert.Fail(ex.InnerException?.Message ?? ex.Message);
             }
         }
 
         private IEnumerable<Entity> CreateEntities(IEnumerable<EntityToCreate> entities, IServiceScope scope
-                                                            , IUnitOfWork<IEFDatabaseContext> unitOfWork
                                                             , bool withBatch = true)
         {
             foreach(var entity in entities)
             {
-               yield return CreateEntity(entity, scope, unitOfWork, withBatch);
+               yield return CreateEntity(entity, scope, withBatch);
             }
         }
 
@@ -541,14 +622,14 @@ namespace UnitTests.EFCore
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var entities = new List<EntityToCreate>();
-                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope, uow));
-                    entities.AddRange(GenerateEntities(childrenCount, scope, uow, EntityTypeEnum.OrderRow));
-                    var dbEntities = CreateEntities(entities, scope, uow).ToList();
+                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
+                    entities.AddRange(GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
+                    var dbEntities = CreateEntities(entities, scope).ToList();
                     uow.Commit();
                     var parentId = dbEntities.SingleOrDefault(entity => entity.EntityTypeId == EntityTypeEnum.Order)?.Id ?? 0;
                     if (parentId > 0)
@@ -557,13 +638,13 @@ namespace UnitTests.EFCore
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
                                                 .Select(child => child.Id), scope, uow);
                         uow.Commit();
-                        factory.CommitTransaction(uow);
+                        uow.CommitTransaction();
                     }
                     Assert.IsTrue(parentId > 0);
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }
@@ -587,14 +668,14 @@ namespace UnitTests.EFCore
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
-                using var uow = factory.Create();
-                factory.BeginTransaction(uow);
+                using var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
                 try
                 {
                     var entities = new List<EntityToCreate>();
-                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope, uow));
-                    entities.AddRange(GenerateEntities(childrenCount, scope, uow, EntityTypeEnum.OrderRow));
-                    var dbEntities = CreateEntities(entities, scope, uow, withBatch: false).ToList();
+                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
+                    entities.AddRange(GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
+                    var dbEntities = CreateEntities(entities, scope, withBatch: false).ToList();
                     uow.Commit();
                     var parentId = dbEntities.SingleOrDefault(entity => entity.EntityTypeId == EntityTypeEnum.Order)?.Id ?? 0;
                     if (parentId > 0)
@@ -603,13 +684,13 @@ namespace UnitTests.EFCore
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
                                                 .Select(child => child.Id), scope, uow);
                         uow.Commit();
-                        factory.CommitTransaction(uow);
+                        uow.CommitTransaction();
                     }
                     Assert.IsTrue(parentId > 0);
                 }
                 catch (Exception ex)
                 {
-                    factory.RollBackTransaction(uow);
+                    uow.RollBackTransaction();
                     Assert.Fail(ex.InnerException?.Message ?? ex.Message);
                 }
             }
@@ -618,22 +699,47 @@ namespace UnitTests.EFCore
 
         [Test()]
         [Order(8)]
-        public void ParallelEntityCreationNotFailsForConcurrency()
+        public void ParallelEntityCreationDoesNotFailsForConcurrency()
         {
-            // Creazione task di esecuzione 'medio'
-            var executionTask = TimedTaskFactory.Start(() => InnerCreateEntities(10)
-                , intervalInMilliseconds: 500
-                , synchronous: true
-                , cancelToken: CancellationTokenSource.Token);
+            var task1 = Task.Factory.StartNew(() =>
+            {
+                using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
+                            .GetOrCreate(NullUserSession.Instance);
+                CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                uow.Commit();
+            });
 
-            // Creazione task di esecuzione 'lento'
-            var executionTask_5sec = TimedTaskFactory.Start(() => InnerCreateEntities(20)
-                , intervalInMilliseconds: 5000
-                , synchronous: true
-                , cancelToken: CancellationTokenSource.Token);
+            var task2 = Task.Factory.StartNew(() =>
+            {
+                using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
+                                                    .GetOrCreate(NullUserSession.Instance);
+                CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                uow.Commit();
+            });
 
-            Task.WaitAll(executionTask, executionTask_5sec);
+            Task.WaitAll(task1, task2);
         }
+
+        [Test()]
+        [Order(9)]
+        public void ConcurrentOperationsDoesntFail()
+        {
+            var task1 = Task.Factory.StartNew(() =>
+            {
+                InnerCreateEntities(10);
+            });
+
+            var task2 = Task.Factory.StartNew(() =>
+            {
+                InnerUpdateEntities(10);
+            });
+
+            Task.WaitAll(task1, task2);
+            Assert.IsTrue(true);
+        }
+
     }
 }
 
