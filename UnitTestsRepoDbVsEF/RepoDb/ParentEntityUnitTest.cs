@@ -53,12 +53,11 @@
         }
 
         private IEnumerable<Entity> CreateEntities(IEnumerable<EntityToCreate> entities, IServiceScope scope
-                                                    , IUnitOfWork<IRepoDbDatabaseContext> unitOfWork
                                                     , bool withBatch = true)
         {
             foreach (var entity in entities)
             {
-                yield return CreateEntity(entity, scope, unitOfWork, withBatch);
+                yield return CreateEntity(entity, scope, withBatch);
             }
         }
 
@@ -92,12 +91,11 @@
 
             for (int i = 1; i <= recordsNumber; i++)
             {
-                yield return GenerateEntity(entityTypeEnum, scope, unitOfWork);
+                yield return GenerateEntity(entityTypeEnum, scope);
             }
         }
 
-        private EntityToCreate GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope
-                                                    , IUnitOfWork<IRepoDbDatabaseContext> unitOfWork)
+        private EntityToCreate GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope)
         {
             var attributeDefinitions = Enumerable.Empty<AttributeDefinition>();
             if (AttributeDefinitionsDictionary.ContainsKey(entityTypeEnum))
@@ -177,7 +175,7 @@
 
             for (int i = 1; i <= recordsNumber; i++)
             {
-                yield return GenerateEntity(entityTypeEnum, scope, unitOfWork);
+                yield return GenerateEntity(entityTypeEnum, scope);
             }
 
 
@@ -191,19 +189,20 @@
         /// <param name="scope"></param>
         /// <param name="unitOfWork"></param>
         /// <returns></returns>
-        private Entity CreateEntity(EntityToCreate entity, IServiceScope scope, IUnitOfWork<IRepoDbDatabaseContext> unitOfWork
+        private Entity CreateEntity(EntityToCreate entity, IServiceScope scope
                             , bool withBatch = true)
         {
             var repository = scope.ServiceProvider.GetRequiredService<IRepoDbEntityRepository>();
             var attributeRepository = scope.ServiceProvider.GetRequiredService<IRepoDbAttributeValueRepository>();
             var dbEntity = Mapper.Map<Entity>(entity);
-
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
+                            .GetOrCreate(NullUserSession.Instance);
             try
             {
                 repository.Attach(unitOfWork);
                 attributeRepository.Attach(unitOfWork);
                 dbEntity.SetAuditableFields(unitOfWork.UserSession?.Username ?? "MITROL");
-
+                dbEntity.RowVersion = Guid.NewGuid().ToString();
                 dbEntity = repository.Add(dbEntity);
 
                 var attributes = entity.Attributes.Select(a => {
@@ -211,6 +210,7 @@
                     dbAttribute.EntityId = dbEntity.Id;
                     dbAttribute.Entity = dbEntity;
                     dbAttribute.SetAuditableFields(unitOfWork.UserSession?.Username ?? "MITROL");
+                    dbAttribute.RowVersion = Guid.NewGuid().ToString();
                     return dbAttribute.SetAttributeValue(a);
                 });
 
@@ -260,7 +260,7 @@
                 sw.Start();
                 try
                 {
-                    CreateEntity(GenerateEntity(entityType, scope, uow), scope, uow);
+                    CreateEntity(GenerateEntity(entityType, scope), scope);
                     uow.CommitTransaction();
                 }
                 catch (Exception ex)
@@ -308,7 +308,7 @@
                     int rowsNumber = 0;
                     foreach (var entity in entities)
                     {
-                        rowsNumber += CreateEntity(entity, scope, uow).Id > 0 ? 1: 0;
+                        rowsNumber += CreateEntity(entity, scope).Id > 0 ? 1: 0;
                     }
 
                     uow.CommitTransaction();
@@ -362,7 +362,7 @@
                     int rowsNumber = 0;
                     foreach (var entity in entities)
                     {
-                        rowsNumber += CreateEntity(entity, scope, uow, withBatch: false).Id > 0 ? 1: 0;
+                        rowsNumber += CreateEntity(entity, scope,withBatch: false).Id > 0 ? 1: 0;
                     }
 
                     uow.CommitTransaction();
@@ -558,9 +558,9 @@
                 try
                 {
                     var entities = new List<EntityToCreate>();
-                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope, uow));
+                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
                     entities.AddRange(GenerateEntities(childrenCount, scope, uow, EntityTypeEnum.OrderRow));
-                    var dbEntities = CreateEntities(entities, scope, uow).ToList();
+                    var dbEntities = CreateEntities(entities, scope).ToList();
                     uow.Commit();
                     var parentId = dbEntities.SingleOrDefault(entity => entity.EntityTypeId == EntityTypeEnum.Order)?.Id ?? 0;
                     if (parentId > 0)
@@ -599,18 +599,20 @@
                 try
                 {
                     var entities = new List<EntityToCreate>();
-                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope, uow));
+                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
                     entities.AddRange(GenerateEntities(childrenCount, scope, uow, EntityTypeEnum.OrderRow));
-                    var dbEntities = CreateEntities(entities, scope, uow, withBatch: false).ToList();
-                    uow.Commit();
+                    var dbEntities = CreateEntities(entities, scope,  withBatch: false).ToList();
                     var parentId = dbEntities.SingleOrDefault(entity => entity.EntityTypeId == EntityTypeEnum.Order)?.Id ?? 0;
                     if (parentId > 0)
                     {
                         AddChildrenLinks(parentId
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
                                                 .Select(child => child.Id), scope, uow);
-                        uow.Commit();
                         uow.CommitTransaction();
+                    }
+                    else
+                    {
+                        uow.RollBackTransaction();
                     }
                     Assert.IsTrue(parentId > 0);
                 }

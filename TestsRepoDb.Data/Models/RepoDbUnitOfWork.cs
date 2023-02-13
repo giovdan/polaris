@@ -29,7 +29,7 @@
         {
             if (IsFinished)
             {
-                if (Context.Connection.State == System.Data.ConnectionState.Open)
+                if (Context.Connection.State == ConnectionState.Open)
                 {
                     Context.Connection.Close();
                 }
@@ -40,22 +40,28 @@
 
         public void Commit()
         {
-            
+            CommitTransaction();
         }
 
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            throw new NotImplementedException();
+            if (Context.Connection.State != ConnectionState.Open)
+            {
+                Context.Connection.Open();
+            }
+
+            CurrentTransaction = Context.Connection.BeginTransaction(isolationLevel);
+            return CurrentTransaction;
         }
 
         public void CommitTransaction()
         {
-            throw new NotImplementedException();
+            CurrentTransaction.Commit();
         }
 
         public void RollBackTransaction()
         {
-            throw new NotImplementedException();
+            CurrentTransaction.Rollback();
         }
     }
 }

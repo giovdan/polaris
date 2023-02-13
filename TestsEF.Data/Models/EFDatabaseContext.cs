@@ -33,7 +33,7 @@
 
             modelBuilder.Entity<Entity>()
                 .Property(c => c.RowVersion)
-                .IsConcurrencyToken()
+                .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate(); 
 
             modelBuilder.Entity<AttributeDefinition>()
@@ -42,12 +42,12 @@
 
             modelBuilder.Entity<AttributeDefinition>()
                 .Property(c => c.RowVersion)
-                .IsConcurrencyToken()
+                .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate();
 
             modelBuilder.Entity<AttributeValue>()
                 .Property(c => c.RowVersion)
-                .IsConcurrencyToken()
+                .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate();
         }
 
