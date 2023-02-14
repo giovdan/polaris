@@ -1,6 +1,7 @@
 ﻿namespace UnitTests.RepoDb
 {
     using Microsoft.Extensions.DependencyInjection;
+    using MySql.Data.MySqlClient;
     using NUnit.Framework;
     using RepoDbVsEF.Data.Interfaces;
     using RepoDbVsEF.Domain;
@@ -8,6 +9,7 @@
     using RepoDbVsEF.Domain.Enums;
     using RepoDbVsEF.Domain.Interfaces;
     using RepoDbVsEF.Domain.Models;
+    using RepoDbVsEF.Domain.Threading;
     using RepoDbVsEF.RepoDb.Data.Interfaces;
     using RepoDbVsEF.RepoDb.Data.Repositories;
     using System;
@@ -16,18 +18,21 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using UnitTests.Models;
 
     public class ParentEntityUnitTest: BaseUnitTest
     {
+        private CancellationTokenSource CancellationTokenSource;
         private Dictionary<EntityTypeEnum, IEnumerable<AttributeDefinition>> AttributeDefinitionsDictionary { get; set; }
+
         #region < Private Methods >
         private void AddChildrenLinks(ulong id, IEnumerable<ulong> childrenIds, IServiceScope scope
-                                                      , IUnitOfWork<IRepoDbDatabaseContext> unitOfWork
                                                       , bool withBatch = true)
         {
             var linkChildRepository = scope.ServiceProvider.GetRequiredService<IChildLinkRepository>();
-
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
+                            .GetOrCreate(NullUserSession.Instance);
             linkChildRepository.Attach(unitOfWork);
             if (withBatch)
             {
@@ -106,7 +111,7 @@
             {
                 var attributeDefinitionRepository = scope.ServiceProvider.GetRequiredService<IRepoDbAttributeDefinitionRepository>();
                 attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum);
-                AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
+                AttributeDefinitionsDictionary.TryAdd(entityTypeEnum, attributeDefinitions);
             }
 
             return new EntityToCreate
@@ -156,8 +161,7 @@
         /// <param name="attributeDefinitionRepository"></param>
         /// <returns></returns>
         private IEnumerable<EntityToCreate> GenerateEntities(int recordsNumber
-                                    , IServiceScope scope
-                                    , IUnitOfWork<IRepoDbDatabaseContext> unitOfWork)
+                                    , IServiceScope scope)
         {
             var rnd = new Random();
             var entityType = rnd.Next(1, 16);
@@ -223,7 +227,79 @@
             }
 
         }
+
+        private int InnerCreateEntities(int recordsNumber)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
+            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
+            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
+                var entities = GenerateEntities(recordsNumber, scope).ToHashSet();
+                uow.BeginTransaction();
+                try
+                {
+                    var sw = new Stopwatch();
+                    sw.Start();
+                    int rowsNumber = 0;
+                    foreach (var entity in entities)
+                    {
+                        rowsNumber += CreateEntity(entity, scope) != null ? 1 : 0;
+                    }
+
+                    uow.Commit();
+                    uow.CommitTransaction();
+                    sw.Stop();
+                    Trace.WriteLine($"EF Core - Batch Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
+                    AttributeDefinitionsDictionary.Clear();
+                    return rowsNumber;
+                }
+                catch (Exception ex)
+                {
+                    uow.RollBackTransaction();
+                    return -1;
+                }
+            }
+        }
+
+        private Entity InnerCreateEntity(EntityTypeEnum entityType)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
+            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(NullUserSession.Instance);
+                uow.BeginTransaction();
+                var sw = new Stopwatch();
+                sw.Start();
+                try
+                {
+                    var entity = CreateEntity(GenerateEntity(entityType, scope), scope);
+                    uow.Commit();
+                    uow.CommitTransaction();
+                    return entity;
+                }
+                catch (Exception ex)
+                {
+                    uow.RollBackTransaction();
+                    return null;
+                }
+
+                sw.Stop();
+                Trace.WriteLine($"EF Core - Insert single Entity - Elapsed time: {sw.ElapsedMilliseconds}");
+                AttributeDefinitionsDictionary.Clear();
+            }
+        }
         #endregion
+
+        public ParentEntityUnitTest()
+        {
+            CancellationTokenSource = new CancellationTokenSource();
+        }
+
 
         [OneTimeSetUp()]
         public void Setup()
@@ -567,7 +643,7 @@
                     {
                         AddChildrenLinks(parentId
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
-                                                .Select(child => child.Id), scope, uow);
+                                                .Select(child => child.Id), scope);
                         uow.Commit();
                         uow.CommitTransaction();
                     }
@@ -607,7 +683,7 @@
                     {
                         AddChildrenLinks(parentId
                                             , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
-                                                .Select(child => child.Id), scope, uow);
+                                                .Select(child => child.Id), scope);
                         uow.CommitTransaction();
                     }
                     else
@@ -637,6 +713,80 @@
 
             Assert.IsTrue(entities.Any());
 
+        }
+
+        [Test()]
+        [Order(9)]
+        public void ConcurrentOperationsDoesntFail()
+        {
+            var task1 = TimedTaskFactory.Start(() =>
+                {
+                    InnerCreateEntity(EntityTypeEnum.Product);
+                }
+                , intervalInMilliseconds: 500
+                , synchronous: true
+                , cancelToken: CancellationTokenSource.Token);
+
+            // Creazione task di esecuzione 'medio'
+            var task2 = TimedTaskFactory.Start(() =>
+            {
+                var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                //UpdateEntity(scope);
+                var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
+                        .GetOrCreate(NullUserSession.Instance);
+                var repository = scope.ServiceProvider.GetRequiredService<IRepoDbEntityRepository>();
+                repository.Attach(uow);
+                repository.GetAll();
+            }
+                , intervalInMilliseconds: 100
+                , synchronous: true
+                , cancelToken: CancellationTokenSource.Token);
+
+            Task.WaitAll(task1, task2);
+            Assert.IsTrue(true);
+        }
+
+        [Test()]
+        [Order(10)]
+        public void ParallelEntityCreationDoesNotFailsForConcurrency()
+        {
+            var task1 = Task.Factory.StartNew(() =>
+            {
+                using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
+                            .GetOrCreate(NullUserSession.Instance);
+                try
+                {
+                    uow.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+                    CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                    uow.CommitTransaction();
+                }
+                catch (Exception ex)
+                {
+                    uow.RollBackTransaction();
+                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
+                }
+            });
+
+            var task2 = Task.Factory.StartNew(() =>
+            {
+                using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
+                                                    .GetOrCreate(NullUserSession.Instance);
+                try
+                {
+                    uow.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+                    CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                    uow.CommitTransaction();
+                }
+                catch (Exception ex)
+                {
+                    uow.RollBackTransaction();
+                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
+                }
+            });
+
+            Task.WaitAll(task1, task2);
         }
     }
 }

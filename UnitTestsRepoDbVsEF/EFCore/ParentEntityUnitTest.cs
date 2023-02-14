@@ -733,7 +733,7 @@ namespace UnitTests.EFCore
                 {
                     InnerCreateEntity(EntityTypeEnum.Product);
                 }
-                , intervalInMilliseconds: 5
+                , intervalInMilliseconds: 500
                 , synchronous: true
                 , cancelToken: CancellationTokenSource.Token);
 
@@ -748,7 +748,7 @@ namespace UnitTests.EFCore
                     repository.Attach(uow);
                     repository.GetAll();
                 }
-                , intervalInMilliseconds: 1
+                , intervalInMilliseconds: 100
                 , synchronous: true
                 , cancelToken: CancellationTokenSource.Token);
 
