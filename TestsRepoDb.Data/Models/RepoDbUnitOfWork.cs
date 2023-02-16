@@ -45,13 +45,21 @@
 
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            if (Context.Connection.State != ConnectionState.Open)
+            try
             {
-                Context.Connection.Open();
-            }
+                if (Context.Connection.State != ConnectionState.Open)
+                {
+                    Context.Connection.Open();
+                }
 
-            CurrentTransaction = Context.Connection.BeginTransaction(isolationLevel);
-            return CurrentTransaction;
+                CurrentTransaction = Context.Connection.BeginTransaction(isolationLevel);
+                return CurrentTransaction;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public void CommitTransaction()

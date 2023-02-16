@@ -772,11 +772,14 @@
             {
                 using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
                 using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
-                                                    .GetOrCreate(NullUserSession.Instance);
+                        .GetOrCreate(NullUserSession.Instance);
                 try
                 {
-                    uow.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
-                    CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                    uow.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+                    var repository = scope.ServiceProvider.GetRequiredService<IRepoDbAttributeValueRepository>();
+                    repository.Attach(uow);
+                    var latest = repository.GetAll().LastOrDefault();
+                    latest.RowVersion = Guid.NewGuid().ToString();
                     uow.CommitTransaction();
                 }
                 catch (Exception ex)
