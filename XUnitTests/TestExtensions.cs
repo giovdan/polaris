@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace XUnitTests
+﻿namespace XUnitTests
 {
         using RepoDbVsEF.Domain.Enums;
         using RepoDbVsEF.Domain.Models;

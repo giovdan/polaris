@@ -3,6 +3,7 @@
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using AutoMapper;
+    using global::RepoDb;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@
     using RepoDbVsEF.EF.Data.Interfaces;
     using RepoDbVsEF.EF.Data.Models;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using XUnitTests.Mappings;
 
@@ -141,6 +143,12 @@
                 builder = builder.AddJsonFile($"{externalConfigFile}.{environmentName}.json", optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
+        }
+
+        public static IEnumerable<object[]> GetRecordCounts()
+        {
+            foreach (var value in new[] { 0, 5, 10, 100, 500, 1000, 5000, 10000 })
+                yield return new object[] { value };
         }
     }
 }
