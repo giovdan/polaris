@@ -11,7 +11,7 @@
         int SaveChanges();
         EntityEntry Entry(object entity);
         DatabaseFacade Database { get; }
-        DbSet<Entity> Entities { get; set; }
+        DbSet<DatabaseEntity> Entities { get; set; }
         DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         DbSet<AttributeValue> AttributeValues { get; set; }
         DbSet<ChildLink> ChildLinks { get; set; }

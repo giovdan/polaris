@@ -12,20 +12,20 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    public class RepoDbEntityRepository: InternalBaseRepository<Entity>, IRepoDbEntityRepository
+    public class RepoDbEntityRepository: InternalBaseRepository<DatabaseEntity>, IRepoDbEntityRepository
     {
         public RepoDbEntityRepository(string connectionString): base(connectionString)
         {
 
         }
 
-        public Entity Add(Entity entity)
+        public DatabaseEntity Add(DatabaseEntity entity)
         {
             entity.Id = Insert<ulong>(entity, transaction: UnitOfWork.CurrentTransaction);
             return entity;
         }
 
-        public Task<Entity> AddAsync(Entity entity)
+        public Task<DatabaseEntity> AddAsync(DatabaseEntity entity)
         {
             return Task.Factory.StartNew(() => Add(entity));
         }
@@ -35,52 +35,52 @@
             UnitOfWork = unitOfWork;
         }
 
-        public int BatchInsert(IEnumerable<Entity> items)
+        public int BatchInsert(IEnumerable<DatabaseEntity> items)
         {
             return InsertAll(items);
         }
 
-        public int BulkInsert(IEnumerable<Entity> items)
+        public int BulkInsert(IEnumerable<DatabaseEntity> items)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Entity> FindBy(Expression<Func<Entity, bool>> predicate)
+        public IEnumerable<DatabaseEntity> FindBy(Expression<Func<DatabaseEntity, bool>> predicate)
         {
             return Query(predicate);
         }
 
-        public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate)
+        public Task<IEnumerable<DatabaseEntity>> FindByAsync(Expression<Func<DatabaseEntity, bool>> predicate)
         {
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public Entity Get(ulong id)
+        public DatabaseEntity Get(ulong id)
         {
             return Query(e => e.Id == id).SingleOrDefault();
         }
 
-        public IEnumerable<Entity> GetAll()
+        public IEnumerable<DatabaseEntity> GetAll()
         {
             return QueryAll();
         }
 
-        public Task<Entity> GetAsync(ulong id)
+        public Task<DatabaseEntity> GetAsync(ulong id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }
 
-        public int RawUpdate(Entity entity)
+        public int RawUpdate(DatabaseEntity entity)
         {
             return UnitOfWork.Context.Connection.ExecuteNonQuery($"UPDATE entity SET DisplayName = '{entity.DisplayName}' WHERE Id = {entity.Id}");
         }
 
-        public void Remove(Entity entity)
+        public void Remove(DatabaseEntity entity)
         {
             Delete(entity, transaction: UnitOfWork.CurrentTransaction);
         }
 
-        public Entity Update(Entity entity)
+        public DatabaseEntity Update(DatabaseEntity entity)
         {
             Update(entity, transaction: UnitOfWork.CurrentTransaction);
             return entity;

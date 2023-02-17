@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDbVsEF.EF.Data", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTests", "XUnitTests\XUnitTests.csproj", "{A279A511-0E7C-4974-8C76-62DA12F6C403}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDbVsEF.GraphQL", "RepoDbVsEF.GraphQL\RepoDbVsEF.GraphQL.csproj", "{42157B1E-B719-4FAB-9EF5-765F18420584}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDbVsEF.Application", "RepoDbVsEF.Application\RepoDbVsEF.Application.csproj", "{6280BDFF-599A-417C-A98C-539723EB7331}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{A279A511-0E7C-4974-8C76-62DA12F6C403}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A279A511-0E7C-4974-8C76-62DA12F6C403}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A279A511-0E7C-4974-8C76-62DA12F6C403}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42157B1E-B719-4FAB-9EF5-765F18420584}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42157B1E-B719-4FAB-9EF5-765F18420584}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42157B1E-B719-4FAB-9EF5-765F18420584}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42157B1E-B719-4FAB-9EF5-765F18420584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6280BDFF-599A-417C-A98C-539723EB7331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6280BDFF-599A-417C-A98C-539723EB7331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6280BDFF-599A-417C-A98C-539723EB7331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6280BDFF-599A-417C-A98C-539723EB7331}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

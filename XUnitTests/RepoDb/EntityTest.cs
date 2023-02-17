@@ -57,7 +57,7 @@
             }
         }
 
-        private IEnumerable<Entity> CreateEntities(IEnumerable<EntityToCreate> entities, IServiceScope scope
+        private IEnumerable<DatabaseEntity> CreateEntities(IEnumerable<EntityToCreate> entities, IServiceScope scope
                                                     , bool withBatch = true)
         {
             foreach (var entity in entities)
@@ -193,12 +193,12 @@
         /// <param name="scope"></param>
         /// <param name="unitOfWork"></param>
         /// <returns></returns>
-        private Entity CreateEntity(EntityToCreate entity, IServiceScope scope
+        private DatabaseEntity CreateEntity(EntityToCreate entity, IServiceScope scope
                             , bool withBatch = true)
         {
             var repository = scope.ServiceProvider.GetRequiredService<IRepoDbEntityRepository>();
             var attributeRepository = scope.ServiceProvider.GetRequiredService<IRepoDbAttributeValueRepository>();
-            var dbEntity = Mapper.Map<Entity>(entity);
+            var dbEntity = Mapper.Map<DatabaseEntity>(entity);
             var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IRepoDbDatabaseContext>>()
                             .GetOrCreate(NullUserSession.Instance);
             try
@@ -264,7 +264,7 @@
             }
         }
 
-        private Entity InnerCreateEntity(EntityTypeEnum entityType)
+        private DatabaseEntity InnerCreateEntity(EntityTypeEnum entityType)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 

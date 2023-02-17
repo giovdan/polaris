@@ -14,7 +14,7 @@
         }
 
         #region Definitions
-        public DbSet<Entity> Entities { get; set; }
+        public DbSet<DatabaseEntity> Entities { get; set; }
         public DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         public DbSet<AttributeValue> AttributeValues { get; set; }
         public DbSet<ChildLink> ChildLinks { get; set; }
@@ -27,11 +27,11 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Entity>()
+            modelBuilder.Entity<DatabaseEntity>()
                 .HasIndex(u => u.Code)
                 .IsUnique();
 
-            modelBuilder.Entity<Entity>()
+            modelBuilder.Entity<DatabaseEntity>()
                 .Property(c => c.RowVersion)
                 .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate(); 

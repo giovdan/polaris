@@ -8,7 +8,7 @@
 
         public UnitTestProfile()
         {
-            CreateMap<EntityToCreate, Entity>()
+            CreateMap<EntityToCreate, DatabaseEntity>()
                 .ForMember(dest => dest.EntityTypeId, opt => opt.MapFrom(s => s.EntityType));
 
             CreateMap<AttributeItem, AttributeValue>()

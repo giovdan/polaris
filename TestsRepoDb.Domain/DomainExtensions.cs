@@ -51,7 +51,7 @@
                 return new ConfigurationBuilder()
                     .SetBasePath(GetStartUpDirectoryInfo().FullName)
                     .AddJsonFile(@"bin\config\RepoDbVsEF.Data.json", optional: false, reloadOnChange: true)
-                    .AddEnvironmentVariables().Build();
+                    .Build();
             }
             catch (Exception ex)
             {
@@ -59,9 +59,9 @@
             }
         }
 
-        public static Entity GenerateEntity(EntityTypeEnum entityType)
+        public static DatabaseEntity GenerateEntity(EntityTypeEnum entityType)
         {
-            return new Entity
+            return new DatabaseEntity
             {
                 EntityTypeId = entityType
             };

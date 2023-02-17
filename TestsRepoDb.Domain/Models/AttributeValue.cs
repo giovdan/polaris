@@ -17,6 +17,6 @@
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public virtual AttributeDefinition AttributeDefinition { get; set; }
-        public virtual Entity Entity { get; set; }
+        public virtual DatabaseEntity Entity { get; set; }
     }
 }

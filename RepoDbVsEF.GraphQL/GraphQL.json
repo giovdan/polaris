@@ -1,0 +1,16 @@
+{
+  "MySQL": {
+    "Server": "127.0.0.1",
+    "Database": "db_polaris",
+    "Port": 34306,
+    "Username": "root",
+    "Password": "/Lj3AhOUtKcSqbj+f64Jzg=="
+  },
+  "TokenAuthentication": {
+    "Secret": "Y2F0Y2hlciUyMHdvbmclMjBsb3ZlJTIwLm5ldA==",
+    "Issuer": "http://www.mitrol.it",
+    "Audience": "Mitrol SRL",
+    "ExpiredAt": 60,
+    "RefreshExpiredAt": 120
+  }
+}

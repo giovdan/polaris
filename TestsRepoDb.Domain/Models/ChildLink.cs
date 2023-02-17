@@ -10,7 +10,7 @@
         public int RowNumber { get; set; }
         public int Level { get; set; }
 
-        public virtual Entity Parent { get; set; }
-        public virtual Entity Child { get; set; }
+        public virtual DatabaseEntity Parent { get; set; }
+        public virtual DatabaseEntity Child { get; set; }
     }
 }

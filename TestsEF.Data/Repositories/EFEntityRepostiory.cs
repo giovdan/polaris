@@ -12,7 +12,7 @@ namespace RepoDbVsEF.EF.Data.Repositories
     using System.Text;
     using System.Threading.Tasks;
 
-    public class EFEntityRepostiory : BaseRepository<Entity>, IEFEntityRepository
+    public class EFEntityRepostiory : BaseRepository<DatabaseEntity>, IEFEntityRepository
     {
         public EFEntityRepostiory(IServiceFactory serviceFactory
                         , IDatabaseContextFactory databaseContextFactory): base(serviceFactory, databaseContextFactory)
@@ -20,23 +20,23 @@ namespace RepoDbVsEF.EF.Data.Repositories
 
         }
 
-        public Entity Add(Entity entity)
+        public DatabaseEntity Add(DatabaseEntity entity)
         {
             return UnitOfWork.Context.Entities.Add(entity).Entity;
         }
 
-        public Task<Entity> AddAsync(Entity entity)
+        public Task<DatabaseEntity> AddAsync(DatabaseEntity entity)
         {
             return Task.Factory.StartNew(() => Add(entity));
         }
 
-        public int BatchInsert(IEnumerable<Entity> items)
+        public int BatchInsert(IEnumerable<DatabaseEntity> items)
         {
             UnitOfWork.Context.Entities.AddRange(items);
             return items.Count();
         }
 
-        public int BulkInsert(IEnumerable<Entity> items)
+        public int BulkInsert(IEnumerable<DatabaseEntity> items)
         {
             StringBuilder insertQuery = new($"REPLACE INTO `Entity` (`Code`, `EntityTypeId``, `RowVersion`) VALUES ");
 
@@ -51,42 +51,42 @@ namespace RepoDbVsEF.EF.Data.Repositories
             return result;
         }
 
-        public IEnumerable<Entity> FindBy(Expression<Func<Entity, bool>> predicate)
+        public IEnumerable<DatabaseEntity> FindBy(Expression<Func<DatabaseEntity, bool>> predicate)
         {
             return UnitOfWork.Context.Entities.Where(predicate);
         }
 
-        public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate)
+        public Task<IEnumerable<DatabaseEntity>> FindByAsync(Expression<Func<DatabaseEntity, bool>> predicate)
         {
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public Entity Get(ulong id)
+        public DatabaseEntity Get(ulong id)
         {
             return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == id);
         }
 
-        public IEnumerable<Entity> GetAll()
+        public IEnumerable<DatabaseEntity> GetAll()
         {
             return UnitOfWork.Context.Entities;
         }
 
-        public Task<Entity> GetAsync(ulong id)
+        public Task<DatabaseEntity> GetAsync(ulong id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }
 
-        public void Remove(Entity entity)
+        public void Remove(DatabaseEntity entity)
         {
             UnitOfWork.Context.Entities.Remove(entity);
         }
 
-        public Entity Update(Entity entity)
+        public DatabaseEntity Update(DatabaseEntity entity)
         {
             return UnitOfWork.Context.Entities.Update(entity).Entity;
         }
 
-        public Entity RawUpdate(Entity entity)
+        public DatabaseEntity RawUpdate(DatabaseEntity entity)
         {
             UnitOfWork.Context.Database.ExecuteSqlRaw($"UPDATE entity SET DisplayName = '{entity.DisplayName}' WHERE Id = {entity.Id}");
             return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == entity.Id);

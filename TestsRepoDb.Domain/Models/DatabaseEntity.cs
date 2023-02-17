@@ -7,7 +7,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("Entity")]
-    public class Entity : BaseEntityWithRowVersion, IAuditableEntity
+    public class DatabaseEntity : BaseEntityWithRowVersion, IAuditableEntity
     {
         public string Code { get; set; }
         public string DisplayName { get; set; }
@@ -18,7 +18,7 @@
         public DateTime? UpdatedOn { get; set; }
 
 
-        public Entity()
+        public DatabaseEntity()
         {
             Code = Guid.NewGuid().ToString();
             DisplayName = $"{EntityTypeId.ToString().ToUpper()}_{Code}";

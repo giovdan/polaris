@@ -3,8 +3,8 @@
     using RepoDbVsEF.Domain.Interfaces;
     using RepoDbVsEF.Domain.Models;
 
-    public interface IEFEntityRepository : IRepository<Entity, IEFDatabaseContext>
+    public interface IEFEntityRepository : IRepository<DatabaseEntity, IEFDatabaseContext>
     {
-        Entity RawUpdate(Entity entity);
+        DatabaseEntity RawUpdate(DatabaseEntity entity);
     }
 }

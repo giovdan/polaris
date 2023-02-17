@@ -4,8 +4,8 @@
     using RepoDbVsEF.Domain.Interfaces;
     using RepoDbVsEF.Domain.Models;
 
-    public interface IRepoDbEntityRepository: IRepository<Entity, IRepoDbDatabaseContext>
+    public interface IRepoDbEntityRepository: IRepository<DatabaseEntity, IRepoDbDatabaseContext>
     {
-        int RawUpdate(Entity entity);
+        int RawUpdate(DatabaseEntity entity);
     }
 }
