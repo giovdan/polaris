@@ -1,6 +1,4 @@
-﻿using GraphQL.Server.Ui.Voyager;
-
-namespace RepoDbVsEF.GraphQL
+﻿namespace RepoDbVsEF.GraphQL
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -15,8 +13,8 @@ namespace RepoDbVsEF.GraphQL
     using RepoDbVsEF.EF.Data.Interfaces;
     using RepoDbVsEF.EF.Data.Models;
     using RepoDbVsEF.EF.Data.Repositories;
-    using RepoDbVsEF.GraphQL.Queries;
-
+    using RepoDbVsEF.GraphQL.Core;
+    
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
@@ -50,9 +48,9 @@ namespace RepoDbVsEF.GraphQL
 
             services
                 .AddGraphQLServer()
-                .RegisterService<IEntityService>()
-                .AddQueryType<EntityQuery>()
-                .AddQueryType<AttributeDefinitionQuery>();
+                //.RegisterService<IEntityService>()
+                .AddQueryType<Query>()
+                .AddType<GraphQLEntityType>();
 
             services.AddControllers()
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -74,13 +72,13 @@ namespace RepoDbVsEF.GraphQL
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGraphQL("/graphql");
+                endpoints.MapGraphQL();
             });
 
-            app.UseGraphQLVoyager("graphql-voyager", options: new VoyagerOptions
-            {
-                GraphQLEndPoint = "/graphql"
-            });
+            //app.UseGraphQLVoyager("graphql-voyager", options: new VoyagerOptions
+            //{
+            //    GraphQLEndPoint = "/"
+            //});
         }
     }
 }
