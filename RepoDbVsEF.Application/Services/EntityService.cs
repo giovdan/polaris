@@ -7,12 +7,13 @@
     using RepoDbVsEF.Application.Core;
     using RepoDbVsEF.Domain.Interfaces;
     using RepoDbVsEF.EF.Data.Interfaces;
+    using RepoDbVsEF.Domain.Models;
 
     public class EntityService : BaseService, IEntityService
     {
-        private IEFEntityRepository EntityRepository => ServiceFactory.GetService<IEFEntityRepository>();
+        protected IEFEntityRepository EntityRepository => ServiceFactory.GetService<IEFEntityRepository>();
 
-        public EntityService(IServiceFactory serviceFactory): base(serviceFactory)
+        public EntityService(IServiceFactory serviceFactory) : base(serviceFactory)
         {
 
         }
@@ -28,17 +29,34 @@
 
         public Entity Get(ulong entityId)
         {
-            return Mapper.Map<Entity>(EntityRepository.Get(entityId));
+            using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(UserSession);
+                EntityRepository.Attach(uow);
+                return Mapper.Map<Entity>(EntityRepository.Get(entityId));
+            }
+
         }
 
         public IEnumerable<Entity> GetAll()
         {
-            throw new NotImplementedException();
+            using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(UserSession);
+                EntityRepository.Attach(uow);
+                return Mapper.Map<IEnumerable<Entity>>(EntityRepository.GetAll());
+            }
         }
 
         public Entity Update(Entity entity)
         {
-            throw new NotImplementedException();
+            using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(UserSession);
+                EntityRepository.Attach(uow);
+                EntityRepository.Update(Mapper.Map<DatabaseEntity>(entity));
+                return entity;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@
 
     public class Entity
     {
-        public ulong Id { get; set; }
+        public long Id { get; set; }
         public string DisplayName { get; set; }
         public EntityTypeEnum EntityType { get; set; }
     }

@@ -1,9 +1,10 @@
 ﻿namespace RepoDbVsEF.Application.Interfaces
 {
+    using RepoDbVsEF.Application.Core;
     using RepoDbVsEF.Application.Models;
     using System.Collections.Generic;
 
-    public interface IEntityService
+    public interface IEntityService: IApplicationService
     {
         Entity Create(Entity entity);
         Entity Update(Entity entity);

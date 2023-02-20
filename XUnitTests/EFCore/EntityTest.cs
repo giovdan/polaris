@@ -2,6 +2,8 @@
 {
     using FluentAssertions;
     using Microsoft.Extensions.DependencyInjection;
+    using RepoDbVsEF.Application.Interfaces;
+    using RepoDbVsEF.Application.Services;
     using RepoDbVsEF.Domain;
     using RepoDbVsEF.Domain.Attributes;
     using RepoDbVsEF.Domain.Enums;
@@ -354,10 +356,11 @@
             AttributeDefinitionsDictionary = new Dictionary<EntityTypeEnum, IEnumerable<AttributeDefinition>>();
             CancellationTokenSource = new CancellationTokenSource();
             var services = new ServiceCollection();
+            services.AddScoped<IEntityService, EntityService>();
             services.AddScoped<IEFEntityRepository, EFEntityRepostiory>();
-            services.AddScoped<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
-            services.AddScoped<IEFAttributeValueRepository, EFAttributeValueRepository>();
-            services.AddScoped<IChildLinkRepository, EFChildLinkRepository>();
+            services.AddTransient<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
+            services.AddTransient<IEFAttributeValueRepository, EFAttributeValueRepository>();
+            services.AddTransient<IChildLinkRepository, EFChildLinkRepository>();
             RegisterServices(services, isRepoDb: false);
         }
 
@@ -365,16 +368,10 @@
         public void GetAllEntitiesReturnsSomething()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
-            {
-                var uow = factory.GetOrCreate(NullUserSession.Instance);
-                var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
-                repository.Attach(uow);
-                var suppliers = repository.GetAll();
-                suppliers.Should().NotBeEmpty();
-            }
+            var service = ServiceProvider.GetRequiredService<IEntityService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+            var entities = service.GetAll();
+            entities.Should().NotBeNullOrEmpty();
         }
 
         [Theory()]

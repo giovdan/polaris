@@ -10,6 +10,8 @@
     using RepoDbVsEF.Application.Mappings;
     using RepoDbVsEF.Application.Services;
     using RepoDbVsEF.Domain.Helpers;
+    using RepoDbVsEF.Domain.Interfaces;
+    using RepoDbVsEF.Domain.Models.Core;
     using RepoDbVsEF.EF.Data.Interfaces;
     using RepoDbVsEF.EF.Data.Models;
     using RepoDbVsEF.EF.Data.Repositories;
@@ -25,6 +27,11 @@
                 cfg.AddProfile(new ServiceProfile());
             });
 
+            services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
+            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
+            services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
+            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+            services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
             services.AddDbContext<EFDatabaseContext>(options =>
             {
                 string connectionString = WebApiHelper.Instance
@@ -35,7 +42,7 @@
             }, contextLifetime: ServiceLifetime.Transient);
 
             services.AddScoped<IEntityService, EntityService>();
-
+            services.AddSingleton<IServiceFactory, ServiceFactory>();
             services.AddTransient<IEFEntityRepository, EFEntityRepostiory>();
             services.AddTransient<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
             services.AddTransient<IEFAttributeValueRepository, EFAttributeValueRepository>();
@@ -48,9 +55,8 @@
 
             services
                 .AddGraphQLServer()
-                //.RegisterService<IEntityService>()
-                .AddQueryType<Query>()
-                .AddType<GraphQLEntityType>();
+                .RegisterService<IEntityService>()
+                .AddQueryType<Query>();
 
             services.AddControllers()
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

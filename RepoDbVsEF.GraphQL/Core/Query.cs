@@ -8,13 +8,8 @@
 
     public class Query
     {
-        private IEntityService _entityService;
-        public Query(IEntityService entityService)
-        {
-            _entityService = entityService;
-        }
+        public IQueryable<Entity> GetEntities([Service] IEntityService entityService) => entityService.GetAll().AsQueryable();
 
-        public IQueryable<Entity> GetEntities() => _entityService.GetAll().AsQueryable();
-     
+        
     }
 }

@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RepoDbVsEF.Application\RepoDbVsEF.Application.csproj" />
     <ProjectReference Include="..\TestsEF.Data\RepoDbVsEF.EF.Data.csproj" />
     <ProjectReference Include="..\TestsRepoDb.Data\RepoDbVsEF.RepoDb.Data.csproj" />
     <ProjectReference Include="..\TestsRepoDb.Domain\RepoDbVsEF.Domain.csproj" />
