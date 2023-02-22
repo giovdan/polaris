@@ -6,6 +6,6 @@
 
     public interface IChildLinkRepository: IRepository<ChildLink, IEFDatabaseContext>
     {
-        void RemoveLinks(ulong parentId);
+        void RemoveLinks(long parentId);
     }
 }

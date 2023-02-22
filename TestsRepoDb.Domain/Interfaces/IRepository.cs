@@ -18,11 +18,11 @@ namespace RepoDbVsEF.Domain.Interfaces
 
         Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
 
-        TEntity Get(ulong id);
+        TEntity Get(long id);
 
         IEnumerable<TEntity> GetAll();
 
-        Task<TEntity> GetAsync(ulong id);
+        Task<TEntity> GetAsync(long id);
 
         TEntity Add(TEntity entity);
 

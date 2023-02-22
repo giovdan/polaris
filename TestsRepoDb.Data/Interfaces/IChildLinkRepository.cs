@@ -8,6 +8,6 @@ namespace RepoDbVsEF.RepoDb.Data.Interfaces
 
     public interface IChildLinkRepository : IRepository<ChildLink, IRepoDbDatabaseContext>
     {
-        void RemoveLinks(ulong parentId);
+        void RemoveLinks(long parentId);
     }
 }

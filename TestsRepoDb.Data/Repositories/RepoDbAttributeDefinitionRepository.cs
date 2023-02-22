@@ -54,7 +54,7 @@
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public AttributeDefinition Get(ulong id)
+        public AttributeDefinition Get(long id)
         {
             return Get(id);
         }
@@ -64,7 +64,7 @@
             return GetAll();
         }
 
-        public Task<AttributeDefinition> GetAsync(ulong id)
+        public Task<AttributeDefinition> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }

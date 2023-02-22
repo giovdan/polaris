@@ -7,6 +7,6 @@
     public class BaseEntity
     {
         [Key()]
-        public ulong Id { get; set; }
+        public long Id { get; set; }
     }
 }

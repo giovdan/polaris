@@ -1,13 +1,12 @@
-﻿namespace XUnitTests
+﻿using RepoDb;
+namespace XUnitTests
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using AutoMapper;
-    using global::RepoDb;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using RepoDb;
+    using RepoDbVsEF.Application.Mappings;
     using RepoDbVsEF.Data.Interfaces;
     using RepoDbVsEF.Data.Models;
     using RepoDbVsEF.Domain;
@@ -19,13 +18,11 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using XUnitTests.Mappings;
-
+    
     public class BaseUnitTest
     {
         public IConfiguration Configuration { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
-        public IMapper Mapper { get; set; }
         public string ConnectionString
         {
             get
@@ -45,8 +42,9 @@
             services.AddAutoMapper(cfg =>
             {
                 cfg.DisableConstructorMapping();
-                cfg.AddProfile(new UnitTestProfile());
+                cfg.AddProfile(new ServiceProfile());
             });
+
 
             if (isRepoDb)
             {
@@ -77,7 +75,6 @@
             var container = containerBuilder.Build();
 
             ServiceProvider = new AutofacServiceProvider(container);
-            Mapper = ServiceProvider.GetRequiredService<IMapper>();
         }
 
         #region < Start / Stop DbServer >
@@ -147,7 +144,7 @@
 
         public static IEnumerable<object[]> GetRecordCounts()
         {
-            foreach (var value in new[] { 0, 5, 10, 100, 500, 1000, 5000, 10000 })
+            foreach (var value in new[] { 0, 1, 5, 10, 100, 500, 1000, 5000, 10000 })
                 yield return new object[] { value };
         }
     }

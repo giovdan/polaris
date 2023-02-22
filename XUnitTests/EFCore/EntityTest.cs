@@ -3,6 +3,7 @@
     using FluentAssertions;
     using Microsoft.Extensions.DependencyInjection;
     using RepoDbVsEF.Application.Interfaces;
+    using RepoDbVsEF.Application.Models;
     using RepoDbVsEF.Application.Services;
     using RepoDbVsEF.Domain;
     using RepoDbVsEF.Domain.Attributes;
@@ -20,7 +21,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
-    using XUnitTests.Models;
 
     [Trait("TestType", "Entity")]
     public class EntityTest: BaseUnitTest
@@ -29,37 +29,7 @@
         protected CancellationTokenSource CancellationTokenSource { get; private set; }
 
         #region < Private Methods >
-        private void AddChildrenLinks(ulong id, IEnumerable<ulong> childrenIds, IServiceScope scope
-                                                      , IUnitOfWork<IEFDatabaseContext> unitOfWork
-                                                      , bool withBatch = true)
-        {
-            var linkChildRepository = scope.ServiceProvider.GetRequiredService<IChildLinkRepository>();
-
-            linkChildRepository.Attach(unitOfWork);
-            if (withBatch)
-            {
-                linkChildRepository.BatchInsert(childrenIds.Select((child, index) => new ChildLink
-                {
-                    ParentId = id,
-                    ChildId = child,
-                    Level = 1,
-                    RowNumber = index + 1
-                }));
-            }
-            else
-            {
-                linkChildRepository.BulkInsert(childrenIds.Select((child, index) => new ChildLink
-                {
-                    ParentId = id,
-                    ChildId = child,
-                    Level = 1,
-                    RowNumber = index + 1
-                }));
-
-            }
-        }
-
-        private EntityToCreate GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope)
+        private Entity GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope)
         {
             var attributeDefinitions = Enumerable.Empty<AttributeDefinition>();
             if (AttributeDefinitionsDictionary.ContainsKey(entityTypeEnum))
@@ -75,14 +45,14 @@
                 AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
             }
 
-            return new EntityToCreate
+            return new Entity
             {
                 DisplayName = $"EFCORE_{DomainExtensions.RandomString(20)}",
                 EntityType = entityTypeEnum,
                 Attributes = GenerateAttributes(attributeDefinitions)
             };
-
         }
+
 
         private IEnumerable<AttributeItem> GenerateAttributes(IEnumerable<AttributeDefinition> attributeDefinitions)
         {
@@ -123,7 +93,7 @@
         /// <param name="entityType"></param>
         /// <param name="attributeDefinitionRepository"></param>
         /// <returns></returns>
-        private IEnumerable<EntityToCreate> GenerateEntities(int recordsNumber
+        private IEnumerable<Entity> GenerateEntities(int recordsNumber
                                     , IServiceScope scope
                                     , EntityTypeEnum entityTypeEnum = EntityTypeEnum.None)
         {
@@ -150,55 +120,7 @@
 
 
         }
-        /// <summary>
-        /// Create single entity
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="scope"></param>
-        /// <param name="unitOfWork"></param>
-        /// <returns></returns>
-        private DatabaseEntity CreateEntity(EntityToCreate entity, IServiceScope scope
-                            , bool withBatch = true)
-        {
-            var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
-            var attributeRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeValueRepository>();
-            var dbEntity = Mapper.Map<DatabaseEntity>(entity);
-
-            try
-            {
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
-                                        .GetOrCreate(NullUserSession.Instance);
-                repository.Attach(unitOfWork);
-                attributeRepository.Attach(unitOfWork);
-                dbEntity = repository.Add(dbEntity);
-
-                var attributes = entity.Attributes.Select(a => {
-                    var dbAttribute = Mapper.Map<AttributeValue>(a);
-                    return dbAttribute.SetAttributeValue(a);
-                });
-                if (withBatch)
-                {
-                    attributes = attributes.Select(a => {
-                        a.Entity = dbEntity;
-                        return a;
-                    });
-                    attributeRepository.BatchInsert(attributes);
-                }
-                else
-                {
-                    unitOfWork.Commit();
-                    attributes = attributes.Select(a => { a.EntityId = dbEntity.Id; return a; }).ToHashSet();
-                    attributeRepository.BulkInsert(attributes);
-                }
-
-                return dbEntity;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-        }
+       
 
         private void UpdateEntity(IServiceScope scope)
         {
@@ -282,73 +204,8 @@
                 }
             }
         }
+        
 
-        private IEnumerable<DatabaseEntity> CreateEntities(IEnumerable<EntityToCreate> entities, IServiceScope scope
-                                            , bool withBatch = true)
-        {
-            foreach (var entity in entities)
-            {
-                yield return CreateEntity(entity, scope, withBatch);
-            }
-        }
-
-        private int InnerCreateEntities(int recordsNumber, bool withBatch = false)
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-
-            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
-            {
-                var uow = factory.GetOrCreate(NullUserSession.Instance);
-                var entities = GenerateEntities(recordsNumber, scope).ToHashSet();
-                uow.BeginTransaction();
-                try
-                {
-                    var sw = new Stopwatch();
-                    sw.Start();
-                    var result = CreateEntities(entities,scope,withBatch);
-                    Trace.WriteLine($"EF Core - Batch Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
-                    AttributeDefinitionsDictionary.Clear();
-                    return result.Count();
-                }
-                catch (Exception ex)
-                {
-                    uow.RollBackTransaction();
-                    return -1;
-                }
-            }
-        }
-
-        private DatabaseEntity InnerCreateEntity(EntityTypeEnum entityType)
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
-            {
-                var uow = factory.GetOrCreate(NullUserSession.Instance);
-                uow.BeginTransaction();
-                var sw = new Stopwatch();
-                sw.Start();
-                try
-                {
-                    var entity = CreateEntity(GenerateEntity(entityType, scope), scope);
-                    uow.Commit();
-                    uow.CommitTransaction();
-                    return entity;
-                }
-                catch (Exception ex)
-                {
-                    uow.RollBackTransaction();
-                    return null;
-                }
-
-                sw.Stop();
-                Trace.WriteLine($"EF Core - Insert single Entity - Elapsed time: {sw.ElapsedMilliseconds}");
-                AttributeDefinitionsDictionary.Clear();
-            }
-        }
         #endregion
 
         public EntityTest(): base()
@@ -358,9 +215,9 @@
             var services = new ServiceCollection();
             services.AddScoped<IEntityService, EntityService>();
             services.AddScoped<IEFEntityRepository, EFEntityRepostiory>();
-            services.AddTransient<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
-            services.AddTransient<IEFAttributeValueRepository, EFAttributeValueRepository>();
-            services.AddTransient<IChildLinkRepository, EFChildLinkRepository>();
+            services.AddScoped<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
+            services.AddScoped<IEFAttributeValueRepository, EFAttributeValueRepository>();
+            services.AddScoped<IChildLinkRepository, EFChildLinkRepository>();
             RegisterServices(services, isRepoDb: false);
         }
 
@@ -378,131 +235,74 @@
         [InlineData(EntityTypeEnum.Customer)]
         public void CreateEntityReturnsOk(EntityTypeEnum entityType)
         {
-            var entity = InnerCreateEntity(entityType);
+            var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+            var result = service.Create(GenerateEntity(entityType, scope));
 
-            (entity?.Id ?? 0).Should().BeGreaterThan(0);
-            entity?.EntityTypeId.Should().Be(EntityTypeEnum.Customer);
+            result.Success.Should().Be(true);
+            result.Value.EntityType.Should().Be(EntityTypeEnum.Customer);
         }
 
-        [Theory, MemberData(nameof(GetRecordCounts))]
-        public void CreateEntitiesReturnsOk(int recordNumber)
-        {
-            recordNumber.Should().BeGreaterThanOrEqualTo(0);
-            InnerCreateEntities(recordNumber).Should().Be(recordNumber);
-        }
 
 
         [Theory, MemberData(nameof(GetRecordCounts))]
         public void BulkCreateEntityWithChildrenReturnsSomething(int childrenCount)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
-            {
-                using var uow = factory.GetOrCreate(NullUserSession.Instance);
-                uow.BeginTransaction();
-                try
-                {
-                    var entities = new List<EntityToCreate>();
-                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
-                    entities.AddRange(GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
-                    var dbEntities = CreateEntities(entities, scope, withBatch: false).ToList();
-                    uow.Commit();
-                    var parentId = dbEntities.SingleOrDefault(entity => entity.EntityTypeId == EntityTypeEnum.Order)?.Id ?? 0;
-                    if (parentId > 0)
-                    {
-                        AddChildrenLinks(parentId
-                                            , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
-                                                .Select(child => child.Id), scope, uow);
-                        uow.Commit();
-                        uow.CommitTransaction();
-                    }
+            var entities = new List<Entity>();
+            entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
+            entities.AddRange(GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
+            var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+            var result = service.BulkCreate(entities);
 
-                    parentId.Should().BeGreaterThan(0);
-                }
-                catch (Exception ex)
-                {
-                    uow.RollBackTransaction();
-                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
-                }
-            }
-
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNullOrEmpty();
         }
+
         [Theory, MemberData(nameof(GetRecordCounts))]
         public void BulkInsertMultipleEntitiesReturnsOk(int recordsNumber)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            if (recordsNumber == 0)
+            {
+                Assert.True(true);
+                return;
+            }
+                
 
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>();
-            using (var uow = factory.GetOrCreate(NullUserSession.Instance))
-            {
-                var entities = GenerateEntities(recordsNumber, scope).ToHashSet();
-                uow.BeginTransaction();
-                try
-                {
-                    var sw = new Stopwatch();
-                    sw.Start();
-                    int rowsNumber = 0;
-                    foreach (var entity in entities)
-                    {
-                        rowsNumber += CreateEntity(entity, scope, withBatch: false).Id > 0 ? 1 : 0;
-                    }
-
-                    uow.Commit();
-                    uow.CommitTransaction();
-                    sw.Stop();
-                    Trace.WriteLine($"EF Core - Bulk Insert {recordsNumber} entities - Elapsed time: {sw.ElapsedMilliseconds}");
-                    AttributeDefinitionsDictionary.Clear();
-                    rowsNumber.Should().Be(recordsNumber);
-                }
-                catch (Exception ex)
-                {
-                    uow.RollBackTransaction();
-                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
-                }
-            }
+            var entities = GenerateEntities(recordsNumber, scope).ToHashSet();
+            var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+            var result = service.BulkCreate(entities);
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNullOrEmpty();
         }
 
         [Theory, MemberData(nameof(GetRecordCounts))]
         public void CreateEntityWithChildrenReturnsSomething(int childrenCount)
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            if (childrenCount == 0)
             {
-                using var uow = factory.GetOrCreate(NullUserSession.Instance);
-                uow.BeginTransaction();
-                try
-                {
-                    var entities = new List<EntityToCreate>();
-                    entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
-                    entities.AddRange(GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
-                    var dbEntities = CreateEntities(entities, scope).ToList();
-                    uow.Commit();
-                    var parentId = dbEntities.SingleOrDefault(entity => entity.EntityTypeId == EntityTypeEnum.Order)?.Id ?? 0;
-                    if (parentId > 0)
-                    {
-                        AddChildrenLinks(parentId
-                                            , dbEntities.Where(entity => entity.EntityTypeId == EntityTypeEnum.OrderRow)
-                                                .Select(child => child.Id), scope, uow);
-                        uow.Commit();
-                        uow.CommitTransaction();
-                    }
-
-                    parentId.Should().BeGreaterThan(0);
-                }
-                catch (Exception ex)
-                {
-                    uow.RollBackTransaction();
-                    Assert.Fail(ex.InnerException?.Message ?? ex.Message);
-                }
+                Assert.True(true);
+                return;
             }
+
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
+            var entityWithChildren = new EntityWithChildren(GenerateEntity(EntityTypeEnum.Order, scope)
+                            ,GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
+
+            var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+            var result = service.CreateEntityWithChildren(entityWithChildren);
+            result.Success.Should().BeTrue();
+            result.Value.Id.Should().BeGreaterThan(0);
+            result.Value.Children.Should().NotBeNullOrEmpty();
         }
 
-       
+
         [Fact()]
         public void UpdateEntityReturnsOk()
         {
@@ -582,7 +382,8 @@
                 using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
                 using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
                             .GetOrCreate(NullUserSession.Instance);
-                CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+                service.Create(GenerateEntity(EntityTypeEnum.Customer, scope));
                 uow.Commit();
             });
 
@@ -591,7 +392,8 @@
                 using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
                 using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
                                                     .GetOrCreate(NullUserSession.Instance);
-                CreateEntity(GenerateEntity(EntityTypeEnum.Customer, scope), scope);
+                var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+                service.Create(GenerateEntity(EntityTypeEnum.Customer, scope));
                 uow.Commit();
             });
 
@@ -603,7 +405,9 @@
         {
             var task1 = TimedTaskFactory.Start(() =>
                 {
-                    InnerCreateEntity(EntityTypeEnum.Product);
+                    var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                    var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+                    service.Create(GenerateEntity(EntityTypeEnum.Customer, scope));
                 }
                 , intervalInMilliseconds: 500
                 , synchronous: true

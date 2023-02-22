@@ -21,7 +21,7 @@
 
         public DatabaseEntity Add(DatabaseEntity entity)
         {
-            entity.Id = Insert<ulong>(entity, transaction: UnitOfWork.CurrentTransaction);
+            entity.Id = Insert<long>(entity, transaction: UnitOfWork.CurrentTransaction);
             return entity;
         }
 
@@ -55,7 +55,7 @@
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public DatabaseEntity Get(ulong id)
+        public DatabaseEntity Get(long id)
         {
             return Query(e => e.Id == id).SingleOrDefault();
         }
@@ -65,7 +65,7 @@
             return QueryAll();
         }
 
-        public Task<DatabaseEntity> GetAsync(ulong id)
+        public Task<DatabaseEntity> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }

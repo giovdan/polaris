@@ -51,7 +51,7 @@
             return new TaskFactory().StartNew(() => FindBy(predicate));
         }
 
-        public ChildLink Get(ulong id)
+        public ChildLink Get(long id)
         {
             return UnitOfWork.Context.ChildLinks.SingleOrDefault(child => child.Id == id);
         }
@@ -61,7 +61,7 @@
             return UnitOfWork.Context.ChildLinks.AsEnumerable();
         }
 
-        public Task<ChildLink> GetAsync(ulong id)
+        public Task<ChildLink> GetAsync(long id)
         {
             return new TaskFactory().StartNew(() => Get(id));
         }
@@ -87,7 +87,7 @@
             return entity;
         }
 
-        public void RemoveLinks(ulong parentId)
+        public void RemoveLinks(long parentId)
         {
             UnitOfWork.Context.Database.ExecuteSqlRaw($"DELETE FROM INTO `ChildLink` WHERE ParentId = {parentId}");
         }

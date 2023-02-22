@@ -34,7 +34,7 @@
             Delete(entity, transaction: UnitOfWork.CurrentTransaction);
         }
 
-        public void RemoveLinks(ulong parentId)
+        public void RemoveLinks(long parentId)
         {
             UnitOfWork.Context.Connection.ExecuteNonQuery($"DELETE FROM ChildLink WHERE ParentId = {parentId}");
         }

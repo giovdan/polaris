@@ -8,8 +8,8 @@
     [Table("AttributeValue")]
     public class AttributeValue: BaseEntityWithRowVersion, IAuditableEntity
     {
-        public ulong AttributeDefinitionId { get; set; }
-        public ulong EntityId { get; set; }
+        public long AttributeDefinitionId { get; set; }
+        public long EntityId { get; set; }
         public decimal? Value { get; set; }
         public string TextValue { get; set; }
         public string CreatedBy { get; set; }

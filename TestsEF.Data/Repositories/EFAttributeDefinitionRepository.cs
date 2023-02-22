@@ -28,7 +28,7 @@
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public AttributeDefinition Get(ulong id)
+        public AttributeDefinition Get(long id)
         {
             return UnitOfWork.Context.AttributeDefinitions.SingleOrDefault(a => a.Id == id);
         }
@@ -38,7 +38,7 @@
             return UnitOfWork.Context.AttributeDefinitions;
         }
 
-        public Task<AttributeDefinition> GetAsync(ulong id)
+        public Task<AttributeDefinition> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }

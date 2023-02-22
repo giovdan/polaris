@@ -31,7 +31,7 @@
         {
             try
             {
-                entity.Id = Insert<ulong>(entity, transaction: UnitOfWork.CurrentTransaction);
+                entity.Id = Insert<long>(entity, transaction: UnitOfWork.CurrentTransaction);
                 return entity;
             }
             catch 
@@ -65,12 +65,12 @@
             return QueryAll();
         }
 
-        public T Get(ulong id)
+        public T Get(long id)
         {
             return Query(s => s.Id == id).SingleOrDefault();
         }
 
-        public Task<T> GetAsync(ulong id)
+        public Task<T> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }

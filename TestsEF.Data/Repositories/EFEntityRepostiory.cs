@@ -61,7 +61,7 @@ namespace RepoDbVsEF.EF.Data.Repositories
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public DatabaseEntity Get(ulong id)
+        public DatabaseEntity Get(long id)
         {
             return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == id);
         }
@@ -71,7 +71,7 @@ namespace RepoDbVsEF.EF.Data.Repositories
             return UnitOfWork.Context.Entities;
         }
 
-        public Task<DatabaseEntity> GetAsync(ulong id)
+        public Task<DatabaseEntity> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }

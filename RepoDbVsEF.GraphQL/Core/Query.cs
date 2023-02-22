@@ -8,7 +8,7 @@
 
     public class Query
     {
-        public IQueryable<Entity> GetEntities([Service] IEntityService entityService) => entityService.GetAll().AsQueryable();
+        public IQueryable<Entity> GetEntities(IEntityService entityService) => entityService.GetAll().AsQueryable();
 
         
     }

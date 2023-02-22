@@ -26,6 +26,7 @@
                 cfg.DisableConstructorMapping();
                 cfg.AddProfile(new ServiceProfile());
             });
+            
 
             services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
             services.AddTransient<IDatabaseContext, EFDatabaseContext>();
@@ -41,8 +42,8 @@
                 options.EnableSensitiveDataLogging();
             }, contextLifetime: ServiceLifetime.Transient);
 
-            services.AddScoped<IEntityService, EntityService>();
             services.AddSingleton<IServiceFactory, ServiceFactory>();
+            services.AddScoped<IEntityService, EntityService>();
             services.AddTransient<IEFEntityRepository, EFEntityRepostiory>();
             services.AddTransient<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
             services.AddTransient<IEFAttributeValueRepository, EFAttributeValueRepository>();

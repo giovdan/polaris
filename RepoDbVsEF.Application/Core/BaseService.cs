@@ -15,7 +15,7 @@
         public BaseService(IServiceFactory serviceFactory)
         {
             ServiceFactory = serviceFactory;
-            UnitOfWorkFactory = serviceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>();
+            UnitOfWorkFactory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>();
             Mapper = serviceFactory.GetService<IMapper>();
         }
 

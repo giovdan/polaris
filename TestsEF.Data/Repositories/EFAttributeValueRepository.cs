@@ -92,14 +92,14 @@
             return UnitOfWork.Context.AttributeValues.AsEnumerable();
         }
 
-        public AttributeValue Get(ulong id)
+        public AttributeValue Get(long id)
         {
             return UnitOfWork.Context.AttributeValues
                         .Include(a => a.AttributeDefinition)
                         .SingleOrDefault(item => item.Id == id);
         }
 
-        public Task<AttributeValue> GetAsync(ulong id)
+        public Task<AttributeValue> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }
