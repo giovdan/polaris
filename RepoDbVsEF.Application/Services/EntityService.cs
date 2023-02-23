@@ -217,7 +217,6 @@
                 EntityRepository.Attach(uow);
                 return Mapper.Map<Entity>(EntityRepository.Get(entityId));
             }
-
         }
 
         public IEnumerable<Entity> GetAll()

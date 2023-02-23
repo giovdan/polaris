@@ -9,6 +9,7 @@
         public long Id { get; set; }
         public long AttributeDefinitionId { get; set; }
         public AttributeKindEnum AttributeKind { get; set; }
+        public AttributeDefinitionEnum EnumId { get; set; }
         public AttributeValueItem Value { get; set; }
     }
 

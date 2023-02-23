@@ -62,12 +62,13 @@
             return Instance.Configuration.GetSection(name);
         }
 
-        public string GetConnectionString<T>(string dbName) where T : DbContext
+        public string GetConnectionString<T>(string sectionName) where T : DbContext
         {
 
             var mySQLSection = new MySQLSection();
-            DomainExtensions.GetConfiguration().GetSection("MySQL").Bind(mySQLSection);
-            return Instance.Configuration.GetConnectionString(dbName);
+            DomainExtensions.GetConfiguration().GetSection(sectionName).Bind(mySQLSection);
+            return
+                ($"Server={mySQLSection.Server};port={mySQLSection.Port};Database={mySQLSection.Database};Uid={mySQLSection.Username};Pwd={SimpleStringCipher.Instance.Decrypt(mySQLSection.Password)}");
         }
 
 

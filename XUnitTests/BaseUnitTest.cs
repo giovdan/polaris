@@ -59,8 +59,8 @@ namespace XUnitTests
             else
             {
                 services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
-                services.AddTransient<IDatabaseContext, EFDatabaseContext>();
                 services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
+                services.AddTransient<IDatabaseContext, EFDatabaseContext>();
                 services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
                 services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
                 services.AddDbContext<EFDatabaseContext>(options =>

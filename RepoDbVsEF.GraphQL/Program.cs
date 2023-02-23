@@ -1,17 +1,20 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.WindowsServices;
-using RepoDbVsEF.Domain.Helpers;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-
+﻿
 namespace RepoDbVsEF.GraphQL
 {
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Hosting.WindowsServices;
+    using RepoDbVsEF.Domain.Helpers;
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using Microsoft.Extensions.Logging;
+
     class Program
     {
         private static bool _isService { get; set; }
+
 
         static void Main(string[] args)
         {
@@ -46,11 +49,11 @@ namespace RepoDbVsEF.GraphQL
             var applicationUrls = WebApiHelper.Instance.GetConfigurationSection("ApplicationUrls").Value;
 
             return WebHost.CreateDefaultBuilder(webHostArgs)
-                    //.ConfigureLogging((hostingContext, logging) =>
-                    //{
-                    //    logging.AddConfiguration(WebApiHelper.Instance.Configuration.GetSection("Logging"));
-                    //    logging.AddConsole();
-                    //})
+                    .ConfigureLogging((hostingContext, logging) =>
+                    {
+                        logging.AddConfiguration(WebApiHelper.Instance.Configuration.GetSection("Logging"));
+                        logging.AddConsole();
+                    })
                     .UseContentRoot(pathToContentRoot)
                     .UseUrls(applicationUrls)
                     .UseEnvironment(enviroment)

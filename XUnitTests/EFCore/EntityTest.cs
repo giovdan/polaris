@@ -181,7 +181,7 @@
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            using (var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IDatabaseContext>>())
             {
                 var uow = factory.GetOrCreate(NullUserSession.Instance);
 
@@ -251,14 +251,14 @@
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var entities = new List<Entity>();
-            entities.Add(GenerateEntity(EntityTypeEnum.Order, scope));
-            entities.AddRange(GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
+
+            var entityWithChildren = new EntityWithChildren(GenerateEntity(EntityTypeEnum.Order, scope)
+                , GenerateEntities(childrenCount, scope, EntityTypeEnum.OrderRow));
             var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
-            var result = service.BulkCreate(entities);
+            var result = service.CreateEntityWithChildren(entityWithChildren);
 
             result.Success.Should().BeTrue();
-            result.Value.Should().NotBeNullOrEmpty();
+            result.Value.Id.Should().BeGreaterThan(0);
         }
 
         [Theory, MemberData(nameof(GetRecordCounts))]
@@ -380,21 +380,17 @@
             var task1 = Task.Factory.StartNew(() =>
             {
                 using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-                using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
-                            .GetOrCreate(NullUserSession.Instance);
                 var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+                service.SetSession(NullUserSession.InternalSessionInstance);
                 service.Create(GenerateEntity(EntityTypeEnum.Customer, scope));
-                uow.Commit();
             });
 
             var task2 = Task.Factory.StartNew(() =>
             {
                 using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-                using var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>()
-                                                    .GetOrCreate(NullUserSession.Instance);
                 var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+                service.SetSession(NullUserSession.InternalSessionInstance);
                 service.Create(GenerateEntity(EntityTypeEnum.Customer, scope));
-                uow.Commit();
             });
 
             Task.WaitAll(task1, task2);
@@ -436,67 +432,48 @@
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            using var factory = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>();
-            using var uow = factory.GetOrCreate(NullUserSession.Instance);
-            uow.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
-            try
-            {
-                var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
-                var attributeRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeValueRepository>();
+            var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
+            var latest = service.GetAll().OrderByDescending(a => a.Id).FirstOrDefault();
+            latest.Should().NotBeNull();
 
-                repository.Attach(uow);
-                attributeRepository.Attach(uow);
-
-                var latest = repository.GetAll()
-                                .OrderBy(e => e.UpdatedOn)
-                                .LastOrDefault();
-
-                latest.Should().NotBeNull();
-
-                var rnd = new Random();
-                var attributes = attributeRepository.FindBy(a => a.EntityId == latest.Id)
-                    .Select(a =>
+            var rnd = new Random();
+            latest.Attributes = latest.Attributes
+                .Select(a =>
+                {
+                    var attributeInfo = a.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                    switch (attributeInfo.AttributeKind)
                     {
-                        var attributeInfo = a.AttributeDefinition.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
-                        switch (attributeInfo.AttributeKind)
-                        {
-                            case AttributeKindEnum.Number:
-                            case AttributeKindEnum.Enum:
-                            case AttributeKindEnum.Bool:
-                                {
-                                    a.Value = Convert.ToDecimal(rnd.NextDouble());
-                                    a.TextValue = string.Empty;
-                                }
-                                break;
-                            case AttributeKindEnum.String:
-                                {
-                                    a.TextValue = DomainExtensions.RandomString(20);
-                                    a.Value = 0;
-                                }
-                                break;
-                            case AttributeKindEnum.Date:
-                                {
-                                    a.Value = DateTime.UtcNow.AddDays(rnd.Next(-2, 5)).Ticks;
-                                    a.Value = 0;
-                                }
-                                break;
-                        }
+                        case AttributeKindEnum.Number:
+                            {
+                                a.Value.CurrentValue = rnd.NextDouble();
+                            }
+                            break;
+                        case AttributeKindEnum.Bool:
+                            {
+                                a.Value.CurrentValue = rnd.Next(0, 1);
+                            }
+                            break;
+                        case AttributeKindEnum.String:
+                            {
+                                a.Value.CurrentValue = DomainExtensions.RandomString(20);
+                            }
+                            break;
+                        case AttributeKindEnum.Date:
+                            {
+                                a.Value.CurrentValue = DateTime.UtcNow.AddDays(rnd.Next(-2, 5)).Ticks;
+                            }
+                            break;
+                    }
 
-                        return a;
-                    })
-                    .ToList();
+                    return a;
+                })
+                .ToList();
 
-                var affectedRows = attributeRepository.BulkUpdate(attributes);
-                uow.CommitTransaction();
-
-                attributes.Should().NotBeNullOrEmpty();
-                attributes.Should().HaveCount(affectedRows);
-            }
-            catch (Exception ex)
-            {
-                uow.RollBackTransaction();
-                Assert.Fail(ex.InnerException?.Message ?? ex.Message);
-            }
+            service.SetSession(NullUserSession.InternalSessionInstance);
+            var result = service.Update(latest);
+            result.Success.Should().BeTrue();
+            result.Value.Should().BeOfType(typeof(Entity));
+            
         }
 
 

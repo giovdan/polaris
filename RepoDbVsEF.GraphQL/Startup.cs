@@ -1,8 +1,11 @@
 ﻿namespace RepoDbVsEF.GraphQL
 {
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json;
@@ -16,9 +19,39 @@
     using RepoDbVsEF.EF.Data.Models;
     using RepoDbVsEF.EF.Data.Repositories;
     using RepoDbVsEF.GraphQL.Core;
-    
+    using System;
+
     public class Startup
     {
+        private static IContainer s_container;
+
+        private IServiceProvider RegisterService(IServiceCollection services)
+        {
+            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
+            services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IEFDatabaseContext);
+
+            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+
+
+            services.AddScoped<IEFEntityRepository, EFEntityRepostiory>();
+            services.AddScoped<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
+            services.AddScoped<IEFAttributeValueRepository, EFAttributeValueRepository>();
+            services.AddScoped<IEntityService, EntityService>();
+
+            //Scoped
+            services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
+            services.AddScoped<IServiceFactory, ServiceFactory>();
+            services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
+
+            //Transient
+            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+
+            //services.AddTransient<IDatabaseContext, EFDatabaseContext>();
+            var containerBuilder = new ContainerBuilder();
+            s_container = containerBuilder.Build();
+            return new AutofacServiceProvider(s_container);
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(cfg =>
@@ -26,27 +59,18 @@
                 cfg.DisableConstructorMapping();
                 cfg.AddProfile(new ServiceProfile());
             });
-            
 
-            services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
-            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
-            services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
-            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
-            services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
+
+            RegisterService(services);
+
             services.AddDbContext<EFDatabaseContext>(options =>
             {
                 string connectionString = WebApiHelper.Instance
-                                .GetConnectionString<EFDatabaseContext>("db_polaris");
+                                .GetConnectionString<EFDatabaseContext>("MySQL");
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
                 options.EnableSensitiveDataLogging();
             }, contextLifetime: ServiceLifetime.Transient);
-
-            services.AddSingleton<IServiceFactory, ServiceFactory>();
-            services.AddScoped<IEntityService, EntityService>();
-            services.AddTransient<IEFEntityRepository, EFEntityRepostiory>();
-            services.AddTransient<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
-            services.AddTransient<IEFAttributeValueRepository, EFAttributeValueRepository>();
 
             services.AddMvc()
                     .AddNewtonsoftJson(options =>
