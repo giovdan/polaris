@@ -1,8 +1,9 @@
-﻿namespace RepoDbVsEF.GraphQL
+﻿using GraphQL.Server.Ui.Voyager;
+
+namespace RepoDbVsEF.GraphQL
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using global::GraphQL.Server.Ui.Voyager;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,6 @@
     using Newtonsoft.Json;
     using RepoDbVsEF.Application.Interfaces;
     using RepoDbVsEF.Application.Mappings;
-    using RepoDbVsEF.Application.Models;
     using RepoDbVsEF.Application.Services;
     using RepoDbVsEF.Domain.Helpers;
     using RepoDbVsEF.Domain.Interfaces;
@@ -21,7 +21,10 @@
     using RepoDbVsEF.EF.Data.Models;
     using RepoDbVsEF.EF.Data.Repositories;
     using RepoDbVsEF.GraphQL.Core;
+    using RepoDbVsEF.GraphQL.Core.Types;
+    
     using System;
+    using HotChocolate.Types.Descriptors;
 
     public class Startup
     {
@@ -29,7 +32,8 @@
 
         private IServiceProvider RegisterService(IServiceCollection services)
         {
-            services.AddSingleton<AttributeValueType>();
+            services.AddSingleton<INamingConventions, EnumNamingConvention>();
+
             services.AddTransient<IDatabaseContext, EFDatabaseContext>();
             services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IEFDatabaseContext);
 
@@ -83,9 +87,13 @@
 
             services
                 .AddGraphQLServer()
+                .AddConvention<INamingConventions, EnumNamingConvention>()
                 .RegisterService<IEntityService>()
+                .AddSorting()
                 .AddType<AttributeValueType>()
-                .AddQueryType<Query>();
+                .AddQueryType<Query>()
+                .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true)
+                .AddMutationType<Mutation>();
 
             services.AddControllers()
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);

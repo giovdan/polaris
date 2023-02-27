@@ -10,13 +10,15 @@
     using RepoDbVsEF.Domain.Models;
     using System.Linq;
     using RepoDbVsEF.Domain.Enums;
+    using RepoDbVsEF.Domain.Attributes;
+    using RepoDbVsEF.Domain;
 
     public class EntityService : BaseService, IEntityService
     {
         protected IEFEntityRepository EntityRepository => ServiceFactory.GetService<IEFEntityRepository>();
         protected IEFAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IEFAttributeValueRepository>();
         protected IChildLinkRepository ChildLinkRepository => ServiceFactory.GetService<IChildLinkRepository>();
-
+        protected IEFAttributeDefinitionRepository AttributeDefinitionRepository => ServiceFactory.GetService<IEFAttributeDefinitionRepository>();
         #region < Private Methods > 
         private long[] InnerBatchCreate(IEnumerable<Entity> entities, IUnitOfWorkFactory<IEFDatabaseContext> factory)
         {
@@ -244,7 +246,16 @@
                                 .GroupBy(a => a.Entity)
                                 .Single();
 
-                    return Result.Ok(Mapper.Map<Entity>(entity));
+                    var result = Mapper.Map<Entity>(entity);
+
+                    result.Attributes = result.Attributes.Select(a =>
+                    {
+                        var attributeInfo = a.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                        a.AttributeKind = attributeInfo.AttributeKind;
+                        return a;
+                    });
+
+                    return Result.Ok(result);
                 }
                 else
                 {
@@ -253,13 +264,13 @@
             }
         }
 
-        public IEnumerable<Entity> GetAll()
+        public IEnumerable<EntityListItem> GetAll()
         {
             using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
                 var uow = factory.GetOrCreate(UserSession);
                 EntityRepository.Attach(uow);
-                return Mapper.Map<IEnumerable<Entity>>(EntityRepository.GetAll());
+                return Mapper.Map<IEnumerable<EntityListItem>>(EntityRepository.GetAll());
             }
         }
 
@@ -315,8 +326,6 @@
             }
         }
 
-        
-
         public Result<long[]> BatchCreate(IEnumerable<Entity> entities)
         {
             using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
@@ -335,6 +344,22 @@
                     uow.RollBackTransaction();
                     return Result.Fail<long[]>(ex.InnerException?.Message ?? ex.Message);
                 }
+            }
+        }
+
+        public IEnumerable<AttributeItem> GetAttributesByType(EntityTypeEnum type)
+        {
+            using(var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(UserSession);
+                AttributeDefinitionRepository.Attach(uow);
+                return Mapper.Map<IEnumerable<AttributeItem>>(AttributeDefinitionRepository.FindBy(a => a.EntityTypeId == type))
+                        .Select(a =>
+                        {
+                            var attributeInfo = a.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                            a.AttributeKind = attributeInfo.AttributeKind;
+                            return a;
+                        });
             }
         }
     }

@@ -8,17 +8,29 @@
 
     public class AttributeItem
     {
+        [GraphQLName("Id")]
         public long Id { get; set; }
+        [GraphQLName("AttributeDefinitionId")]
         public long AttributeDefinitionId { get; set; }
+        [GraphQLName("AttributeKind")]
         public AttributeKindEnum AttributeKind { get; set; }
+        [GraphQLName("EnumId")]
         public AttributeDefinitionEnum EnumId { get; set; }
+        [GraphQLName("Value")]
         public AttributeValueItem Value { get; set; }
+
+        public AttributeItem()
+        {
+            Value = new AttributeValueItem();
+        }
     }
 
     public class AttributeValueItem
     {
         [GraphQLType(typeof(AnyType))]
+        [GraphQLName("CurrentValue")]
         public object CurrentValue { get; set; }
+        [GraphQLName("CurrentValueId")]
         public int CurrentValueId { get; set; }
     }
 

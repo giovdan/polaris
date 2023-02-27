@@ -9,7 +9,7 @@ namespace RepoDbVsEF.Domain.Enums
         Number = 1,
         String = 2,
         Enum = 4,
-        Bool = 8, 
+        Bool = 8,
         Date = 16
     }
 }
