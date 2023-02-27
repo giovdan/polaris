@@ -1,5 +1,7 @@
 ﻿namespace RepoDbVsEF.Application.Models
 {
+    using HotChocolate;
+    using HotChocolate.Types;
     using RepoDbVsEF.Domain.Enums;
     using RepoDbVsEF.Domain.Models;
     using System;
@@ -15,6 +17,7 @@
 
     public class AttributeValueItem
     {
+        [GraphQLType(typeof(AnyType))]
         public object CurrentValue { get; set; }
         public int CurrentValueId { get; set; }
     }

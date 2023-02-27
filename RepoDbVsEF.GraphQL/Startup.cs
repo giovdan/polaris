@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
+    using global::GraphQL.Server.Ui.Voyager;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@
     using Newtonsoft.Json;
     using RepoDbVsEF.Application.Interfaces;
     using RepoDbVsEF.Application.Mappings;
+    using RepoDbVsEF.Application.Models;
     using RepoDbVsEF.Application.Services;
     using RepoDbVsEF.Domain.Helpers;
     using RepoDbVsEF.Domain.Interfaces;
@@ -27,6 +29,7 @@
 
         private IServiceProvider RegisterService(IServiceCollection services)
         {
+            services.AddSingleton<AttributeValueType>();
             services.AddTransient<IDatabaseContext, EFDatabaseContext>();
             services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IEFDatabaseContext);
 
@@ -81,10 +84,11 @@
             services
                 .AddGraphQLServer()
                 .RegisterService<IEntityService>()
+                .AddType<AttributeValueType>()
                 .AddQueryType<Query>();
 
             services.AddControllers()
-                .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -106,10 +110,10 @@
                 endpoints.MapGraphQL();
             });
 
-            //app.UseGraphQLVoyager("graphql-voyager", options: new VoyagerOptions
-            //{
-            //    GraphQLEndPoint = "/"
-            //});
+            app.UseGraphQLVoyager("graphql-voyager", options: new VoyagerOptions
+            {
+                GraphQLEndPoint = "/"
+            });
         }
     }
 }

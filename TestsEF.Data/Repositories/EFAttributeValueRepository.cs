@@ -79,6 +79,7 @@
         {
             return UnitOfWork.Context.AttributeValues
                         .Include(a => a.AttributeDefinition)
+                        .Include(a => a.Entity)
                         .Where(predicate);
         }
 

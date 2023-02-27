@@ -18,6 +18,25 @@
         protected IChildLinkRepository ChildLinkRepository => ServiceFactory.GetService<IChildLinkRepository>();
 
         #region < Private Methods > 
+        private long[] InnerBatchCreate(IEnumerable<Entity> entities, IUnitOfWorkFactory<IEFDatabaseContext> factory)
+        {
+            HashSet<long> entityIds = new HashSet<long>();
+            foreach (var entity in entities)
+            {
+                var result = InnerBatchCreate(entity, factory);
+                if (result.Success)
+                {
+                    entityIds.Add(result.Value.Id);
+                }
+                else
+                {
+                    throw new Exception(ErrorCodesEnum.ERR_GEN007.ToString());
+                }
+            }
+
+            return entityIds.ToArray();
+        }
+
         private void AddChildrenLinks(long id, IEnumerable<long> childrenIds
                                     , IUnitOfWorkFactory<IEFDatabaseContext> factory
                                     , bool withBatch = true)
@@ -209,13 +228,28 @@
 
             }
         }
-        public Entity Get(long entityId)
+        public Result<Entity> Get(long entityId)
         {
             using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
                 var uow = factory.GetOrCreate(UserSession);
-                EntityRepository.Attach(uow);
-                return Mapper.Map<Entity>(EntityRepository.Get(entityId));
+                AttributeValueRepository.Attach(uow);
+
+                var attributes = AttributeValueRepository.FindBy(a => a.EntityId == entityId);
+
+                if (attributes.Any())
+                {
+                    IGrouping<DatabaseEntity, AttributeValue> entity =
+                        attributes
+                                .GroupBy(a => a.Entity)
+                                .Single();
+
+                    return Result.Ok(Mapper.Map<Entity>(entity));
+                }
+                else
+                {
+                    return Result.Fail<Entity>(ErrorCodesEnum.ERR_GEN002.ToString());
+                }
             }
         }
 
@@ -281,9 +315,27 @@
             }
         }
 
+        
+
         public Result<long[]> BatchCreate(IEnumerable<Entity> entities)
         {
-            throw new NotImplementedException();
+            using (var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
+            {
+                var uow = factory.GetOrCreate(UserSession);
+                try
+                {
+                    uow.BeginTransaction();
+                    var entityIds = InnerBatchCreate(entities, factory);
+                    uow.Commit();
+                    uow.CommitTransaction();
+                    return Result.Ok(entityIds);
+                }
+                catch (Exception ex)
+                {
+                    uow.RollBackTransaction();
+                    return Result.Fail<long[]>(ex.InnerException?.Message ?? ex.Message);
+                }
+            }
         }
     }
 }

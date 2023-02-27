@@ -12,7 +12,7 @@
         Result<Entity> Update(Entity entity);
         Result Delete(long entityId);
         IEnumerable<Entity> GetAll();
-        Entity Get(long entityId);
+        Result<Entity> Get(long entityId);
         Result<long[]> BulkCreate(IEnumerable<Entity> entities);
         Result<long[]> BatchCreate(IEnumerable<Entity> entities);
     }
