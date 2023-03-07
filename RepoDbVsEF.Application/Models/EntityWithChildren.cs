@@ -1,12 +1,12 @@
 ﻿namespace RepoDbVsEF.Application.Models
 {
-    using Newtonsoft.Json;
+    using HotChocolate;
     using System.Collections.Generic;
     using System.Linq;
 
     public class EntityWithChildren: Entity
     {
-        [JsonProperty("Children")]
+        [GraphQLName("Children")]
         public IEnumerable<Entity> Children { get; set; }
 
         public EntityWithChildren()

@@ -2,6 +2,7 @@
 {
     using FluentAssertions;
     using Microsoft.Extensions.DependencyInjection;
+    using RepoDbVsEF.Application;
     using RepoDbVsEF.Application.Interfaces;
     using RepoDbVsEF.Application.Models;
     using RepoDbVsEF.Application.Services;
@@ -433,9 +434,10 @@
 
             using var scope = ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<IEntityService>();
-            var latest = service.GetAll().OrderByDescending(a => a.Id).FirstOrDefault();
+            var latest = service.GetAll().OrderByDescending(a => a.Id).FirstOrDefault().ToEntity();
             latest.Should().NotBeNull();
 
+            
             var rnd = new Random();
             latest.Attributes = latest.Attributes
                 .Select(a =>

@@ -1,7 +1,6 @@
 ﻿
 namespace RepoDbVsEF.Domain.Enums
 {
-    using HotChocolate;
     using RepoDbVsEF.Domain.Attributes;
     using RepoDbVsEF.Domain.Core;
     using System.ComponentModel;
@@ -9,7 +8,6 @@ namespace RepoDbVsEF.Domain.Enums
     [TypeConverter(typeof(EnumCustomNameTypeConverter))]
     public enum AttributeDefinitionEnum
     {
-        [GraphQLName("FirstName")]
         [AttributeInfo(entityType: EntityTypeEnum.Customer, attributeKind: AttributeKindEnum.String)]
         FirstName = 1,
         [AttributeInfo(entityType: EntityTypeEnum.Customer, attributeKind: AttributeKindEnum.String)]
