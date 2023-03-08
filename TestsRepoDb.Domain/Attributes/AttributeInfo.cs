@@ -1,6 +1,6 @@
-﻿namespace RepoDbVsEF.Domain.Attributes
+﻿namespace Mitrol.Framework.Domain.Attributes
 {
-    using RepoDbVsEF.Domain.Enums;
+    using Mitrol.Framework.Domain.Enums;
     using System;
 
 

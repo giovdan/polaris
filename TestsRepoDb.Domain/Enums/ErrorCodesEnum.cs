@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepoDbVsEF.Domain.Enums
+namespace Mitrol.Framework.Domain.Enums
 {
     public enum ErrorCodesEnum
     {

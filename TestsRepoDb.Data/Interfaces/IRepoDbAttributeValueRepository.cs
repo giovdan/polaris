@@ -1,9 +1,8 @@
-﻿namespace RepoDbVsEF.RepoDb.Data.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces
 {
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.Domain.Interfaces;
     using System.Collections.Generic;
-    using RepoDbVsEF.Data.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
 
     public interface IRepoDbAttributeValueRepository: IRepository<AttributeValue, IRepoDbDatabaseContext>
     {

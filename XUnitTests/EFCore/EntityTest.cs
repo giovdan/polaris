@@ -2,18 +2,15 @@
 {
     using FluentAssertions;
     using Microsoft.Extensions.DependencyInjection;
-    using RepoDbVsEF.Application;
-    using RepoDbVsEF.Application.Interfaces;
-    using RepoDbVsEF.Application.Models;
-    using RepoDbVsEF.Application.Services;
-    using RepoDbVsEF.Domain;
-    using RepoDbVsEF.Domain.Attributes;
-    using RepoDbVsEF.Domain.Enums;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.Domain.Threading;
-    using RepoDbVsEF.EF.Data.Interfaces;
-    using RepoDbVsEF.EF.Data.Repositories;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Application.Models;
+    using Mitrol.Framework.MachineManagement.Application.Services;
+    using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Attributes;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.Domain.Threading;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -22,6 +19,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
 
     [Trait("TestType", "Entity")]
     public class EntityTest: BaseUnitTest

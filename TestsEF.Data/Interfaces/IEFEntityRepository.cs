@@ -1,10 +1,10 @@
-﻿namespace RepoDbVsEF.EF.Data.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces
 {
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
 
-    public interface IEFEntityRepository : IRepository<DatabaseEntity, IEFDatabaseContext>
+    public interface IEFEntityRepository : IRepository<MasterEntity, IEFDatabaseContext>
     {
-        DatabaseEntity RawUpdate(DatabaseEntity entity);
+        MasterEntity RawUpdate(MasterEntity entity);
     }
 }

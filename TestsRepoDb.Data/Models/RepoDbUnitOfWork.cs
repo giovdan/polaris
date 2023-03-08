@@ -2,8 +2,8 @@
 {
     using System;
     using System.Data;
-    using RepoDbVsEF.Data.Interfaces;
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
 
     public class RepoDbUnitOfWork : IUnitOfWork<IRepoDbDatabaseContext>
     {

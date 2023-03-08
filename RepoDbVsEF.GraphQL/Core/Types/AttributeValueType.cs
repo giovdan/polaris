@@ -1,7 +1,7 @@
-﻿namespace RepoDbVsEF.GraphQL.Core.Types
+﻿namespace Mitrol.Framework.GraphQL.Core.Types
 {
     using HotChocolate.Types;
-    using RepoDbVsEF.Application.Models;
+    using Mitrol.Framework.MachineManagement.Application.Models;
 
     public class AttributeValueType: ObjectType<AttributeValueItem>
     {

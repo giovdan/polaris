@@ -1,7 +1,7 @@
-﻿namespace RepoDbVsEF.Data.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces
 {
     using System.Data;
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
 
     public interface IRepoDbDatabaseContext: IDatabaseContext
     {

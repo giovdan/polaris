@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestsRepoDb.Domain\RepoDbVsEF.Domain.csproj" />
+    <ProjectReference Include="..\TestsRepoDb.Domain\Mitrol.Framework.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

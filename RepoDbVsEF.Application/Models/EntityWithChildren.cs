@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Application.Models
+﻿namespace Mitrol.Framework.MachineManagement.Application.Models
 {
     using HotChocolate;
     using System.Collections.Generic;

@@ -1,11 +1,11 @@
-﻿namespace RepoDbVsEF.RepoDb.Data.Repositories
+﻿using RepoDb;
+namespace Mitrol.Framework.MachineManagement.Data.RepDb.Repositories
 {
-    using global::RepoDb;
-    using MySql.Data.MySqlClient;
+    using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
     using RepoDbVsEF.Data.Repositories;
-    using RepoDbVsEF.Domain;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.RepoDb.Data.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;

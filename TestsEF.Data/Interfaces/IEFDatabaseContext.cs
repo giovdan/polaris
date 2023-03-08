@@ -1,17 +1,17 @@
-﻿namespace RepoDbVsEF.EF.Data.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Infrastructure;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
     
     public interface IEFDatabaseContext: IDatabaseContext
     {
         int SaveChanges();
         EntityEntry Entry(object entity);
         DatabaseFacade Database { get; }
-        DbSet<DatabaseEntity> Entities { get; set; }
+        DbSet<MasterEntity> Entities { get; set; }
         DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         DbSet<AttributeValue> AttributeValues { get; set; }
         DbSet<ChildLink> ChildLinks { get; set; }

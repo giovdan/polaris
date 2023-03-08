@@ -1,7 +1,7 @@
-﻿namespace RepoDbVsEF.Application.Models
+﻿namespace Mitrol.Framework.MachineManagement.Application.Models
 {
     using HotChocolate;
-    using RepoDbVsEF.Domain.Enums;
+    using Mitrol.Framework.Domain.Enums;
 
     public class EntityListItem
     {

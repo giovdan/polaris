@@ -1,8 +1,6 @@
-﻿namespace RepoDbVsEF.Application.Core
+﻿namespace Mitrol.Framework.MachineManagement.Application.Core
 {
-    using RepoDbVsEF.Domain.Interfaces;
-    using System.Collections.Generic;
-
+    using Mitrol.Framework.Domain.Interfaces;
     public interface IApplicationService
     {
         void SetSession(IUserSession userSession);

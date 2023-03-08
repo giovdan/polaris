@@ -1,7 +1,7 @@
-﻿namespace RepoDbVsEF.EF.Data.Models
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Models
 {
-    using RepoDbVsEF.Domain.Interfaces;
-
+    using Mitrol.Framework.Domain.Interfaces;
+    
     public class DatabaseContextFactory : IDatabaseContextFactory
     {
         private readonly IServiceFactory _serviceFactory;

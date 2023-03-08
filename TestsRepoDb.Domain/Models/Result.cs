@@ -1,6 +1,6 @@
-﻿namespace RepoDbVsEF.Domain.Models
+﻿namespace Mitrol.Framework.Domain.Models
 {
-    using RepoDbVsEF.Domain.Enums;
+    using Mitrol.Framework.Domain.Enums;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;

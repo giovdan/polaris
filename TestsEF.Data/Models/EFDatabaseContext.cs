@@ -1,10 +1,10 @@
-﻿namespace RepoDbVsEF.EF.Data.Models
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Models
 {
     using Microsoft.EntityFrameworkCore;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.EF.Data.Core;
-    using RepoDbVsEF.EF.Data.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Core;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
 
     public class EFDatabaseContext: BaseDbContext, IEFDatabaseContext
     {
@@ -14,7 +14,7 @@
         }
 
         #region Definitions
-        public DbSet<DatabaseEntity> Entities { get; set; }
+        public DbSet<MasterEntity> Entities { get; set; }
         public DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         public DbSet<AttributeValue> AttributeValues { get; set; }
         public DbSet<ChildLink> ChildLinks { get; set; }
@@ -27,11 +27,11 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DatabaseEntity>()
+            modelBuilder.Entity<MasterEntity>()
                 .HasIndex(u => u.Code)
                 .IsUnique();
 
-            modelBuilder.Entity<DatabaseEntity>()
+            modelBuilder.Entity<MasterEntity>()
                 .Property(c => c.RowVersion)
                 .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate(); 

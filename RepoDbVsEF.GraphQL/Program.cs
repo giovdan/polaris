@@ -1,10 +1,10 @@
 ﻿
-namespace RepoDbVsEF.GraphQL
+namespace Mitrol.Framework.GraphQL
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting.WindowsServices;
-    using RepoDbVsEF.Domain.Helpers;
+    using Mitrol.Framework.Domain.Helpers;
     using System;
     using System.Diagnostics;
     using System.IO;

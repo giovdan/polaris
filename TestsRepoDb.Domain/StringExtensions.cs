@@ -1,6 +1,6 @@
 ﻿
 
-namespace RepoDbVsEF.Domain
+namespace Mitrol.Framework.Domain
 {
     using System;
     using System.IO;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepoDbVsEF.Domain.Interfaces
+namespace Mitrol.Framework.Domain.Interfaces
 {
     public interface IAuditableEntity
     {

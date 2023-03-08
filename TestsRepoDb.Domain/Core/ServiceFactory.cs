@@ -1,7 +1,7 @@
-﻿namespace RepoDbVsEF.Domain.Models.Core
+﻿namespace Mitrol.Framework.Domain.Models.Core
 {
     using Microsoft.Extensions.DependencyInjection;
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;

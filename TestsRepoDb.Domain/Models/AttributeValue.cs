@@ -1,8 +1,7 @@
-﻿namespace RepoDbVsEF.Domain.Models
+﻿namespace Mitrol.Framework.Domain.Models
 {
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
     using System;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("AttributeValue")]
@@ -18,6 +17,6 @@
         public DateTime? UpdatedOn { get; set; }
 
         public virtual AttributeDefinition AttributeDefinition { get; set; }
-        public virtual DatabaseEntity Entity { get; set; }
+        public virtual MasterEntity Entity { get; set; }
     }
 }

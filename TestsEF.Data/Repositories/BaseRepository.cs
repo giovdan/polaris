@@ -1,8 +1,8 @@
-﻿namespace RepoDbVsEF.EF.Data.Repositories
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
 {
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.EF.Data.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
 
     public class BaseRepository<TEntity>
         where TEntity: BaseEntity

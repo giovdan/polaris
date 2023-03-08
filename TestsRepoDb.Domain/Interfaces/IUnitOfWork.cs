@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
     using System;
     using System.Data;

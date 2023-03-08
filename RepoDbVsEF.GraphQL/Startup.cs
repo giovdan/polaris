@@ -1,6 +1,6 @@
 ﻿using GraphQL.Server.Ui.Voyager;
 
-namespace RepoDbVsEF.GraphQL
+namespace Mitrol.Framework.GraphQL
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
@@ -11,20 +11,19 @@ namespace RepoDbVsEF.GraphQL
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json;
-    using RepoDbVsEF.Application.Interfaces;
-    using RepoDbVsEF.Application.Mappings;
-    using RepoDbVsEF.Application.Services;
-    using RepoDbVsEF.Domain.Helpers;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models.Core;
-    using RepoDbVsEF.EF.Data.Interfaces;
-    using RepoDbVsEF.EF.Data.Models;
-    using RepoDbVsEF.EF.Data.Repositories;
-    using RepoDbVsEF.GraphQL.Core;
-    using RepoDbVsEF.GraphQL.Core.Types;
-    
+    using Mitrol.Framework.Domain.Helpers;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models.Core;
+    using Mitrol.Framework.GraphQL.Core;
+    using Mitrol.Framework.GraphQL.Core.Types;
     using System;
     using HotChocolate.Types.Descriptors;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Models;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Application.Services;
+    using Mitrol.Framework.MachineManagement.Application.Mappings;
 
     public class Startup
     {

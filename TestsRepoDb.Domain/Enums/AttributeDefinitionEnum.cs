@@ -1,8 +1,8 @@
 ﻿
-namespace RepoDbVsEF.Domain.Enums
+namespace Mitrol.Framework.Domain.Enums
 {
-    using RepoDbVsEF.Domain.Attributes;
-    using RepoDbVsEF.Domain.Core;
+    using Mitrol.Framework.Domain.Attributes;
+    using Mitrol.Framework.Domain.Core;
     using System.ComponentModel;
 
     [TypeConverter(typeof(EnumCustomNameTypeConverter))]

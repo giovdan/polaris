@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Models
+﻿namespace Mitrol.Framework.Domain.Models
 {
     using System;
     using System.Diagnostics;

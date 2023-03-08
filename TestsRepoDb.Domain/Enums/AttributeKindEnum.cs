@@ -1,5 +1,5 @@
 ﻿
-namespace RepoDbVsEF.Domain.Enums
+namespace Mitrol.Framework.Domain.Enums
 {
     using System;
 

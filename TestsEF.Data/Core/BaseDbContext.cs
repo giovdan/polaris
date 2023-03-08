@@ -1,11 +1,9 @@
-﻿namespace RepoDbVsEF.EF.Data.Core
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Core
 {
     using Microsoft.EntityFrameworkCore;
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
     using System;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Text;
     using System.Threading;
 
     using System.Threading.Tasks;

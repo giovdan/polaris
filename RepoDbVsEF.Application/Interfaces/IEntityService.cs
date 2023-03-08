@@ -1,9 +1,9 @@
-﻿namespace RepoDbVsEF.Application.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Application.Interfaces
 {
-    using RepoDbVsEF.Application.Core;
-    using RepoDbVsEF.Application.Models;
-    using RepoDbVsEF.Domain.Enums;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Application.Core;
+    using Mitrol.Framework.MachineManagement.Application.Models;
     using System.Collections.Generic;
 
     public interface IEntityService: IApplicationService

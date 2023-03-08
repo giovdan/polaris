@@ -4,11 +4,10 @@
     using MySql.Data.MySqlClient;
     using RepoDb;
     using System.Data;
-    using RepoDbVsEF.Data.Interfaces;
-    using RepoDbVsEF.Domain;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models.Core;
-    using global::RepoDb;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models.Core;
+    using Mitrol.Framework.Domain;
+    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
 
     public class RepoDbContext: IRepoDbDatabaseContext
     {

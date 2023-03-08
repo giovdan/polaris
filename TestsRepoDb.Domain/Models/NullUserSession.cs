@@ -1,5 +1,5 @@
 ﻿
-namespace RepoDbVsEF.Domain.Models
+namespace Mitrol.Framework.Domain.Models
 {
 
         using System.Collections.Generic;

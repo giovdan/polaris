@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Models
+﻿namespace Mitrol.Framework.Domain.Models
 {
     using System.ComponentModel.DataAnnotations.Schema;
     [Table("ChildLink")]
@@ -9,7 +9,7 @@
         public int RowNumber { get; set; }
         public int Level { get; set; }
 
-        public virtual DatabaseEntity Parent { get; set; }
-        public virtual DatabaseEntity Child { get; set; }
+        public virtual MasterEntity Parent { get; set; }
+        public virtual MasterEntity Child { get; set; }
     }
 }

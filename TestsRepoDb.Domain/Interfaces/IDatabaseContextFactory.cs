@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
     public interface IDatabaseContextFactory
     {

@@ -1,15 +1,15 @@
-﻿namespace RepoDbVsEF.Data.Repositories
+﻿using RepoDb;
+namespace RepoDbVsEF.Data.Repositories
 {
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using RepoDbVsEF.Data.Interfaces;
-    using global::RepoDb;
     using MySql.Data.MySqlClient;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
 
     public class InternalBaseRepository<T>: BaseRepository<T, MySqlConnection>
         where T: BaseEntity

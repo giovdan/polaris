@@ -1,17 +1,17 @@
-﻿namespace RepoDbVsEF.Application.Services
+﻿namespace Mitrol.Framework.MachineManagement.Application.Services
 {
-    using RepoDbVsEF.Application.Interfaces;
-    using RepoDbVsEF.Application.Models;
     using System;
     using System.Collections.Generic;
-    using RepoDbVsEF.Application.Core;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.EF.Data.Interfaces;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
     using System.Linq;
-    using RepoDbVsEF.Domain.Enums;
-    using RepoDbVsEF.Domain.Attributes;
-    using RepoDbVsEF.Domain;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Attributes;
+    using Mitrol.Framework.Domain;
+    using Mitrol.Framework.MachineManagement.Application.Core;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Application.Models;
 
     public class EntityService : BaseService, IEntityService
     {
@@ -74,14 +74,14 @@
         /// <param name="entity"></param>
         /// <param name="factory"></param>
         /// <returns></returns>
-        private Result<DatabaseEntity> InnerBatchCreate(Entity entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
+        private Result<MasterEntity> InnerBatchCreate(Entity entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
         {
             try
             {
                 var uow = factory.GetOrCreate(UserSession);
                 EntityRepository.Attach(uow);
                 AttributeValueRepository.Attach(uow);
-                var dbEntity = EntityRepository.Add(Mapper.Map<DatabaseEntity>(entity));
+                var dbEntity = EntityRepository.Add(Mapper.Map<MasterEntity>(entity));
                 var attributes = entity.Attributes.Select(a => {
                     var dbAttribute = Mapper.Map<AttributeValue>(a);
                     return dbAttribute.SetAttributeValue(a);
@@ -95,18 +95,18 @@
             }
             catch (Exception ex)
             {
-                return Result.Fail<DatabaseEntity>(ex.InnerException?.Message ?? ex.Message);
+                return Result.Fail<MasterEntity>(ex.InnerException?.Message ?? ex.Message);
             }
         }
 
-        private Result<DatabaseEntity> InnerBulkCreate(Entity entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
+        private Result<MasterEntity> InnerBulkCreate(Entity entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
         {
             try
             {
                 var uow = factory.GetOrCreate(UserSession);
                 EntityRepository.Attach(uow);
                 AttributeValueRepository.Attach(uow);
-                var dbEntity = EntityRepository.Add(Mapper.Map<DatabaseEntity>(entity));
+                var dbEntity = EntityRepository.Add(Mapper.Map<MasterEntity>(entity));
                 var attributes = entity.Attributes.Select(a => {
                     var dbAttribute = Mapper.Map<AttributeValue>(a);
                     return dbAttribute.SetAttributeValue(a);
@@ -122,7 +122,7 @@
             }
             catch (Exception ex)
             {
-                return Result.Fail<DatabaseEntity>(ex.InnerException?.Message ?? ex.Message);
+                return Result.Fail<MasterEntity>(ex.InnerException?.Message ?? ex.Message);
             }
         }
 
@@ -241,7 +241,7 @@
 
                 if (attributes.Any())
                 {
-                    IGrouping<DatabaseEntity, AttributeValue> entity =
+                    IGrouping<MasterEntity, AttributeValue> entity =
                         attributes
                                 .GroupBy(a => a.Entity)
                                 .Single();
@@ -282,7 +282,7 @@
                 {
                     var uow = factory.GetOrCreate(UserSession);
                     EntityRepository.Attach(uow);
-                    EntityRepository.Update(Mapper.Map<DatabaseEntity>(entity));
+                    EntityRepository.Update(Mapper.Map<MasterEntity>(entity));
                     uow.Commit();
                     return Result.Ok(entity);
                 }

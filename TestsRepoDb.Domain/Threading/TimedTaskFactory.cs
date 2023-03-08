@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Threading
+﻿namespace Mitrol.Framework.Domain.Threading
 {
     using System;
     using System.Diagnostics;

@@ -1,12 +1,12 @@
-﻿namespace RepoDbVsEF.EF.Data.Models
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Models
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using System;
     using System.Data;
-    using RepoDbVsEF.EF.Data.Interfaces;
-    using RepoDbVsEF.Domain.Interfaces;
     using Microsoft.EntityFrameworkCore.Storage;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
 
     public class EFUnitOfWork : IUnitOfWork<IEFDatabaseContext>
     {

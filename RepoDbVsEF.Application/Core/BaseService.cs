@@ -1,9 +1,9 @@
-﻿namespace RepoDbVsEF.Application.Core
+﻿namespace Mitrol.Framework.MachineManagement.Application.Core
 {
     using AutoMapper;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.EF.Data.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
 
     public class BaseService : Disposable, IApplicationService
     {

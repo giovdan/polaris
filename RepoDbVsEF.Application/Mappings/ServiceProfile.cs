@@ -1,20 +1,20 @@
-﻿namespace RepoDbVsEF.Application.Mappings
+﻿namespace Mitrol.Framework.MachineManagement.Application.Mappings
 {
-    using RepoDbVsEF.Application.Models;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Application.Models;
+    using Mitrol.Framework.Domain.Models;
     using System.Linq;
 
     public class ServiceProfile: AutoMapper.Profile
     {
         public ServiceProfile()
         {
-            CreateMap<DatabaseEntity, Entity>()
+            CreateMap<MasterEntity, Entity>()
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.EntityTypeId));
 
-            CreateMap<Entity, DatabaseEntity>()
+            CreateMap<Entity, MasterEntity>()
                 .ForMember(dest => dest.EntityTypeId, opt => opt.MapFrom(s => s.EntityType));
 
-            CreateMap<DatabaseEntity, EntityListItem>()
+            CreateMap<MasterEntity, EntityListItem>()
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.EntityTypeId));
 
             CreateMap<AttributeValue, AttributeItem>()
@@ -31,7 +31,7 @@
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.EnumId));
 
-            CreateMap<IGrouping<DatabaseEntity, AttributeValue>, Entity>()
+            CreateMap<IGrouping<MasterEntity, AttributeValue>, Entity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(s => s.Key.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(s => s.Key.DisplayName))
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.Key.EntityTypeId))

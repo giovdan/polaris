@@ -1,9 +1,9 @@
-﻿namespace RepoDbVsEF.Application.Models
+﻿namespace Mitrol.Framework.MachineManagement.Application.Models
 {
     using HotChocolate;
     using HotChocolate.Types;
-    using RepoDbVsEF.Domain.Enums;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Models;
     using System;
 
     public class AttributeItem

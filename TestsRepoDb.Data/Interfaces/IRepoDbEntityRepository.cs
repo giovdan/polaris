@@ -1,11 +1,10 @@
-﻿namespace RepoDbVsEF.RepoDb.Data.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces
 {
-    using RepoDbVsEF.Data.Interfaces;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
 
-    public interface IRepoDbEntityRepository: IRepository<DatabaseEntity, IRepoDbDatabaseContext>
+    public interface IRepoDbEntityRepository: IRepository<MasterEntity, IRepoDbDatabaseContext>
     {
-        int RawUpdate(DatabaseEntity entity);
+        int RawUpdate(MasterEntity entity);
     }
 }

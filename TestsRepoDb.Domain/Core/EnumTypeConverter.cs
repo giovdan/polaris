@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Core
+﻿namespace Mitrol.Framework.Domain.Core
 {
     using System;
     using System.ComponentModel;

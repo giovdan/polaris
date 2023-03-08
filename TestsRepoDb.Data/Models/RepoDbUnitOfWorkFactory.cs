@@ -1,11 +1,8 @@
 ﻿
 namespace RepoDbVsEF.Domain.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using RepoDbVsEF.Data.Interfaces;
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
 
     public class RepoDbUnitOfWorkFactory : IUnitOfWorkFactory<IRepoDbDatabaseContext>
     {

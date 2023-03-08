@@ -1,4 +1,4 @@
-﻿namespace RepoDbVsEF.Domain.Models.Core
+﻿namespace Mitrol.Framework.Domain.Models.Core
 {
     public class MySQLSection
     {

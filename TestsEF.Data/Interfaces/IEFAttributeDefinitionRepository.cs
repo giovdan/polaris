@@ -1,7 +1,7 @@
-﻿namespace RepoDbVsEF.EF.Data.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces
 {
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.Domain.Interfaces;
 
     public interface IEFAttributeDefinitionRepository : IRepository<AttributeDefinition, IEFDatabaseContext>
     {

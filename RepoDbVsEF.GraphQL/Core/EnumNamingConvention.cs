@@ -1,6 +1,4 @@
-﻿
-
-namespace RepoDbVsEF.GraphQL.Core
+﻿namespace Mitrol.Framework.GraphQL.Core
 {
     using HotChocolate;
     using HotChocolate.Types.Descriptors;

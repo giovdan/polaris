@@ -1,9 +1,8 @@
 ﻿
-namespace RepoDbVsEF.EF.Data.Models
+namespace Mitrol.Framework.MachineManagement.Data.MySQL.Models
 {
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.EF.Data.Interfaces;
-    using System.Collections.Generic;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
 
     public class EFUnitOfWorkFactory : IUnitOfWorkFactory<IEFDatabaseContext>
     {

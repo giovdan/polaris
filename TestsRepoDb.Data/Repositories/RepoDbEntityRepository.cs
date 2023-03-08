@@ -1,31 +1,30 @@
-﻿namespace RepoDbVsEF.RepoDb.Data.Repositories
+﻿using RepoDb;
+namespace Mitrol.Framework.MachineManagement.Data.RepDb.Repositories
 {
-    using global::RepoDb;
-    using RepoDbVsEF.Data.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
     using RepoDbVsEF.Data.Repositories;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.RepoDb.Data.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    public class RepoDbEntityRepository: InternalBaseRepository<DatabaseEntity>, IRepoDbEntityRepository
+    public class RepoDbEntityRepository: InternalBaseRepository<MasterEntity>, IRepoDbEntityRepository
     {
         public RepoDbEntityRepository(string connectionString): base(connectionString)
         {
 
         }
 
-        public DatabaseEntity Add(DatabaseEntity entity)
+        public MasterEntity Add(MasterEntity entity)
         {
             entity.Id = Insert<long>(entity, transaction: UnitOfWork.CurrentTransaction);
             return entity;
         }
 
-        public Task<DatabaseEntity> AddAsync(DatabaseEntity entity)
+        public Task<MasterEntity> AddAsync(MasterEntity entity)
         {
             return Task.Factory.StartNew(() => Add(entity));
         }
@@ -35,52 +34,52 @@
             UnitOfWork = unitOfWork;
         }
 
-        public int BatchInsert(IEnumerable<DatabaseEntity> items)
+        public int BatchInsert(IEnumerable<MasterEntity> items)
         {
             return InsertAll(items);
         }
 
-        public int BulkInsert(IEnumerable<DatabaseEntity> items)
+        public int BulkInsert(IEnumerable<MasterEntity> items)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<DatabaseEntity> FindBy(Expression<Func<DatabaseEntity, bool>> predicate)
+        public IEnumerable<MasterEntity> FindBy(Expression<Func<MasterEntity, bool>> predicate)
         {
             return Query(predicate);
         }
 
-        public Task<IEnumerable<DatabaseEntity>> FindByAsync(Expression<Func<DatabaseEntity, bool>> predicate)
+        public Task<IEnumerable<MasterEntity>> FindByAsync(Expression<Func<MasterEntity, bool>> predicate)
         {
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public DatabaseEntity Get(long id)
+        public MasterEntity Get(long id)
         {
             return Query(e => e.Id == id).SingleOrDefault();
         }
 
-        public IEnumerable<DatabaseEntity> GetAll()
+        public IEnumerable<MasterEntity> GetAll()
         {
             return QueryAll();
         }
 
-        public Task<DatabaseEntity> GetAsync(long id)
+        public Task<MasterEntity> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }
 
-        public int RawUpdate(DatabaseEntity entity)
+        public int RawUpdate(MasterEntity entity)
         {
             return UnitOfWork.Context.Connection.ExecuteNonQuery($"UPDATE entity SET DisplayName = '{entity.DisplayName}' WHERE Id = {entity.Id}");
         }
 
-        public void Remove(DatabaseEntity entity)
+        public void Remove(MasterEntity entity)
         {
             Delete(entity, transaction: UnitOfWork.CurrentTransaction);
         }
 
-        public DatabaseEntity Update(DatabaseEntity entity)
+        public MasterEntity Update(MasterEntity entity)
         {
             Update(entity, transaction: UnitOfWork.CurrentTransaction);
             return entity;

@@ -1,11 +1,11 @@
-﻿namespace RepoDbVsEF.Domain
+﻿namespace Mitrol.Framework.Domain
 {
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Storage;
     using Microsoft.Extensions.Configuration;
-    using RepoDbVsEF.Domain.Enums;
-    using RepoDbVsEF.Domain.Interfaces;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -59,9 +59,9 @@
             }
         }
 
-        public static DatabaseEntity GenerateEntity(EntityTypeEnum entityType)
+        public static MasterEntity GenerateEntity(EntityTypeEnum entityType)
         {
-            return new DatabaseEntity
+            return new MasterEntity
             {
                 EntityTypeId = entityType
             };

@@ -1,8 +1,8 @@
 ﻿
 
-namespace RepoDbVsEF.Domain.Interfaces
+namespace Mitrol.Framework.Domain.Interfaces
 {
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;

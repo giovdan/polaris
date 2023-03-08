@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace RepoDbVsEF.Domain
+namespace Mitrol.Framework.Domain
 {
     public class SimpleStringCipher
     {

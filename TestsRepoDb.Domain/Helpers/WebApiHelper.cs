@@ -1,13 +1,13 @@
-﻿namespace RepoDbVsEF.Domain.Helpers
+﻿namespace Mitrol.Framework.Domain.Helpers
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.Domain.Models.Core;
     using Newtonsoft.Json;
-    using RepoDbVsEF.Domain.Models;
-    using RepoDbVsEF.Domain.Models.Core;
     using System;
     using System.IO;
     using System.Linq;

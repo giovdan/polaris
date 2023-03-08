@@ -1,10 +1,10 @@
 ﻿
 
-namespace RepoDbVsEF.GraphQL.Core
+namespace Mitrol.Framework.GraphQL.Core
 {
-    using RepoDbVsEF.Application.Interfaces;
-    using RepoDbVsEF.Application.Models;
-    using RepoDbVsEF.Domain.Models;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Application.Models;
 
     public class Mutation
     {
