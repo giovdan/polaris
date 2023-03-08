@@ -1,0 +1,10 @@
+{
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "System": "Information",
+            "Microsoft": "Information"
+        }
+    },
+    "ApplicationUrls": "http://*:4001"
+}

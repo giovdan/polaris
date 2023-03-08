@@ -1,0 +1,5163 @@
+﻿{
+  "SwaggerEndPoints": [
+    {
+      "Key": "authServer",
+      "Config": [
+        {
+          "Name": "Authentication API",
+          "Version": "v1",
+          "Url": "http://localhost:1000/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "eventLogServer",
+      "Config": [
+        {
+          "Name": "Event Log API",
+          "Version": "v1",
+          "Url": "http://localhost:1100/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "machineServer",
+      "Config": [
+        {
+          "Name": "Machine API",
+          "Version": "v1",
+          "Url": "http://localhost:1300/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "noteServer",
+      "Config": [
+        {
+          "Name": "Notes API",
+          "Version": "v1",
+          "Url": "http://localhost:1400/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "plantServer",
+      "Config": [
+        {
+          "Name": "Plant API",
+          "Version": "v1",
+          "Url": "http://localhost:1500/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/authServer/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/eventLog/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/machine/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/jogData/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/machine/jogData/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1400
+        }
+      ],
+      "UpstreamPathTemplate": "/notes/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/accounts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/users",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "authServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/accounts/ResetPassword",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users/ResetPassword",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/WarmUp",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/accounts/WarmUp",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/WarmUp",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/WarmUp",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/token/ConversionSystem/{conversionSystem}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/token/ConversionSystem/{conversionSystem}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "authServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/accounts/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/users/export",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/accounts/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/users/import",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/accounts/changepassword",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users/changepassword",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/accounts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users",
+      "UpstreamHttpMethod": [ "Put", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "authServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/token/boot",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/token/boot",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/accounts/Configuration",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users/Configuration",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/accounts/Configuration",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users/Configuration",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/groups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/groups",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/groups/{id}/permissions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/groups/{id}/permissions",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/accounts/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "authServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/token",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/login",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "authServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Token/latest/{machineName}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Token/latest/{machineName}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/token/logout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/users/logout",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "authServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/token/sessions/{machineName}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/sessions/{machineName}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/eventlogs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/eventlogs",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/eventlogs/boot",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/eventlogs/boot",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/eventlogs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/eventlogs",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/eventlogs/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/eventlogs/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/eventlogs/types",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/eventlogs/types",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/notificationtypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/types",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/dateranges",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/dateranges",
+      "UpstreamHttpMethod": [ "Get" ],
+      "SwaggerKey": "eventLogServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/PLM",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/PLM",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "eventLogServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/Cultures",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Cultures",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/Translations/{culture}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Translations/{culture}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/LanguageFilenames/{culture}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/LanguageFilenames/{culture}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/getFileContent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/getFileContent",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/getLanguageFileContent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/getLanguageFileContent",
+      "UpstreamHttpMethod": [ "Patch" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/setSession",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/setSession",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/RTMBackLogs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/RTMBackLogs",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/RTMBackLogs/{recordType}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/RTM/{recordType}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/resolved",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/resolved",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "eventLogServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/report",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/report",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "eventLogServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/single/report",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/singlereport",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "eventLogServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notificationlogs/morefrequent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/morefrequent",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "eventLogServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/versions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/versions",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/tableList",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/tableList",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/import/filename",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/import/filename",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/import/master",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+
+      "UpstreamPathTemplate": "/api/v1/Machine/import/master",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Accounts/import/master",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+
+      "UpstreamPathTemplate": "/api/v1/import/AccountObject",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/import/master",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+
+      "UpstreamPathTemplate": "/api/v1/import/{everything}",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/import/{validation}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/import/{validation}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/import",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/importExportPaths",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/importExportPaths",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Accounts/importExportPaths",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/importExportPaths/AccountObject",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/importExportPaths",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/importExportPaths/{everything}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/pathContent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/pathContent",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Accounts/pathContent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/pathContent/AccountObject",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/pathContent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/pathContent/{everything}",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/programImportExtension",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/programImportExtension",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/pieceImportExtension",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/pieceImportExtension",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/notificationlogs/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/Alarms/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineStatus/OperatorMessages",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/OperatorMessages",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineStatus/alarms/{code}/SupportActions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/{code}/SupportActions",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/item",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/item",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/Identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/Identifiers",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/Identifiersfromcopy",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/Identifiersfromcopy",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/LastUpdated",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/LastUpdated",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/{unitId}/unit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolsByUnit/{unitId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/processing",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/processing",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/toolMasters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/toolMasters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/lastUpdated",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/lastUpdated",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/infos",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/infos",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/Identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/Identifiers",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/MainFilters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/MainFilters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/SlaveFilters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/SlaveFilters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/PLM",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PLMToolTables",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/withSubRanges",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/withSubRanges",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolSubRanges",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolSubRanges",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolSubRanges",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolSubRanges",
+      "UpstreamHttpMethod": [ "Patch", "Put", "Post", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolSubRanges/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolSubRanges/{everything}",
+      "UpstreamHttpMethod": [ "Patch", "Put", "Post", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolRanges",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolRanges",
+      "UpstreamHttpMethod": [ "Patch", "Delete", "Put", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolRanges/{toolmasterId}/table",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolRanges/{toolmasterId}/table",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolRanges/clone",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolRanges/clone",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolRanges/{plantUnitId}/canAdd",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolRanges/{plantUnitId}/canAdd",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/PlantUnits",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/PlantUnits",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/{toolId}/removefromunit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/{toolId}/removefromunit",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/Categories",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Materials/identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Materials/identifiers",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Materials/attributes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Materials/attributes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/types",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolTypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/forcreate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/forcreate",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/validateidentifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolIdentifiers/validate",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/SetPlasmaIdentifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/SetPlasmaIdentifiers",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/FromCopy",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/FromCopy",
+      "UpstreamHttpMethod": [ "Patch", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/{id}/resetlife",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/{id}/resetlife",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolRanges/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolRanges/",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/LastUpdated?$orderby= UpdatedOn desc",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/LastUpdated",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/Masters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/Masters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/RowMasters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/RowMasters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/export",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/import",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolRanges/import/bevel",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolRanges/import/bevel",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Toolholders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Toolholders",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Toolholders/listbox",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Toolholders/listbox",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Toolholders/LastUpdated",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Toolholders/LastUpdated",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Toolholders/identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Toolholders/Identifiers",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Toolholders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Toolholders",
+      "UpstreamHttpMethod": [ "Post", "Put", "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ToolHolders/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ToolHolders/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolHolders/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolHolders/export",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ToolHolders/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ToolHolders/import",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Materials/types",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Materials/types",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Materials",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Materials",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Materials/latest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Materials/latest",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Materials",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Materials",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Materials/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Materials/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools",
+      "UpstreamHttpMethod": [ "Post", "Put", "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Tools/Unit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Tools/Unit",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/export",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/import/{forceImport}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/import/{forceImport}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Tools/import/validate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Tools/ValidateImportFile",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/profiles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/profiles",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/profiles/filtered/{profileType}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/filteredProfiles/{profileType}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/profiles/LastUpdated",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/profiles/LastUpdated",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/profiles/identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/profiles/identifiers",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/profiles/types/true",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/profiles/types",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/profiles/types/false",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/profiles/managedtypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/profiles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/profiles",
+      "UpstreamHttpMethod": [ "Post", "Put", "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/profiles/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/profiles/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/plantmachines",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/plantmachines",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/plantmachines/statuses",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/plantmachines/statuses",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/plantmachines/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/plantmachines/",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/plantmachines/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/plantmachines/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/shutdown",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/shutdown",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/VPNStart",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/VPNStart",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/VPNStop",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/VPNStop",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/VPNShowLog",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/VPNShowLog",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/Accounts/export/validation",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/validation/export/AccountObject",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/export/validation",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/validation/export/{everything}",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Accounts/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/export/AccountObject",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/export/{everything}",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Accounts/import/abort",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/importexport/abort/AccountObject",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/import/abort",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/importexport/abort/{everything}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/stations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/stations",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/ManagedProgramTypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/ManagedProgramTypes",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/alarms",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/alarms",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/StartExecution",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/StartExecution",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/StopExecution",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/StopExecution",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/ToastNotification/Timeout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/ToastNotification/Timeout",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/{enumId}/values",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/{enumId}/values",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/{parentTypeEnum}/url",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/{parentTypeEnum}/url",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/macroEnabled/{macroTypeEnum}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/macroEnabled/{macroTypeEnum}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/macroEnabled/Macro",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/macroEnabled/Macro",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/fontConfiguration/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/fontConfiguration/filter",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/Fonts/listbox",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Fonts/listbox",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/Fonts/listbox/{toolType}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Fonts/listbox/{toolType}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/ApplicationSettings",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/ApplicationSettings",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineStatus/Infos",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/Infos",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineStatus/Alarms",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineStatus/ActiveAlarms",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Alarms/Active",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineStatus/AlarmToShow",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/AlarmToShow",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineParameters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/Parameters",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineParameters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Parameters",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineParameters/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/Parameters/{everything}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineParameters/setCncVariables/{cncType}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineParameters/setCncVariables/{cncType}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineParameters/import",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/parameters/import",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineParameters/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/parameters/export",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineParameters/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/Parameters/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineParameters/import/parametergroups",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/import/parametergroups",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Machine/boot",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Machine/boot",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/managedmacros/filter",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Machine/managedmacros/filter",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machineSetup",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machineSetup",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/status",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/status",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/odata/machinesetup/plasmaTorchComponents",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/odata/machinesetup/plasmaTorchComponents",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/odata/machinesetup/plasmaTorchComponents/{plasmaToolComponent}/wizard",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/odata/machinesetup/plasmaTorchComponents/{plasmaToolComponent}/wizard",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/odata/machinesetup/stations/{conversionSystem}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/odata/machinesetup/stations/{conversionSystem}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/stations/{numberOfStation}/origins",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/stations/{numberOfStation}/origins",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/{unitType}/ShowSpindleManagement",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/{unitType}/ShowSpindleManagement",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/status",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/status",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/machinesetup/units",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/machinesetup/units",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineSetup/Tools/unit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineSetup/unitTools",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/machinesetup/tools/{unit}/spindle",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/machinesetup/{unit}/spindletools",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/LoadOnUnit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/LoadOnUnit",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/ManualLoadOnUnit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/ManualLoadOnUnit",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/RemoveFromUnit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/RemoveFromUnit",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/loadonspindle",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/loadonspindle",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/removefromspindle",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/removefromspindle",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/ChangePosition",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/ChangePosition",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/machinesetup/enabledtools/unit",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/machinesetup/enabledtools/unit",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/ConfirmActions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/ConfirmActions",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/MoveTo",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/MoveTo",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/updatestatus",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/updatestatus",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/slot",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/slot",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/GeneralSetup",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/GeneralSetup",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/machinesetup/generalsetup/confirm",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/machinesetup/generalsetup/confirm",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Warehouses",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Warehouses",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Warehouses/listbox",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Warehouses/listbox",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Warehouses/types",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/WarehouseTypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Warehouses/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1500
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Warehouses/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionList",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionList",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionList",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionList",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionList/optimizations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionList/optimizations",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionList/OptimizationsForProcessing",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionList/OptimizationsForProcessing",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/Optimizations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/Optimizations",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/Attribute",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/Attribute",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionList/executed/{date}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionList/executed/{date}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionList/backlog/{date}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionList/backlog/{date}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList",
+      "UpstreamHttpMethod": [ "Patch", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/manage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/manage",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/CheckTools/{rowId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/CheckTools/{rowId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/ReSchedule",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/ReSchedule",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/ProcessQueue",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/ProcessQueue",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProductionList/ProcessQueue/Abort",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProductionList/AbortQueue",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs/Types",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProgramTypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs/partingcuts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Program/CalculatePartingcuts",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs/NestingResult",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Programs/NestingResult",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs/Attributes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Programs/Attributes",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs/LinearNesting/Attributes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/LinearNestings/Attributes",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/CodeLines",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/CodeLines",
+      "UpstreamHttpMethod": [ "Post", "Delete", "Patch", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Programs",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Programs/lastexecuted",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Programs/lastexecuted",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/addtoqueue",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/addtoqueue",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/graphics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/graphics",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/{programId}/graphics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/{programId}/graphics",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/ForUpdate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/ForUpdate",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/SendToNesting",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/SendToNesting",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs",
+      "UpstreamHttpMethod": [ "Post", "Patch", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Programs/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/{id}/LinearNesting",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/LinearNestings/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/LinearNesting",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/LinearNestings",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Programs/LinearNesting/save",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/LinearNestings/save",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/MachineInfo",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/MachineInfo",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/ReRunAll",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/ReRunAll",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/ReRun/{lineNumber}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/ReRun/{lineNumber}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/StepBackward",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/StepBackward",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/StepForward",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/StepForward",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/GetInfo",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/GetInfo",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/StockItems",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/StockItems",
+      "UpstreamHttpMethod": [ "Patch", "Put", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/StockItems/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/StockItems/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/identifiers",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/attributes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/attributes",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/profileTypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/profileTypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/types",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/types",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/materialCodes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/materialCodes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/profileCodes/{profileTypeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/profileCodes/{profileTypeId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/thicknesses",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/thicknesses",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Stockitems/LastUpdated",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Stockitems/LastUpdated",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/StockItems/export",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/StockItems/export",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Pieces/programTypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProgramTypePieces",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Pieces",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Pieces",
+      "UpstreamHttpMethod": [ "Get", "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Pieces/filters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PieceFilters",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/StockItems/SubFilters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/StockItems/SubFilters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces",
+      "UpstreamHttpMethod": [ "Patch", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/resetCache",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/resetCache",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/graphics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/graphics",
+      "UpstreamHttpMethod": [ "Patch", "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/{pieceId}/graphics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/{pieceId}/graphics",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/{linkId}/links",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceLinks/{linkId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Pieces/links/attributes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PieceLinks/attributes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/{id}/operationsCount",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/{id}/operationsCount",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/save",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/save",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/forUpdate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/forUpdate",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/clone",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/clone",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/identifiers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/identifiers",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Pieces/updateAttribute",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Pieces/updateAttribute",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Pieces/lastmodified?$top=6",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Pieces/lastmodified",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/FindBy",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/FindBy",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/definition",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/definition",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/PieceOperationAdditionalItems/attributes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PieceOperationAdditionalItems/attributes",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/PieceOperations/managedTypes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PieceOperations/managedTypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Machine/managedmacros",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PieceOperations/managedmacros",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/PieceOperations/subFilters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/PieceOperations/subFilters",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/batch",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/batch",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/move",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/move",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/skip",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/skip",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/changeCollapseStatus",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/changeCollapseStatus",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/{operationId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/{operationId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/remove",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/remove",
+      "UpstreamHttpMethod": [ "patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperations/clone",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperations/clone",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperationAdditionalItems",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperationAdditionalItems",
+      "UpstreamHttpMethod": [ "Delete", "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/PieceOperationAdditionalItems/manage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/PieceOperationAdditionalItems/manage",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProgramCode/GetLines",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProgramCode/GetLines",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/ProgramCode/graphics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProgramCode/graphics",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/Categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/Categories",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/RepeatitionModes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/RepeatitionModes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/DeltaModes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/DeltaModes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/Statuses",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/Statuses",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/popup",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/popup",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/{id}/history",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/{id}/history",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1400
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/notes",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/notes/LatestNotes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1400
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/LatestNotes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineMaintenances",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances/status",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineMaintenances/status",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/required/{showFinished}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/RequiredMachineMaintenances/{showFinished}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/processed",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProcessedMachineMaintenances",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances/{id}/required",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/RequiredMachineMaintenances/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances/{id}/processed",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/ProcessedMachineMaintenances/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineMaintenances/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances/confirm",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineMaintenances/confirm",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineMaintenances/postpone",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineMaintenances/postpone",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineMaintenances/{week}/report",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineMaintenances/{week}/report",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/notes/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1400
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/notes/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/notes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1400
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/notes",
+      "UpstreamHttpMethod": [ "Put", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Jog",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Jog",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Jog/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Jog/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/virtualPanels",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/virtualPanels",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/Origins",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/Origins",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Origins",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Origins",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Origins{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Origins{everything}",
+      "UpstreamHttpMethod": [ "Get", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineConfiguration",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineConfiguration",
+      "UpstreamHttpMethod": [ "Get", "Patch" ],
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/MachineConfiguration/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/MachineConfiguration/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Patch" ],
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/MachineConfiguration/Status",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/MachineConfiguration/Status",
+      "UpstreamHttpMethod": [ "Get" ],
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/subscriptions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/subscriptions",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/subscriptions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/subscriptions",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "SwaggerKey": "machineServer"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Rules/{typeName}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Rules/{typeName}",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/OData/ProductionLog/PLM",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1100
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OData/ProductionLog/PLM",
+      "SwaggerKey": "eventLogServer",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Graphics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1300
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Graphics",
+      "UpstreamHttpMethod": [ "Patch" ],
+      "SwaggerKey": "machineServer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "ApiSecurity",
+        "AllowedScopes": []
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "AdministrationPath": "/administration"
+  }
+}
