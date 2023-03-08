@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mitrol.Framework.Domain\Mitrol.Framework.Domain.csproj" />
     <ProjectReference Include="..\TestsEF.Data\Mitrol.Framework..MachineManagement.Data.MySQL.csproj" />
     <ProjectReference Include="..\TestsRepoDb.Domain\Mitrol.Framework.Domain.csproj" />
   </ItemGroup>

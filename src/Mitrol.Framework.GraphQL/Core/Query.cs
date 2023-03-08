@@ -17,7 +17,7 @@
             return entityService.GetAll().AsQueryable();
         }
 
-        public Entity GetEntity(IEntityService entityService, long id)
+        public EntityItem GetEntity(IEntityService entityService, long id)
         {
             entityService.SetSession(NullUserSession.Instance);
             var result = entityService.Get(id);

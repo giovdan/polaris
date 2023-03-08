@@ -3,20 +3,21 @@
     using FluentValidation.Results;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Storage;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Mitrol.Framework.Domain;
-    using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Interfaces;
-    using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Core.Models.Microservices;
     using Mitrol.Framework.Domain.Enums;
-    using Mitrol.Framework.Domain.Extensions;
     using Mitrol.Framework.Domain.Models;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -116,7 +117,7 @@
                 sb.AppendLine(e.ToString());
             });
 
-            return sb.ToString().Replace(System.Environment.NewLine, string.Empty); ;
+            return sb.ToString().Replace(Environment.NewLine, string.Empty); ;
         }
 
         /// <summary>
@@ -186,11 +187,6 @@
         public static string GenerateGUID()
         {
             return Guid.NewGuid().ToString();
-        }
-
-        public static ResponseModel<TModel> ToResponseModel<TModel>(this ValidationResult validationResult)
-        {
-            return Result.Fail<TModel>(validationResult.ToErrors()).ToResponseModel();
         }
 
         /// <summary>
@@ -303,7 +299,7 @@
         }
 
         //Restituisce il EnumSerializationName relativo al valore dell'enumerativo, in intero, che gli viene passato
-         public static string GetEnumSerializationNameFromIntEnumValue(string typeName, int EnumValue)
+        public static string GetEnumSerializationNameFromIntEnumValue(string typeName, int EnumValue)
         {
             if (typeName == null)
                 return null;
@@ -490,7 +486,7 @@
                 .AllowAnyMethod()
                 .SetIsOriginAllowed(origin => true) // allow any origin
                 .AllowCredentials() // allow credentials
-            ; 
+            ;
 
             services.AddCors(options =>
             {
@@ -526,43 +522,6 @@
             return isInclusive ?
                     value.CompareTo(lower) >= 0 && value.CompareTo(upper) <= 0
                     : value.CompareTo(lower) > 0 && value.CompareTo(upper) < 0;
-        }
-
-
-        public static ResponseModel<bool> ToResponseModel(this Result result)
-        {
-            if (result == null) result = Result.Fail(ErrorCodesEnum.ERR_GEN007.ToString());
-
-            return new ResponseModel<bool>
-            {
-                Result = result.Success
-                ,
-                ResponseType = result.Success ? ResponseTypeEnum.Ok : Domain.Enums.ResponseTypeEnum.BadRequest
-                ,
-                ErrorDetails = result.Failure ? result.Errors : null
-            };
-        }
-
-        public static ResponseModel<T> ToResponseModel<T>(this Result<T> result)
-        {
-            return new ResponseModel<T>
-            {
-                Result = result.Success ? result.Value : default
-                ,
-                ResponseType = result.Success ? Domain.Enums.ResponseTypeEnum.Ok : Domain.Enums.ResponseTypeEnum.BadRequest
-                ,
-                ErrorDetails = result.Failure ? result.Errors : null
-            };
-        }
-
-        public static ResponseModel<string> ToResponseModel(this ErrorCodesEnum errorCode)
-        {
-            return new ResponseModel<string>
-            {
-                ResponseType = ResponseTypeEnum.BadRequest,
-                ErrorDetails = new List<ErrorDetail> { new ErrorDetail(errorCode.ToString()) },
-                Result = default
-            };
         }
 
         /// <summary>
@@ -701,7 +660,7 @@
                 throw;
             }
 
-            
+
         }
 
         /// <summary>
@@ -739,7 +698,7 @@
         /// <returns></returns>
         public static bool IsInTolerance(this ToleranceConfiguration tolerance, float Teo, float Ril)
         {
-            if(tolerance.LowerValue.HasValue && tolerance.UpperValue.HasValue)
+            if (tolerance.LowerValue.HasValue && tolerance.UpperValue.HasValue)
             {
                 // Analisi con tolleranza assoluta
                 if (tolerance.Type == ToleranceTypeEnum.ABS)
@@ -762,6 +721,47 @@
 
             // Analisi senza tolleranza se valori di range o tipo di tolleranza non specificati
             return (DomainExtensions.CompareFloatWithInchTolerance(Teo, Ril));
+        }
+
+        public static IConfigurationRoot GetConfiguration()
+        {
+            try
+            {
+
+                return new ConfigurationBuilder()
+                    .SetBasePath(DomainExtensions.GetStartUpDirectoryInfo().FullName)
+                    .AddJsonFile(@"bin\config\RepoDbVsEF.Data.json", optional: false, reloadOnChange: true)
+                    .Build();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public static void SetAuditableFields(this IAuditableEntity auditableEntity, string userName)
+        {
+            auditableEntity.CreatedBy = userName;
+            auditableEntity.CreatedOn = auditableEntity.CreatedOn == DateTime.MinValue ? DateTime.UtcNow : auditableEntity.CreatedOn;
+            auditableEntity.UpdatedBy = userName;
+            auditableEntity.UpdatedOn = DateTime.UtcNow;
+        }
+
+        public static void SetAuditableFields(this IEnumerable<IAuditableEntity> auditableEntities, string userName)
+        {
+            foreach (var auditableEntity in auditableEntities)
+            {
+                auditableEntity.CreatedBy = userName;
+                auditableEntity.CreatedOn = auditableEntity.CreatedOn == DateTime.MinValue ? DateTime.UtcNow : auditableEntity.CreatedOn;
+                auditableEntity.UpdatedBy = userName;
+                auditableEntity.UpdatedOn = DateTime.UtcNow;
+
+            }
+        }
+
+        public static IDbTransaction GetDbTransaction(this IDbContextTransaction source)
+        {
+            return (source as IInfrastructure<IDbTransaction>).Instance;
         }
     }
 }

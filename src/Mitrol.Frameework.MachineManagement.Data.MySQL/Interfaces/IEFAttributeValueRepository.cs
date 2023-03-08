@@ -1,8 +1,8 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces
 {
     using System.Collections.Generic;
-    using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
 
     public interface IEFAttributeValueRepository: IRepository<AttributeValue, IEFDatabaseContext>
     {

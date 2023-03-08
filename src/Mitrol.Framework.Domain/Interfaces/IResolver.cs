@@ -6,7 +6,7 @@
     }
 
     public interface IResolver<TService> : IResolver
-    {
+    {       
         new TService Resolve();
     }
 

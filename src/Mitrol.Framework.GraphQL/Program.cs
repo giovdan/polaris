@@ -4,24 +4,24 @@ namespace Mitrol.Framework.GraphQL
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting.WindowsServices;
-    using Mitrol.Framework.Domain.Helpers;
     using System;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using Microsoft.Extensions.Logging;
+    using Mitrol.Framework.Domain.Core.Helpers;
 
     class Program
     {
-        private static bool _isService { get; set; }
+        private static bool IsService { get; set; }
 
 
         static void Main(string[] args)
         {
-            _isService = !(Debugger.IsAttached || args.Contains("--console"));
+            IsService = !(Debugger.IsAttached || args.Contains("--console"));
             using var host = BuildWebHost(args);
 
-            if (_isService)
+            if (IsService)
             {
                 host.RunAsService();
                 Console.WriteLine("Service started");
@@ -37,7 +37,7 @@ namespace Mitrol.Framework.GraphQL
             var pathToContentRoot = Directory.GetCurrentDirectory();
             var webHostArgs = args.Where(arg => arg != "--console").ToArray();
 
-            if (_isService)
+            if (IsService)
             {
                 var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
                 pathToContentRoot = Path.GetDirectoryName(pathToExe);

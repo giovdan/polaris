@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mitrol.Framework.Domain.Core\Mitrol.Framework.Domain.Core.csproj" />
+    <ProjectReference Include="..\Mitrol.Framework.MachineManagement.Domain\Mitrol.Framework.MachineManagement.Domain.csproj" />
   </ItemGroup>
 
 </Project>

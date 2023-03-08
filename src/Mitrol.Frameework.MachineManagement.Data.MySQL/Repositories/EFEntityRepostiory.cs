@@ -2,9 +2,10 @@
 namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
 {
     using Microsoft.EntityFrameworkCore;
+    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.Domain.Models;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -12,7 +13,7 @@ namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
     using System.Text;
     using System.Threading.Tasks;
 
-    public class EFEntityRepostiory : BaseRepository<MasterEntity>, IEFEntityRepository
+    public class EFEntityRepostiory : BaseRepository<Entity>, IEFEntityRepository
     {
         public EFEntityRepostiory(IServiceFactory serviceFactory
                         , IDatabaseContextFactory databaseContextFactory): base(serviceFactory, databaseContextFactory)
@@ -20,23 +21,23 @@ namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
 
         }
 
-        public MasterEntity Add(MasterEntity entity)
+        public Entity Add(Entity entity)
         {
             return UnitOfWork.Context.Entities.Add(entity).Entity;
         }
 
-        public Task<MasterEntity> AddAsync(MasterEntity entity)
+        public Task<Entity> AddAsync(Entity entity)
         {
             return Task.Factory.StartNew(() => Add(entity));
         }
 
-        public int BatchInsert(IEnumerable<MasterEntity> items)
+        public int BatchInsert(IEnumerable<Entity> items)
         {
             UnitOfWork.Context.Entities.AddRange(items);
             return items.Count();
         }
 
-        public int BulkInsert(IEnumerable<MasterEntity> items)
+        public int BulkInsert(IEnumerable<Entity> items)
         {
             StringBuilder insertQuery = new($"REPLACE INTO `Entity` (`Code`, `EntityTypeId``, `RowVersion`) VALUES ");
 
@@ -51,42 +52,42 @@ namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
             return result;
         }
 
-        public IEnumerable<MasterEntity> FindBy(Expression<Func<MasterEntity, bool>> predicate)
+        public IEnumerable<Entity> FindBy(Expression<Func<Entity, bool>> predicate)
         {
             return UnitOfWork.Context.Entities.Where(predicate);
         }
 
-        public Task<IEnumerable<MasterEntity>> FindByAsync(Expression<Func<MasterEntity, bool>> predicate)
+        public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate)
         {
             return Task.Factory.StartNew(() => FindBy(predicate));
         }
 
-        public MasterEntity Get(long id)
+        public Entity Get(long id)
         {
             return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == id);
         }
 
-        public IEnumerable<MasterEntity> GetAll()
+        public IEnumerable<Entity> GetAll()
         {
             return UnitOfWork.Context.Entities;
         }
 
-        public Task<MasterEntity> GetAsync(long id)
+        public Task<Entity> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
         }
 
-        public void Remove(MasterEntity entity)
+        public void Remove(Entity entity)
         {
             UnitOfWork.Context.Entities.Remove(entity);
         }
 
-        public MasterEntity Update(MasterEntity entity)
+        public Entity Update(Entity entity)
         {
             return UnitOfWork.Context.Entities.Update(entity).Entity;
         }
 
-        public MasterEntity RawUpdate(MasterEntity entity)
+        public Entity RawUpdate(Entity entity)
         {
             UnitOfWork.Context.Database.ExecuteSqlRaw($"UPDATE entity SET DisplayName = '{entity.DisplayName}' WHERE Id = {entity.Id}");
             return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == entity.Id);

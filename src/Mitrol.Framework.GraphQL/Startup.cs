@@ -11,7 +11,6 @@ namespace Mitrol.Framework.GraphQL
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json;
-    using Mitrol.Framework.Domain.Helpers;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models.Core;
     using Mitrol.Framework.GraphQL.Core;
@@ -24,6 +23,9 @@ namespace Mitrol.Framework.GraphQL
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Services;
     using Mitrol.Framework.MachineManagement.Application.Mappings;
+    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Core.Models;
+    using Mitrol.Framework.Domain.Core.Helpers;
 
     public class Startup
     {
@@ -33,8 +35,7 @@ namespace Mitrol.Framework.GraphQL
         {
             services.AddSingleton<INamingConventions, EnumNamingConvention>();
 
-            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
-            services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IEFDatabaseContext);
+            
 
             services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
 
@@ -50,7 +51,9 @@ namespace Mitrol.Framework.GraphQL
             services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
 
             //Transient
+            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
             services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+            services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IEFDatabaseContext);
 
             //services.AddTransient<IDatabaseContext, EFDatabaseContext>();
             var containerBuilder = new ContainerBuilder();

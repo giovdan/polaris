@@ -14,4 +14,8 @@
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="108.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Mitrol.Framework.Domain\Mitrol.Framework.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

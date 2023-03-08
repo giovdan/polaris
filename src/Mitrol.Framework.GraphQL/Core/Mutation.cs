@@ -8,7 +8,7 @@ namespace Mitrol.Framework.GraphQL.Core
 
     public class Mutation
     {
-        public Entity CreateEntity(IEntityService entityService, Entity entity)
+        public EntityItem CreateEntity(IEntityService entityService, EntityItem entity)
         {
             entityService.SetSession(NullUserSession.Instance);
             var result = entityService.Create(entity);

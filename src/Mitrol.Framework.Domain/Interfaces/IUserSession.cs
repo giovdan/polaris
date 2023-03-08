@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Mitrol.Framework.Domain.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Models;
+    using System;
+    using System.Collections.Generic;
+
     public interface IUserSession
     {
         /// <summary>
@@ -28,11 +30,17 @@ namespace Mitrol.Framework.Domain.Interfaces
         /// Culture of the Logged User
         /// </summary>
         string Culture { get; }
-        string Group { get; }
+        GroupEnum Group { get; }
         IEnumerable<string> Permissions { get; }
         long UserId { get; set; }
         string MachineName { get; set; }
         bool IsSystemUser { get; set; }
         string FullName { get; }
+
+        UserConfiguration Configuration { get; set; }
+
+        MeasurementSystemEnum ConversionSystem { get; set; }
+
+        bool HasPermission(params PermissionEnum[] permission);
     }
 }
