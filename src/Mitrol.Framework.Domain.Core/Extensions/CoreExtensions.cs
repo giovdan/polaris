@@ -3,21 +3,20 @@
     using FluentValidation.Results;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Infrastructure;
-    using Microsoft.EntityFrameworkCore.Storage;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Core.Models.Microservices;
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Extensions;
     using Mitrol.Framework.Domain.Models;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -117,7 +116,7 @@
                 sb.AppendLine(e.ToString());
             });
 
-            return sb.ToString().Replace(Environment.NewLine, string.Empty); ;
+            return sb.ToString().Replace(System.Environment.NewLine, string.Empty); ;
         }
 
         /// <summary>
@@ -188,6 +187,7 @@
         {
             return Guid.NewGuid().ToString();
         }
+
 
         /// <summary>
         /// Convert ValidationRule to ErrorDetails List
@@ -278,28 +278,29 @@
 
             foreach (var field in type.GetFields())
             {
-                var attribute = Attribute.GetCustomAttribute(field,
-                    typeof(DatabaseDisplayNameAttribute)) as DatabaseDisplayNameAttribute;
-                if (attribute != null)
-                {
+                //var attribute = Attribute.GetCustomAttribute(field,
+                //    typeof(DatabaseDisplayNameAttribute)) as DatabaseDisplayNameAttribute;
+                //if (attribute != null)
+                //{
 
-                    if (attribute.DisplayName == displayName)
-                    {
-                        return (TEnum)field.GetValue(null);
-                    }
-                }
-                else
-                {
-                    if (field.Name == displayName)
-                        return (TEnum)field.GetValue(null);
-                }
+                //    if (attribute.DisplayName == displayName)
+                //    {
+                //        return (TEnum)field.GetValue(null);
+                //    }
+                //}
+                //else
+                //{
+                //    if (field.Name == displayName)
+                //        return (TEnum)field.GetValue(null);
+                //}
+                return (TEnum)field.GetValue(null);
             }
 
             throw new KeyNotFoundException($"{ErrorCodesEnum.ERR_GEN011} displayName:{displayName}");
         }
 
         //Restituisce il EnumSerializationName relativo al valore dell'enumerativo, in intero, che gli viene passato
-        public static string GetEnumSerializationNameFromIntEnumValue(string typeName, int EnumValue)
+         public static string GetEnumSerializationNameFromIntEnumValue(string typeName, int EnumValue)
         {
             if (typeName == null)
                 return null;
@@ -443,25 +444,25 @@
         {
             string result = string.Empty;
             var values = Enum.GetValues(typeof(TEnum));
-            foreach (TEnum value in values)
-            {
-                try
-                {
-                    string itemToCheck = DomainExtensions.GetEnumAttribute<TEnum, DatabaseDisplayNameAttribute>(value).DisplayName;
-                    if (itemToCheck.ToUpper() == displayName.ToUpper())
-                    {
-                        result = value.ToString();
-                        break;
-                    }
-                }
-                catch (Exception)
-                {
-                }
-            }
+            //foreach (TEnum value in values)
+            //{
+            //    try
+            //    {
+            //        string itemToCheck = DomainExtensions.GetEnumAttribute<TEnum, DatabaseDisplayNameAttribute>(value).DisplayName;
+            //        if (itemToCheck.ToUpper() == displayName.ToUpper())
+            //        {
+            //            result = value.ToString();
+            //            break;
+            //        }
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //}
             return result;
         }
 
-        public static void SetEntity<T>(this DbContext dbContext, T entity, EntityState state) where T : Models.BaseEntity
+        public static void SetEntity<T>(this DbContext dbContext, T entity, EntityState state) where T : BaseEntity
         {
             var local = dbContext.Set<T>()
                                      .Local
@@ -486,7 +487,7 @@
                 .AllowAnyMethod()
                 .SetIsOriginAllowed(origin => true) // allow any origin
                 .AllowCredentials() // allow credentials
-            ;
+            ; 
 
             services.AddCors(options =>
             {
@@ -524,40 +525,8 @@
                     : value.CompareTo(lower) > 0 && value.CompareTo(upper) < 0;
         }
 
-        /// <summary>
-        /// SubRange List related to ToolType
-        /// </summary>
-        /// <param name="toolType"></param>
-        /// <returns></returns>
-        public static Dictionary<ToolRangeTypeEnum, SubRangeTypeEnum> GetToolSubRangeTypes(this ToolTypeEnum toolType)
-        {
-            var relatedToolRanges =
-                    DomainExtensions.GetEnumAttributes<ToolTypeEnum, RelatedToolRangeTypeAttribute>(toolType);
-
-            return relatedToolRanges.ToDictionary(x => x.Type, x => x.SubRangeType);
-        }
-
-        /// <summary>
-        /// Map from SubRangeType to ParentType
-        /// </summary>
-        /// <param name="subRangeType"></param>
-        /// <returns></returns>
-        public static ParentTypeEnum GetParentType(this SubRangeTypeEnum subRangeType)
-        {
-            ParentTypeEnum parentType = ParentTypeEnum.ToolRangeMarking;
-
-            switch (subRangeType)
-            {
-                case SubRangeTypeEnum.Bevel:
-                    parentType = ParentTypeEnum.ToolSubRangeBevel;
-                    break;
-                case SubRangeTypeEnum.TrueHole:
-                    parentType = ParentTypeEnum.ToolSubRangeTrueHole;
-                    break;
-            }
-
-            return parentType;
-        }
+        
+        
 
         public static int WeekOfYear(this DateTime date, string culture)
         {
@@ -660,7 +629,7 @@
                 throw;
             }
 
-
+            
         }
 
         /// <summary>
@@ -690,78 +659,37 @@
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
 
-        /// <summary>
-        /// Analisi di due valori in base alla tolleranza
-        /// </summary>
-        /// <param name="teo"></param>
-        /// <param name="ril"></param>
-        /// <returns></returns>
-        public static bool IsInTolerance(this ToleranceConfiguration tolerance, float Teo, float Ril)
-        {
-            if (tolerance.LowerValue.HasValue && tolerance.UpperValue.HasValue)
-            {
-                // Analisi con tolleranza assoluta
-                if (tolerance.Type == ToleranceTypeEnum.ABS)
-                {
-                    // Se rilevato è minore del teorico meno il valore inferiore
-                    // o  rilevato è maggiore del teorico più il valore superiore
-                    // I valori sono fuori range e torna false; altrimenti true
-                    return (Ril < (Teo - tolerance.LowerValue)) || (Ril > (Teo + tolerance.UpperValue)) is false;
-                }
-                // Analisi con tolleranza percentuale
-                else if (tolerance.Type == ToleranceTypeEnum.PERC)
-                {
-                    // Se rilevato è minore del teorico meno il valore percentuale inferiore
-                    // o  rilevato è maggiore del teorico più il valore percentuale superiore
-                    // I valori sono fuori range e torna false; altrimenti true
-                    return (Ril < (Teo - ((Teo / 100.0F) * tolerance.LowerValue))) ||
-                        (Ril > (Teo + ((Teo / 100.0F) * tolerance.UpperValue))) is false;
-                }
-            }
+        ///// <summary>
+        ///// Analisi di due valori in base alla tolleranza
+        ///// </summary>
+        ///// <param name="teo"></param>
+        ///// <param name="ril"></param>
+        ///// <returns></returns>
+        //public static bool IsInTolerance(this ToleranceConfiguration tolerance, float Teo, float Ril)
+        //{
+        //    if(tolerance.LowerValue.HasValue && tolerance.UpperValue.HasValue)
+        //    {
+        //        // Analisi con tolleranza assoluta
+        //        if (tolerance.Type == ToleranceTypeEnum.ABS)
+        //        {
+        //            // Se rilevato è minore del teorico meno il valore inferiore
+        //            // o  rilevato è maggiore del teorico più il valore superiore
+        //            // I valori sono fuori range e torna false; altrimenti true
+        //            return (Ril < (Teo - tolerance.LowerValue)) || (Ril > (Teo + tolerance.UpperValue)) is false;
+        //        }
+        //        // Analisi con tolleranza percentuale
+        //        else if (tolerance.Type == ToleranceTypeEnum.PERC)
+        //        {
+        //            // Se rilevato è minore del teorico meno il valore percentuale inferiore
+        //            // o  rilevato è maggiore del teorico più il valore percentuale superiore
+        //            // I valori sono fuori range e torna false; altrimenti true
+        //            return (Ril < (Teo - ((Teo / 100.0F) * tolerance.LowerValue))) ||
+        //                (Ril > (Teo + ((Teo / 100.0F) * tolerance.UpperValue))) is false;
+        //        }
+        //    }
 
-            // Analisi senza tolleranza se valori di range o tipo di tolleranza non specificati
-            return (DomainExtensions.CompareFloatWithInchTolerance(Teo, Ril));
-        }
-
-        public static IConfigurationRoot GetConfiguration()
-        {
-            try
-            {
-
-                return new ConfigurationBuilder()
-                    .SetBasePath(DomainExtensions.GetStartUpDirectoryInfo().FullName)
-                    .AddJsonFile(@"bin\config\RepoDbVsEF.Data.json", optional: false, reloadOnChange: true)
-                    .Build();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public static void SetAuditableFields(this IAuditableEntity auditableEntity, string userName)
-        {
-            auditableEntity.CreatedBy = userName;
-            auditableEntity.CreatedOn = auditableEntity.CreatedOn == DateTime.MinValue ? DateTime.UtcNow : auditableEntity.CreatedOn;
-            auditableEntity.UpdatedBy = userName;
-            auditableEntity.UpdatedOn = DateTime.UtcNow;
-        }
-
-        public static void SetAuditableFields(this IEnumerable<IAuditableEntity> auditableEntities, string userName)
-        {
-            foreach (var auditableEntity in auditableEntities)
-            {
-                auditableEntity.CreatedBy = userName;
-                auditableEntity.CreatedOn = auditableEntity.CreatedOn == DateTime.MinValue ? DateTime.UtcNow : auditableEntity.CreatedOn;
-                auditableEntity.UpdatedBy = userName;
-                auditableEntity.UpdatedOn = DateTime.UtcNow;
-
-            }
-        }
-
-        public static IDbTransaction GetDbTransaction(this IDbContextTransaction source)
-        {
-            return (source as IInfrastructure<IDbTransaction>).Instance;
-        }
+        //    // Analisi senza tolleranza se valori di range o tipo di tolleranza non specificati
+        //    return (DomainExtensions.CompareFloatWithInchTolerance(Teo, Ril));
+        //}
     }
 }

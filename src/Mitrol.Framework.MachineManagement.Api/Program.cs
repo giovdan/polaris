@@ -3,8 +3,8 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting.WindowsServices;
-    using RepoDbVsEF.Domain;
-    using RepoDbVsEF.Domain.Helpers;
+    using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Core.Helpers;
     using System;
     using System.Diagnostics;
     using System.Globalization;

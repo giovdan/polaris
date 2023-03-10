@@ -22,19 +22,19 @@
         public Dictionary<string, object> CodeGenerators { get; set; }
 
         // TODO: resolve around production row
-        [JsonProperty("ProfileType")]
-        public ProfileTypeEnum ProfileType { get; set; }
+        //[JsonProperty("ProfileType")]
+        //public ProfileTypeEnum ProfileType { get; set; }
 
-        [JsonProperty("SuggestedCodeFormat")]
-        public string SuggestedCodeFormat
-        {
-            get
-            {
-                var suggstedCodeFormat =
-                            DomainExtensions.GetEnumAttribute<ProfileTypeEnum, SuggestedFormatAttribute>(ProfileType);
-                return suggstedCodeFormat?.SuggestedFormat ?? string.Empty;
-            }
-        }
+        //[JsonProperty("SuggestedCodeFormat")]
+        //public string SuggestedCodeFormat
+        //{
+        //    get
+        //    {
+        //        var suggstedCodeFormat =
+        //                    DomainExtensions.GetEnumAttribute<ProfileTypeEnum, SuggestedFormatAttribute>(ProfileType);
+        //        return suggstedCodeFormat?.SuggestedFormat ?? string.Empty;
+        //    }
+        //}
 
         [JsonProperty("OriginModality")]
         public byte OriginModality { get; set; }

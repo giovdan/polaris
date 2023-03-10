@@ -3,6 +3,7 @@
     using Microsoft.OpenApi.Any;
     using Microsoft.OpenApi.Models;
     using Mitrol.Framework.Domain.Core.Enums;
+    using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Models;
     using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -18,8 +19,8 @@
                     ["{fieldName}"] = new OpenApiString("{ErrorCodesEnum}")
                 };
             }
-            else if (context.Type == typeof(LoginRequest))
-            {
+            //else if (context.Type == typeof(LoginRequest))
+            //{
                 ///     POST api/v1/login
                 ///     {
                 ///         "UserName": "admin",
@@ -34,7 +35,7 @@
                     ["MachineName"] = new OpenApiString("Machine name"),
                     ["GrantType"] = new OpenApiString("Password"),
                 };
-            }
+            //}
         }
     }
 }

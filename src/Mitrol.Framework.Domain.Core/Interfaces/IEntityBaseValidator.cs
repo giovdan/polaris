@@ -7,8 +7,8 @@
 
     public interface IEntityBaseValidator<TModel> where TModel:class
     {
-        void Init(IServiceFactory serviceFactory, Dictionary<DatabaseDisplayNameEnum, object> additionalInfos);
-        void Init(Dictionary<DatabaseDisplayNameEnum, object> additionalInfos);
+        //void Init(IServiceFactory serviceFactory, Dictionary<DatabaseDisplayNameEnum, object> additionalInfos);
+        //void Init(Dictionary<DatabaseDisplayNameEnum, object> additionalInfos);
         Result Validate(TModel model);
     }
 }

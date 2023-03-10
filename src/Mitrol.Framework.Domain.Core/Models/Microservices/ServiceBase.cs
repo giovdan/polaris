@@ -8,14 +8,14 @@
     public class ServiceBase : Disposable, IApplicationService
     {
         protected IServiceFactory ServiceFactory { get; }
-        protected IUnitOfWorkFactory UnitOfWorkFactory { get; private set; }
+        protected IUnitOfWorkFactory<IDatabaseContext> UnitOfWorkFactory { get; private set; }
         protected IMapper Mapper { get; set; }
         protected IUserSession UserSession { get; set; }
 
         public ServiceBase(IServiceFactory serviceFactory)
         {
             ServiceFactory = serviceFactory;
-            UnitOfWorkFactory = serviceFactory.GetService<IUnitOfWorkFactory>();
+            UnitOfWorkFactory = serviceFactory.GetService<IUnitOfWorkFactory<IDatabaseContext>>();
             Mapper = serviceFactory.GetService<IMapper>();
         }
 

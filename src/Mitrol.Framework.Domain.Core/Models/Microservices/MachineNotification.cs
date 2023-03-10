@@ -27,18 +27,18 @@
             Number = number;
             Parameter = parameter;
 
-            var notificationCodePrefix = type.GetEnumAttribute<DatabaseDisplayNameAttribute>().DisplayName;
-            var notificationCode = $"{notificationCodePrefix}{number:D3}-{parameter:D3}";
+            //var notificationCodePrefix = type.GetEnumAttribute<DatabaseDisplayNameAttribute>().DisplayName;
+            //var notificationCode = $"{notificationCodePrefix}{number:D3}-{parameter:D3}";
 
-            NotificationCode = notificationCode;
-            LocalizationKey = notificationCode;
-            DescriptionLocalizationKey = $"{notificationCode}_DESCRIPTION";
-            CausesAndSolutions = new CauseSolutionPair[]
-            {
-                new ($"{notificationCode}_CAUSE1", $"{notificationCode}_SOLUTION1_DESC"),
-                new ($"{notificationCode}_CAUSE2", $"{notificationCode}_SOLUTION2_DESC"),
-                new ($"{notificationCode}_CAUSE3", $"{notificationCode}_SOLUTION3_DESC")
-            };
+            //NotificationCode = notificationCode;
+            //LocalizationKey = notificationCode;
+            //DescriptionLocalizationKey = $"{notificationCode}_DESCRIPTION";
+            //CausesAndSolutions = new CauseSolutionPair[]
+            //{
+            //    new ($"{notificationCode}_CAUSE1", $"{notificationCode}_SOLUTION1_DESC"),
+            //    new ($"{notificationCode}_CAUSE2", $"{notificationCode}_SOLUTION2_DESC"),
+            //    new ($"{notificationCode}_CAUSE3", $"{notificationCode}_SOLUTION3_DESC")
+            //};
         }
 
         public MachineNotification(NotificationTypeEnum type, int number, int parameter, DateTime notificationDate)
@@ -62,8 +62,8 @@
         [JsonProperty("Arguments")]
         public Dictionary<string, string> Arguments { get; set; }
 
-        [JsonProperty("CausesAndSolutions")]
-        public CauseSolutionPair[] CausesAndSolutions { get; set; }
+        //[JsonProperty("CausesAndSolutions")]
+        //public CauseSolutionPair[] CausesAndSolutions { get; set; }
 
         [JsonProperty("DescriptionLocalizationKey")]
         public string DescriptionLocalizationKey { get; set; }

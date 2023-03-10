@@ -1,8 +1,14 @@
 ﻿namespace Mitrol.Framework.Domain
 {
+    using Microsoft.Extensions.Configuration;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -27,20 +33,30 @@
         }
 
         /// <summary>
-        /// Compara due dati float rispettando la tolleranza mm/inch
+        /// Get Config Files Directory
         /// </summary>
-        /// <param name="valo1"></param>
-        /// <param name="valo2"></param>
-        /// <param name="inch"></param>
         /// <returns></returns>
-        public static bool CompareFloatWithInchTolerance(float valo1, float valo2, bool inch = false)
+        public static DirectoryInfo GetConfigDirectory()
         {
-            // Faccio la differnza
-            float differenza = Math.Abs(valo1 - valo2);
+            var assemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var solutionLocation = GetStartUpDirectoryInfo(currentPath: assemblyLocation).FullName;
+            return !string.IsNullOrEmpty(solutionLocation) ? new DirectoryInfo($"{solutionLocation}\\bin\\config") : null;
+        }
 
-            // Differenzio il calcolo per mm o inch
-            // Nel caso di inch, la tolleranza giusta sperimentata e' 0.1 mm
-            return (differenza <= (float)(inch ? 0.000394 : 0.01));
+        public static IConfigurationRoot GetConfiguration()
+        {
+            try
+            {
+
+                return new ConfigurationBuilder()
+                    .SetBasePath(GetStartUpDirectoryInfo().FullName)
+                    .AddJsonFile(@"bin\config\RepoDbVsEF.Data.json", optional: false, reloadOnChange: true)
+                    .Build();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
 
@@ -163,35 +179,49 @@
         }
         #endregion < System.Enum >
 
-
-        #region < ToHex Extensions >
-        public static string ToHex(this long number)
+        //ritorna il valore intero per poterlo inserire nel DB in base alla stringa dell'enumerativo passata
+        public static Result<int> GetIntEnumValueFromString(string typeName, string enumerationName)
         {
-            return ToHex(number.ToString());
-        }
-
-        public static string ToHex(this double number)
-        {
-            return ToHex(number.ToString());
-        }
-
-        public static string ToHex(this decimal number)
-        {
-            return ToHex(number.ToString());
-        }
-
-        public static string ToHex(this string str)
-        {
-            var sb = new StringBuilder();
-
-            var bytes = Encoding.Unicode.GetBytes(str);
-            foreach (var t in bytes)
+            try
             {
-                sb.Append(t.ToString("X2"));
-            }
 
-            return sb.ToString();
+                //Type dell'enumerativo
+                Type t = Type.GetType(typeName);
+
+                //get Converter
+                var typeConverter = TypeDescriptor.GetConverter(t);
+                //converto in un tipo enumerativo della stringa da importare
+                var enumerativeValue = typeConverter.ConvertFrom(null, CultureInfo.InvariantCulture
+                        , enumerationName);
+                //Ottengo il valore numerico corrispondente all'enumerativeValue
+                return Result.Ok<int>((int)Convert.ChangeType(enumerativeValue, typeof(int)));
+            }
+            catch (Exception exc)
+            {
+                return Result.Fail<int>(exc.Message);
+            }
         }
-        #endregion
+
+        //Fornisce il valore di default per il tipo indicato.
+        public static int GetDefaultEnumValueFromTypename(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return 0;
+
+            Type t = Type.GetType(typeName);
+            //cerco l'attributo che fornisce il valore di default
+            DefaultValueAttribute[] attributes = (DefaultValueAttribute[])t.GetCustomAttributes(typeof(DefaultValueAttribute), false);
+            if (attributes != null &&
+                attributes.Length > 0)
+            {
+                var value = attributes[0].Value;
+                return GetIntEnumValueFromString(typeName, value.ToString()).Value;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
     }
 }

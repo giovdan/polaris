@@ -38,11 +38,11 @@
                         errorDetails.Add(new ErrorDetail(key, context.ModelState[key].Errors.Select(x => $"{key.ToUpper()}_{ValidationKey}_INVALID").ToList()));
                     }
                 }
-                context.Result = new OkObjectResult(new ResponseModel<string>()
-                {
-                    ResponseType = ResponseTypeEnum.BadRequest,
-                    ErrorDetails = errorDetails
-                });
+                //context.Result = new OkObjectResult(new ResponseModel<string>()
+                //{
+                //    ResponseType = ResponseTypeEnum.BadRequest,
+                //    ErrorDetails = errorDetails
+                //});
             }
 
             return base.OnResultExecutionAsync(context, next);

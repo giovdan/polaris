@@ -51,8 +51,6 @@
                 if (entity != null && !entity.PreserveUpdatedOn)
                 {
                     DateTime now = DateTime.UtcNow;
-                    entity.TimeZoneId = TimeZoneInfo.Local.Id;
-
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedBy = identityName;

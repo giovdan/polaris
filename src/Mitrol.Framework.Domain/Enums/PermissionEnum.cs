@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Mitrol.Framework.Domain.Enums
+{
+    public enum PermissionEnum
+    {
+        VIEW_USERS = 1,
+        CAN_DO_BOOT = 2,
+        USER_MANAGEMENT = 3,
+        GROUP_MANAGEMENT = 4,
+        TOOL_UPDATE = 5,
+        TOOLHODER_MANAGEMENT = 8,
+        SESSIONS_MANAGEMENT = 9,
+        USER_CHANGEPASSWORD = 10,
+        MATERIAL_MANAGEMENT = 11,
+        UPLOAD_FNC = 12,
+        PROFILES_MANAGEMENT = 13,
+        EVENTSLOG_VIEW = 14,
+        PLANT_MANAGEMENT = 15,
+        LOCALIZATION_CULTURE_MANAGEMENT = 16,
+        LOCALIZATION_TRANSLATION_MANAGEMENT = 17,
+        PARAMETERS_MANAGEMENT = 18,
+        PARAMETERS_REMOVEALL = 19,
+        JSON_IMPORT = 20,
+        JSON_EXPORT = 21,
+        SETUP_MANAGEMENT = 22,
+        SETUPSTATUS_UPDATE = 23,
+        SLOT_MANAGEMENT = 24,
+        GET_CONFIGURATION = 25,
+        RESET_CACHE = 26,
+        TOOLTABLE_MANAGEMENT = 27,
+        PROGRAM_MANAGEMENT = 28,
+        PRODUCTIONQUEUE_MANAGEMENT = 29,
+        PIECE_MANAGEMENT = 30,
+        STOCKITEM_MANAGEMENT = 31,
+        NOTES_MANAGEMENT = 32,
+        MAINTENANCE_MANAGEMENT = 33,
+        USERCONFIGURATION_MANAGEMENT = 34,
+        RTM_MANAGEMENT = 35,
+        CONFIRM_MAINTENANCE = 36,
+        POSTPONE_MAINTENANCE = 37,
+        TOOL_CREATE = 38,
+        TOOL_DELETE = 39,
+        TOOL_CLONE = 40,
+        TOOL_READ = 41,
+        TOOLHOLDERS_READ = 42,
+        MATERIALS_READ = 43,
+        PROFILES_READ = 44,
+        TOOLTABLES_READ = 45,
+    }
+}

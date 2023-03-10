@@ -1,0 +1,1080 @@
+{
+  "gitCommitHash": "05dc2a3de269eb2779d7cd40d4a3ebaeeaeea1be",
+  "gitCommitDate": "Wed, 8 Mar 2023 15:49:34 +0100",
+  "gitRefs": "HEAD -> @newversion",
+  "buildDate": "Fri, 10 Mar 2023 08:24:27 +0100",
+  "gitUncommittedFiles": [
+    {
+      "status": "M",
+      "filename": "Mitrol.Framework.sln"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Core/BaseDbContext.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Core/EFDatabaseContext.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Core/EFUnitOfWork.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Core/EFUnitOfWorkFactory.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IChildLinkRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/AttributeDefinition.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/AttributeValue.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/DatabaseContextFactory.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFDatabaseContext.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFUnitOfWork.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFUnitOfWorkFactory.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/Entity.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EFChildLinkRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Attributes/InputValidationAttribute.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Attributes/MustLog.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/CustomExceptions/BusinessValidationException.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/CustomExceptions/EntityNotFoundException.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Extensions/CoreExtensions.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IBackgroundTaskQueue.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IEntityBaseValidator.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IFilterExport.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Middlewares/EventLogMiddleware.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Mitrol.Framework.Domain.Core.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Audit/AuditableEntity.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/BaseDbContext.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/BaseEntityWithRowVersion.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/DatabaseContextFactory.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/UnitOfWork.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/UnitOfWorkFactory.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/BackgroundCancellableTaskQueue.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/BaseExportFilter.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/BaseNotificationListItem.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/BaseRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/ExportFileManagement.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/ImportExportItemsIterator.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/ImportExportService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/ImportFromFilenameParam.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/InternalBaseService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/MachineNotification.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/ServiceBase.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/Station.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/StationItem.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Swagger/ExampleSchemaFilter.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Licensing/EncryptionManagement.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Licensing/HaspStatusEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Licensing/LicensingAPI.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Licensing/Mitrol.Framework.Domain.Licensing.csproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom.CLI/DataStructures.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom.CLI/Mitrol.Framework.Domain.Network.MitCom.CLI.cpp"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom.CLI/Mitrol.Framework.Domain.Network.MitCom.CLI.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom.CLI/Mitrol.Framework.Domain.Network.MitCom.CLI.vcxproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom.CLI/framework.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom.CLI/pch.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/MitCom.cpp"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/MitCom.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/Mitrol.Framework.Domain.Network.MitCom.vcxproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/StringMaps.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/circular_buffer.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/dllmain.cpp"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/framework.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/pch.cpp"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Network.MitCom/pch.h"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/App.config"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/ApplicationConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Common.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Mitrol.Framework.Domain.Remoting.Fanuc.csproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Models/ButtonUserControl.Designer.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Models/ButtonUserControl.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Models/ButtonUserControl.resx"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Program.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Properties/AssemblyInfo.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Properties/Resources.Designer.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Properties/Resources.resx"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Properties/Settings.Designer.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Properties/Settings.settings"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Resources/close.png"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Resources/minimize.png"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Resources/polaris-logo-transparent-dark.ico"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/Resources/restart.png"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/frmServer.Designer.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/frmServer.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/frmServer.resx"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Fanuc/packages.config"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Configuration/StartApplicationSetupSection.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Extensions/RestClientExtensions.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Mitrol.Framework.Domain.Remoting.Services.csproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/MachineConfigurationResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/MachineParameterServiceResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/MacroResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/ProductionServiceResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/ProgramCodeServiceResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/SetupResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/ToolRangeServiceResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Resolvers/ToolServiceResolver.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteMachineConfigurationService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteMachineParameterService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteProcessingSetup.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteProductionService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteProgramCodeService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteToolRangeService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/Services/RemoteToolService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/SignalR/RemoteEventHubClient.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/TranslationsDictionary.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/WebApi/WebApiCaller.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Remoting.Services/WebApi/WebApiRestClient.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/AppliesToGroupAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/AssemblyCoreVersion.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/AssemblyDatabaseVersion.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/BitEnableFor.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/CodeGeneratorsAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/DatabaseDisplayNameAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/DecimalPrecisionAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/DirtyableChildAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/EnumFieldAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/ExtensionAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/GeneralSetupPropertiesAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/InternalCodeAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/IsForGraphics.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/IsSubRangeAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/LifeTimeAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/MacroContextAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/MarkingUnitTypeAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/ObjectImportAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/OperationInfoAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/ParentTypeOrderAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/PlantUnitAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/RegularExpressionAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/RelatedAdditionalItemTypeAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/RelatedFieldsAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/RelatedFilterAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/RelatedToolRangeTypeAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/ServiceToImportAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/SuggestedFormatAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/TechnologyRelatedToAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/ToolCategoryAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Attributes/WorkTypesAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Backlogs/BacklogTimerConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Backlogs/BacklogTimerConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Backlogs/BacklogsConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Backlogs/BacklogsConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/CleanUp/CleanUpConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/CleanUp/CleanUpConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Axes/AxisConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Axes/AxisConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Axes/AxisGroupConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Axes/AxisGroupConfigurationComparer.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Axes/OverrideConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Axes/OverrideConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/CncConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/CncConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/EtherCAT/EtherCATConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/EtherCAT/EtherCATNodeConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/EtherCAT/EtherCatConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/FanucConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/GFunctionEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/Mitrol/MitrolConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/NodeReference.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/NodeReferenceValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Enums/ApplicationSettingKeyEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/FontDefinitionConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/FontPathDefinitionConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/ImportExport/ImportExportConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Interfaces/IRemoteMachineConfigurationService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Machine/MachineConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Machine/MachineConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Machine/TipoGantryEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Macro/MacroTypeConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Models/ApplicationSettingItem.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Models/BootSection.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Models/FlagsDictionary.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Models/SetupSection.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Plant/ConsoleConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Plant/PlantConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Plc/PlcConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Plc/PlcConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Production/ProductionConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Programming/ProgrammingConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Programming/ProgrammingConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/Abstracts/LogConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/Abstracts/NetworkDeviceConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/Abstracts/NetworkDeviceConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/Abstracts/PlatformConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/ConfigurationExtensions.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/IRootConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/RootConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Root/RootConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Drill/DrillConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Drill/DrillUnitConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Drill/ForAngEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/GeneralConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/GridPosition.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Mark/MarkConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Mark/MarkConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Mark/MarkUnitConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Mark/MarkUnitConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Mark/ReaJetConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Notch/NotchConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Oxy/OxyConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Oxy/OxyConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Pla/PlaConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Robot/RobotConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Saw/SawConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Saw/SawConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Saw/SawUnitConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/Saw/SawUnitConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/SetupConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/SetupConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/TorchUnitConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/TorchUnitConfigurationValidator.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configuration/Setup/UnitConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Core/EnumTypeConverter.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Core/MySQLSection.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Core/ServiceFactory.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/DomainExtensions.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Extensions/DomainExtensions.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Extensions/StringExtensions.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Helpers/WebApiHelper.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IConfigurationService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IConvertable.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IExternalInterface.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IImportItem.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IParameterStrategy.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IProcessingSetup.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IProfileImportService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IReadOnlySetup.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IRemoteMachineParameterService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IUserSession.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Enum/ExternalInterfaceNameEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Enum/MacroOperationTypeEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Enum/MacroTypeEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Interface/IDataExternalInterface.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Interface/IMacroOperationItem.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Interface/IMacroProcessing.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Interface/IToolManagement.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/AttributeConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/ClusterGroup.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/ExternalBaseData.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroBaseAttributes.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroConfigurationFilter.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroManagement.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroOperationItem.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroParameters.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/MacroProcessOutputData.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/TechnologyConfiguration.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Macro/Models/ToolFilter.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Mitrol.Framework.Domain.csproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Models/ToleranceConfiguration.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Models/UserSession.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/SimpleStringCipher.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/StringExtensions.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Gateway.Api/Hubs/EventHub.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Gateway.Api/Mitrol.Framework.Gateway.Api.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Gateway.Api/Startup.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Api/Mitrol.Frameework.MachineManagement.Api.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Api/Program.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Core/BaseService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mappings/ServiceProfile.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mitrol.Framework.MachineManagement.Application.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/AttributeItem.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/EntityService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Mitrol.Framework.MachineManagement.Domain.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinition.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeValue.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/DetailIdentifier.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/EFUnitOfWork.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/EFUnitOfWorkFactory.cs"
+    }
+  ]
+}

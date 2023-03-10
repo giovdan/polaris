@@ -5,7 +5,8 @@
     using Newtonsoft.Json;
     using System.Collections.Generic;
 
-    public class Station : Observable, IReadOnlyStation
+    public class Station : Observable
+        //, IReadOnlyStation
     {
         public Station()
         {

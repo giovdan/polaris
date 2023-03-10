@@ -28,7 +28,7 @@
         [JsonProperty("Arguments")]
         public Dictionary<string, string> Arguments { get; set; }
 
-        [JsonProperty("CausesAndSolutions")]
-        public CauseSolutionPair[] CausesAndSolutions { get; set; }
+        //[JsonProperty("CausesAndSolutions")]
+        //public CauseSolutionPair[] CausesAndSolutions { get; set; }
     }
 }

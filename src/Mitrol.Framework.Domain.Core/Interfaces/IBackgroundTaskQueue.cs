@@ -17,7 +17,7 @@
 
     public interface ICancellableBackgroundTaskQueue
     {
-        TaskInfo QueueWorkItem(Func<IServiceScope, IdentifiedTask, Task> workItem,List<OperationInfo> operations);
+        //TaskInfo QueueWorkItem(Func<IServiceScope, IdentifiedTask, Task> workItem,List<OperationInfo> operations);
 
         Task<IdentifiedTask> DequeueAsync(CancellationToken cancellationToken);
 

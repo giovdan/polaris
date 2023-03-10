@@ -5,6 +5,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Globalization;
     using System.Text.Json.Serialization;
 
     [Table("DetailIdentifier")]
@@ -19,8 +20,6 @@
         public long MasterId { get; set; }
         [Required()]
         public string Value { get; set; }
-        [Required()]
-        public ParentTypeEnum ParentTypeId { get; set; }
         [Required()]
         public int Priority { get; set; }
 
@@ -41,12 +40,14 @@
                 AttributeDefinitionId = detailIdentifier.AttributeDefinitionId,
                 Value = value,
                 TextValue = textValue,
-                DataFormatId = (AttributeDataFormatEnum)detailIdentifier.AttributeDefinition.DataFormatId,
-                ParentTypeId = detailIdentifier.ParentTypeId,
-                SubParentTypeId = detailIdentifier.Master.ParentId
+                DataFormat = detailIdentifier.AttributeDefinition.DataFormat,
+                EntityId = detailIdentifier.Master.EntityId
             };
-            
-            return attributeValue.GetAttributeValue(conversionSystem).ToString();
+
+            //return attributeValue.GetAttributeValue(conversionSystem).ToString();
+            return detailIdentifier.AttributeDefinition.AttributeKind == AttributeKindEnum.String 
+                        ? textValue
+                        : value.ToString("F2", CultureInfo.InvariantCulture);
         }
 
         private static (decimal value, string textValue) GetInnerValue(DetailIdentifier detailIdentifier
@@ -55,7 +56,7 @@
             decimal decimalValue = 0;
             string textValue = string.Empty;
 
-            switch (detailIdentifier.AttributeDefinition.AttributeKindId)
+            switch (detailIdentifier.AttributeDefinition.AttributeKind)
             {
                 case AttributeKindEnum.String:
                     {

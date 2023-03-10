@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mitrol.Framework.Domain.Core\Mitrol.Framework.Domain.Core.csproj" />
-    <ProjectReference Include="..\src\Mitrol.Frameework.MachineManagement.Data.MySQL\Mitrol.Framework..MachineManagement.Data.MySQL.csproj" />
-    <ProjectReference Include="..\src\Mitrol.Framework.Domain.Core\Mitrol.Framework.Domain.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace Mitrol.Framework.Domain.Core.CustomExceptions
 {
-    using Mitrol.Framework.Domain.Core.Enums;
+    using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Models;
     using System;
     using System.Collections.Generic;

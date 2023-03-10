@@ -7,6 +7,7 @@
     using Microsoft.EntityFrameworkCore.Storage;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.Domain.Core.Interfaces;
 
     public class EFUnitOfWork : IUnitOfWork<IEFDatabaseContext>
     {

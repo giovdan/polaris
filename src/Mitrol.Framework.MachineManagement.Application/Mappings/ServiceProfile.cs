@@ -1,20 +1,20 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Application.Mappings
 {
     using Mitrol.Framework.MachineManagement.Application.Models;
-    using Mitrol.Framework.Domain.Models;
     using System.Linq;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
 
     public class ServiceProfile: AutoMapper.Profile
     {
         public ServiceProfile()
         {
-            CreateMap<MasterEntity, EntityItem>()
+            CreateMap<Entity, EntityItem>()
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.EntityTypeId));
 
-            CreateMap<EntityItem, MasterEntity>()
+            CreateMap<EntityItem, Entity>()
                 .ForMember(dest => dest.EntityTypeId, opt => opt.MapFrom(s => s.EntityType));
 
-            CreateMap<MasterEntity, EntityListItem>()
+            CreateMap<Entity, EntityListItem>()
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.EntityTypeId));
 
             CreateMap<AttributeValue, AttributeItem>()
@@ -31,7 +31,7 @@
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.EnumId));
 
-            CreateMap<IGrouping<MasterEntity, AttributeValue>, EntityItem>()
+            CreateMap<IGrouping<Entity, AttributeValue>, EntityItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(s => s.Key.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(s => s.Key.DisplayName))
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.Key.EntityTypeId))

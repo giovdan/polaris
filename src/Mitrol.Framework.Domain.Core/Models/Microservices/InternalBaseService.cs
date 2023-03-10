@@ -16,8 +16,6 @@
 namespace Mitrol.Framework.Domain.Core.Models.Microservices
 {
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.Domain.SignalR;
-    using Mitrol.Framework.Domain.SignalR.Gateway;
 
     /// <summary>
     /// Class InternalBaseService.
@@ -26,8 +24,8 @@ namespace Mitrol.Framework.Domain.Core.Models.Microservices
     /// <seealso cref="Mitrol.Framework.Domain.Core.Models.Microservices.ServiceBase" />
     public class InternalBaseService : ServiceBase
     {
-        protected IEventHubClient ProgressEventHubClient => ServiceFactory.GetService<IEventHubClient>();
-        protected IEventLogHubClient EventLogHubClient => ServiceFactory.GetService<IEventLogHubClient>();
+        //protected IEventHubClient ProgressEventHubClient => ServiceFactory.GetService<IEventHubClient>();
+        //protected IEventLogHubClient EventLogHubClient => ServiceFactory.GetService<IEventLogHubClient>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalBaseService"/> class.

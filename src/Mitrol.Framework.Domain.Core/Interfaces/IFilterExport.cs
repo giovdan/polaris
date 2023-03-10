@@ -14,7 +14,7 @@ namespace Mitrol.Framework.Domain.Core.Interfaces
     public interface IBaseFilterExport
     {
         long[] Indexes { get; set; }
-        void ConvertFilter(ImportExportFilter filter);
+        //void ConvertFilter(ImportExportFilter filter);
     }
 
 }

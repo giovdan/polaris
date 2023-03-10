@@ -1,4 +1,5 @@
 ﻿using Mitrol.Framework.Domain.Core.Enums;
+using Mitrol.Framework.Domain.Enums;
 using System;
 
 namespace Mitrol.Framework.Domain.Core.CustomExceptions

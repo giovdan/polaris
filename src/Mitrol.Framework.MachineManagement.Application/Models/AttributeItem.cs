@@ -4,6 +4,7 @@
     using HotChocolate.Types;
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
     using System;
 
     public class AttributeItem

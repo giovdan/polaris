@@ -1,11 +1,10 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces
 {
-    using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.Domain.Models;
-    
+    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
 
-    public interface IChildLinkRepository: IRepository<ChildLink, IEFDatabaseContext>
+    public interface ILinkRepository: IRepository<Link, IEFDatabaseContext>
     {
-        void RemoveLinks(long parentId);
+        void RemoveChildLinks(long parentId);
     }
 }

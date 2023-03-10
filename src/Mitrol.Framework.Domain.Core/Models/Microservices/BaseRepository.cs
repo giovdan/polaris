@@ -17,14 +17,14 @@
             base.DisposeManaged();
         }
 
-        public IUnitOfWork UnitOfWork { get; set; }
+        public IUnitOfWork<TDbContext> UnitOfWork { get; set; }
         protected IDatabaseContextFactory DatabaseContextFactory { get; }
 
         /// <summary>
         /// Default implementation of unit of work
         /// </summary>
         /// <param name="unitOfWork"></param>
-        public void SetUnitOfWork(IUnitOfWork unitOfWork)
+        public void SetUnitOfWork(IUnitOfWork<TDbContext> unitOfWork)
         {
             if (UnitOfWork == null ||
                 (UnitOfWork != null && unitOfWork.Id != UnitOfWork.Id))

@@ -36,11 +36,8 @@
         string MachineName { get; set; }
         bool IsSystemUser { get; set; }
         string FullName { get; }
-
         UserConfiguration Configuration { get; set; }
-
         MeasurementSystemEnum ConversionSystem { get; set; }
-
         bool HasPermission(params PermissionEnum[] permission);
     }
 }

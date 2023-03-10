@@ -2,12 +2,9 @@
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
-    using Mitrol.Framework.Domain.Bus.Events;
     using Mitrol.Framework.Domain.Core.CustomExceptions;
-    using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Extensions;
     using Mitrol.Framework.Domain.Models;
-    using Mitrol.Framework.Domain.SignalR;
     using Newtonsoft.Json;
     using System;
     using System.Security.Claims;
@@ -54,17 +51,17 @@
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 }
 
-                var eventLogHubClient = context.RequestServices.GetRequiredService<IEventLogHubClient>();
-                eventLogHubClient.WriteLogEvent(new WriteLogEvent()
-                {
-                    EventType = EventTypeEnum.Error,
-                    EventContext = EventContextEnum.InternalServerError,
-                    Method = context.Request.Path,
-                    Message = message,
-                    LoggedUser = session.Username,
-                    MachineName = session.MachineName,
-                    SessionId = session.SessionId,
-                });
+                //var eventLogHubClient = context.RequestServices.GetRequiredService<IEventLogHubClient>();
+                //eventLogHubClient.WriteLogEvent(new WriteLogEvent()
+                //{
+                //    EventType = EventTypeEnum.Error,
+                //    EventContext = EventContextEnum.InternalServerError,
+                //    Method = context.Request.Path,
+                //    Message = message,
+                //    LoggedUser = session.Username,
+                //    MachineName = session.MachineName,
+                //    SessionId = session.SessionId,
+                //});
             }
             catch (Exception ex)
             {

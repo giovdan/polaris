@@ -12,12 +12,15 @@
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Models;
+    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.Domain.Core.Enums;
 
     public class EntityService : BaseService, IEntityService
     {
         protected IEFEntityRepository EntityRepository => ServiceFactory.GetService<IEFEntityRepository>();
         protected IEFAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IEFAttributeValueRepository>();
-        protected IChildLinkRepository ChildLinkRepository => ServiceFactory.GetService<IChildLinkRepository>();
+        protected ILinkRepository ChildLinkRepository => ServiceFactory.GetService<ILinkRepository>();
         protected IEFAttributeDefinitionRepository AttributeDefinitionRepository => ServiceFactory.GetService<IEFAttributeDefinitionRepository>();
         #region < Private Methods > 
         private long[] InnerBatchCreate(IEnumerable<EntityItem> entities, IUnitOfWorkFactory<IEFDatabaseContext> factory)
@@ -47,20 +50,22 @@
             ChildLinkRepository.Attach(unitOfWork);
             if (withBatch)
             {
-                ChildLinkRepository.BatchInsert(childrenIds.Select((child, index) => new ChildLink
+                ChildLinkRepository.BatchInsert(childrenIds.Select((child, index) => new Link
                 {
-                    ParentId = id,
-                    ChildId = child,
+                    EntityId = id,
+                    RelatedEntityId = child,
+                    RelationTypeId = EntityRelationshipTypeEnum.Child,
                     Level = 1,
                     RowNumber = index + 1
                 }));
             }
             else
             {
-                ChildLinkRepository.BulkInsert(childrenIds.Select((child, index) => new ChildLink
+                ChildLinkRepository.BulkInsert(childrenIds.Select((child, index) => new Link
                 {
-                    ParentId = id,
-                    ChildId = child,
+                    EntityId = id,
+                    RelatedEntityId = child,
+                    RelationTypeId = EntityRelationshipTypeEnum.Child,
                     Level = 1,
                     RowNumber = index + 1
                 }));
@@ -74,14 +79,14 @@
         /// <param name="entity"></param>
         /// <param name="factory"></param>
         /// <returns></returns>
-        private Result<MasterEntity> InnerBatchCreate(EntityItem entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
+        private Result<Entity> InnerBatchCreate(EntityItem entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
         {
             try
             {
                 var uow = factory.GetOrCreate(UserSession);
                 EntityRepository.Attach(uow);
                 AttributeValueRepository.Attach(uow);
-                var dbEntity = EntityRepository.Add(Mapper.Map<MasterEntity>(entity));
+                var dbEntity = EntityRepository.Add(Mapper.Map<Entity>(entity));
                 var attributes = entity.Attributes.Select(a => {
                     var dbAttribute = Mapper.Map<AttributeValue>(a);
                     return dbAttribute.SetAttributeValue(a);
@@ -95,18 +100,18 @@
             }
             catch (Exception ex)
             {
-                return Result.Fail<MasterEntity>(ex.InnerException?.Message ?? ex.Message);
+                return Result.Fail<Entity>(ex.InnerException?.Message ?? ex.Message);
             }
         }
 
-        private Result<MasterEntity> InnerBulkCreate(EntityItem entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
+        private Result<Entity> InnerBulkCreate(EntityItem entity, IUnitOfWorkFactory<IEFDatabaseContext> factory)
         {
             try
             {
                 var uow = factory.GetOrCreate(UserSession);
                 EntityRepository.Attach(uow);
                 AttributeValueRepository.Attach(uow);
-                var dbEntity = EntityRepository.Add(Mapper.Map<MasterEntity>(entity));
+                var dbEntity = EntityRepository.Add(Mapper.Map<Entity>(entity));
                 var attributes = entity.Attributes.Select(a => {
                     var dbAttribute = Mapper.Map<AttributeValue>(a);
                     return dbAttribute.SetAttributeValue(a);
@@ -122,7 +127,7 @@
             }
             catch (Exception ex)
             {
-                return Result.Fail<MasterEntity>(ex.InnerException?.Message ?? ex.Message);
+                return Result.Fail<Entity>(ex.InnerException?.Message ?? ex.Message);
             }
         }
 
@@ -241,7 +246,7 @@
 
                 if (attributes.Any())
                 {
-                    IGrouping<MasterEntity, AttributeValue> entity =
+                    IGrouping<Entity, AttributeValue> entity =
                         attributes
                                 .GroupBy(a => a.Entity)
                                 .Single();
@@ -282,7 +287,7 @@
                 {
                     var uow = factory.GetOrCreate(UserSession);
                     EntityRepository.Attach(uow);
-                    EntityRepository.Update(Mapper.Map<MasterEntity>(entity));
+                    EntityRepository.Update(Mapper.Map<Entity>(entity));
                     uow.Commit();
                     return Result.Ok(entity);
                 }
@@ -352,14 +357,15 @@
             using(var factory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>())
             {
                 var uow = factory.GetOrCreate(UserSession);
-                AttributeDefinitionRepository.Attach(uow);
-                return Mapper.Map<IEnumerable<AttributeItem>>(AttributeDefinitionRepository.FindBy(a => a.EntityTypeId == type))
-                        .Select(a =>
-                        {
-                            var attributeInfo = a.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
-                            a.AttributeKind = attributeInfo.AttributeKind;
-                            return a;
-                        });
+                return new List<AttributeItem>();
+                //AttributeDefinitionRepository.Attach(uow);
+                //return Mapper.Map<IEnumerable<AttributeItem>>(AttributeDefinitionRepository.FindBy(a => a.EntityType == type))
+                //        .Select(a =>
+                //        {
+                //            var attributeInfo = a.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                //            a.AttributeKind = attributeInfo.AttributeKind;
+                //            return a;
+                //        });
             }
         }
     }

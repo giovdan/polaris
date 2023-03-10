@@ -28,22 +28,22 @@ namespace Mitrol.Framework.Domain.Core.Models.Microservices
             base.DisposeManaged();
         }
 
-        public TaskInfo QueueWorkItem(Func<IServiceScope, IdentifiedTask, Task> workItem,List<OperationInfo> operations)
-        {
-            lock (lockCancellationRequest)
-            {
-                if (workItem == null)
-                {
-                    throw new ArgumentNullException(nameof(workItem));
-                }
-                var workItemToAdd = new IdentifiedTask(workItem,operations);
-                var guid = workItemToAdd.Identifier;
-                _workItems.Enqueue(workItemToAdd);
-                _signal.Release();
-                var tsk = new TaskInfo() { Guid = workItemToAdd.Identifier, Operations = operations }; 
-                return tsk;
-            }
-        }
+        //public TaskInfo QueueWorkItem(Func<IServiceScope, IdentifiedTask, Task> workItem,List<OperationInfo> operations)
+        //{
+        //    lock (lockCancellationRequest)
+        //    {
+        //        if (workItem == null)
+        //        {
+        //            throw new ArgumentNullException(nameof(workItem));
+        //        }
+        //        var workItemToAdd = new IdentifiedTask(workItem,operations);
+        //        var guid = workItemToAdd.Identifier;
+        //        _workItems.Enqueue(workItemToAdd);
+        //        _signal.Release();
+        //        var tsk = new TaskInfo() { Guid = workItemToAdd.Identifier, Operations = operations }; 
+        //        return tsk;
+        //    }
+        //}
 
         public async Task<IdentifiedTask> DequeueAsync(CancellationToken cancellationToken)
         {
