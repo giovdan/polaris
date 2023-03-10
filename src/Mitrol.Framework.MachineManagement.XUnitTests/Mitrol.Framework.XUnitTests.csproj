@@ -24,10 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RepoDbVsEF.Application\Mitrol.Framework.MachineManagement.Application.csproj" />
-    <ProjectReference Include="..\TestsEF.Data\Mitrol.Framework..MachineManagement.Data.MySQL.csproj" />
-    <ProjectReference Include="..\TestsRepoDb.Data\Mitrol.Framework.MachineManagement.Data.RepDb.csproj" />
-    <ProjectReference Include="..\TestsRepoDb.Domain\Mitrol.Framework.Domain.csproj" />
+    <ProjectReference Include="..\Mitrol.Frameework.MachineManagement.Data.MySQL\Mitrol.Framework..MachineManagement.Data.MySQL.csproj" />
+    <ProjectReference Include="..\Mitrol.Framework.Domain.Core\Mitrol.Framework.Domain.Core.csproj" />
+    <ProjectReference Include="..\Mitrol.Framework.Domain\Mitrol.Framework.Domain.csproj" />
+    <ProjectReference Include="..\Mitrol.Framework.MachineManagement.Application\Mitrol.Framework.MachineManagement.Application.csproj" />
+    <ProjectReference Include="..\Mitrol.Framework.MachineManagement.Domain\Mitrol.Framework.MachineManagement.Domain.csproj" />
   </ItemGroup>
 
 </Project>

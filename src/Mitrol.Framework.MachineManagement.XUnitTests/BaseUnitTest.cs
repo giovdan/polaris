@@ -1,5 +1,4 @@
-﻿using RepoDb;
-namespace XUnitTests
+﻿namespace XUnitTests
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
@@ -7,14 +6,11 @@ namespace XUnitTests
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models.Core;
-    using Mitrol.Framework.MachineManagement.Application.Mappings;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Models;
-    using Mitrol.Framework.MachineManagement.Data.RepDb.Interfaces;
-    using RepoDbVsEF.Data.Models;
-    using RepoDbVsEF.Domain.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -39,35 +35,15 @@ namespace XUnitTests
         {
             services.AddSingleton<IServiceFactory, ServiceFactory>();
 
-            services.AddAutoMapper(cfg =>
+            services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
+            services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
+            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
+            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+            services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
+            services.AddDbContext<EFDatabaseContext>(options =>
             {
-                cfg.DisableConstructorMapping();
-                cfg.AddProfile(new ServiceProfile());
+                options.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
             });
-
-
-            if (isRepoDb)
-            {
-                GlobalConfiguration
-                        .Setup()
-                        .UseMySql();
-                services.AddSingleton<IUnitOfWorkFactory<IRepoDbDatabaseContext>, RepoDbUnitOfWorkFactory>();
-                services.AddTransient<IDatabaseContext, RepoDbContext>();
-                services.AddTransient<IRepoDbDatabaseContext, RepoDbContext>();
-                services.AddTransient<IUnitOfWork<IRepoDbDatabaseContext>, RepoDbUnitOfWork>();
-            }
-            else
-            {
-                services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
-                services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
-                services.AddTransient<IDatabaseContext, EFDatabaseContext>();
-                services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
-                services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
-                services.AddDbContext<EFDatabaseContext>(options =>
-                {
-                    options.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
-                });
-            }
 
             services.AddTransient(serviceProvider => Configuration);
             var containerBuilder = new ContainerBuilder();

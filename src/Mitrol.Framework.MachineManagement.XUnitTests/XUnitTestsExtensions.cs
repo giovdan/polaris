@@ -4,9 +4,9 @@
 
     public static class XUnitTestsExtensions
     {
-        public static Entity ToEntity(this EntityListItem entityListItem)
+        public static EntityItem ToEntity(this EntityListItem entityListItem)
         {
-            return new Entity
+            return new EntityItem
             {
                 Id = entityListItem.Id,
                 DisplayName = entityListItem.DisplayName,

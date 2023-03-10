@@ -13,13 +13,14 @@
         public string Code { get; set; }
         public string DisplayName { get; set; }
         public EntityTypeEnum EntityTypeId { get; set; }
-        public long SecondaryKey { get; set; }
-        public long MasterIdentifierId { get; set; }
-        public EntityStatusEnum EntityStatusId { get; set; }
+        public long? SecondaryKey { get; set; }
+        public long? MasterIdentifierId { get; set; }
+        public EntityStatusEnum Status { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        [NotMapped]
         public bool PreserveUpdatedOn { get; set; }
 
         public Entity()

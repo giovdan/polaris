@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
@@ -30,6 +31,10 @@
             modelBuilder.Entity<Entity>()
                 .HasIndex(u => u.Code)
                 .IsUnique();
+
+            modelBuilder.Entity<Entity>().Property(t => t.Status)
+                .HasDefaultValue(EntityStatusEnum.Available)
+                .HasConversion<string>();
 
             modelBuilder.Entity<Entity>()
                 .Property(c => c.RowVersion)

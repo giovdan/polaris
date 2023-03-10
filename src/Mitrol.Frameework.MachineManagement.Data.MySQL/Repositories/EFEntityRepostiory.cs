@@ -39,11 +39,11 @@ namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
 
         public int BulkInsert(IEnumerable<Entity> items)
         {
-            StringBuilder insertQuery = new($"REPLACE INTO `Entity` (`Code`, `EntityTypeId``, `RowVersion`) VALUES ");
+            StringBuilder insertQuery = new($"REPLACE INTO `Entity` (`Code`, `DisplayName`, `EntityTypeId`,`SecondaryKey`,`MasterIdentifierId`,`Status`, `RowVersion`) VALUES ");
 
             foreach (var item in items)
             {
-                insertQuery.Append($"('{item.Code}',{item.EntityTypeId},'{item.RowVersion}'),");
+                insertQuery.Append($"('{item.Code}',{item.EntityTypeId},{item.SecondaryKey},{item.MasterIdentifierId},'{item.Status}','{item.RowVersion}'),");
             }
 
             insertQuery.Length -= 1;
