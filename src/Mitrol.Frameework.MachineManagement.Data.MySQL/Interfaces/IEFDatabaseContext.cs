@@ -14,6 +14,7 @@
         DbSet<Entity> Entities { get; set; }
         DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         DbSet<AttributeValue> AttributeValues { get; set; }
-        DbSet<Link> Links { get; set; }
+        DbSet<EntityLink> EntityLinks { get; set; }
+        DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
     }
 }

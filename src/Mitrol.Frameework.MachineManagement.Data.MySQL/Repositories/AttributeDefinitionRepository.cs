@@ -10,9 +10,9 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    public class EFAttributeDefinitionRepository: BaseRepository<AttributeDefinition>, IEFAttributeDefinitionRepository
+    public class AttributeDefinitionRepository: BaseRepository<AttributeDefinition>, IAttributeDefinitionRepository
     {
-        public EFAttributeDefinitionRepository(IServiceFactory serviceFactory
+        public AttributeDefinitionRepository(IServiceFactory serviceFactory
                         , IDatabaseContextFactory databaseContextFactory) : base(serviceFactory, databaseContextFactory)
         {
 

@@ -18,10 +18,10 @@
 
     public class EntityService : BaseService, IEntityService
     {
-        protected IEFEntityRepository EntityRepository => ServiceFactory.GetService<IEFEntityRepository>();
-        protected IEFAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IEFAttributeValueRepository>();
-        protected ILinkRepository ChildLinkRepository => ServiceFactory.GetService<ILinkRepository>();
-        protected IEFAttributeDefinitionRepository AttributeDefinitionRepository => ServiceFactory.GetService<IEFAttributeDefinitionRepository>();
+        protected IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
+        protected IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
+        protected IEntityLinkRepository EntityLinkRepository => ServiceFactory.GetService<IEntityLinkRepository>();
+        protected IAttributeDefinitionRepository AttributeDefinitionRepository => ServiceFactory.GetService<IAttributeDefinitionRepository>();
         #region < Private Methods > 
         private long[] InnerBatchCreate(IEnumerable<EntityItem> entities, IUnitOfWorkFactory<IEFDatabaseContext> factory)
         {
@@ -47,10 +47,10 @@
                                     , bool withBatch = true)
         {
             var unitOfWork = factory.GetOrCreate(UserSession);
-            ChildLinkRepository.Attach(unitOfWork);
+            EntityLinkRepository.Attach(unitOfWork);
             if (withBatch)
             {
-                ChildLinkRepository.BatchInsert(childrenIds.Select((child, index) => new Link
+                EntityLinkRepository.BatchInsert(childrenIds.Select((child, index) => new EntityLink
                 {
                     EntityId = id,
                     RelatedEntityId = child,
@@ -61,7 +61,7 @@
             }
             else
             {
-                ChildLinkRepository.BulkInsert(childrenIds.Select((child, index) => new Link
+                EntityLinkRepository.BulkInsert(childrenIds.Select((child, index) => new EntityLink
                 {
                     EntityId = id,
                     RelatedEntityId = child,

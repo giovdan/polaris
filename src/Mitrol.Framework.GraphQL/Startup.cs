@@ -40,9 +40,9 @@ namespace Mitrol.Framework.GraphQL
             services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
 
 
-            services.AddScoped<IEFEntityRepository, EFEntityRepostiory>();
-            services.AddScoped<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
-            services.AddScoped<IEFAttributeValueRepository, EFAttributeValueRepository>();
+            services.AddScoped<IEntityRepository, EntityRepostiory>();
+            services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
+            services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
             services.AddScoped<IEntityService, EntityService>();
 
             //Scoped

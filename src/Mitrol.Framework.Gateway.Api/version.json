@@ -1,28 +1,52 @@
 {
-  "gitCommitHash": "7216e63990440394d5f8ca1d9eb704500bfff3e4",
-  "gitCommitDate": "Fri, 10 Mar 2023 08:26:48 +0100",
+  "gitCommitHash": "408f59d455ea599feeb8ce2a94b6655ae991e653",
+  "gitCommitDate": "Fri, 10 Mar 2023 17:32:14 +0100",
   "gitRefs": "HEAD -> @newversion",
-  "buildDate": "Fri, 10 Mar 2023 17:28:29 +0100",
+  "buildDate": "Mon, 13 Mar 2023 12:15:38 +0100",
   "gitUncommittedFiles": [
     {
       "status": "M",
       "filename": "Mitrol.Framework.sln"
     },
     {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IChildLinkRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEFAttributeDefinitionRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEFAttributeValueRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEFDatabaseContext.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEFEntityRepository.cs"
+    },
+    {
       "status": "M",
       "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFDatabaseContext.cs"
     },
     {
-      "status": "M",
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EFAttributeDefinitionRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EFAttributeValueRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EFChildLinkRepository.cs"
+    },
+    {
+      "status": "D",
       "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EFEntityRepostiory.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDefinitionEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/EntityTypeEnum.cs"
     },
     {
       "status": "M",
@@ -30,27 +54,27 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Entity.cs"
+      "filename": "src/Mitrol.Framework.GraphQL/Startup.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/EntityService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinition.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Link.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Views/AttributeDefinitionMaster.cs"
     },
     {
       "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/EFCore/EntityTest.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/Mitrol.Framework.XUnitTests.csproj"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/RepoDb/EntityTest.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/XUnitTestsExtensions.cs"
     }
   ]
 }

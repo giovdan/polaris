@@ -13,9 +13,9 @@ namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
     using System.Text;
     using System.Threading.Tasks;
 
-    public class EFEntityRepostiory : BaseRepository<Entity>, IEFEntityRepository
+    public class EntityRepostiory : BaseRepository<Entity>, IEntityRepository
     {
-        public EFEntityRepostiory(IServiceFactory serviceFactory
+        public EntityRepostiory(IServiceFactory serviceFactory
                         , IDatabaseContextFactory databaseContextFactory): base(serviceFactory, databaseContextFactory)
         {
 

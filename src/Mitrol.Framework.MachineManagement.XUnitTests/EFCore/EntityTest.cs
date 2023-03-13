@@ -33,18 +33,18 @@
         private EntityItem GenerateEntity(EntityTypeEnum entityTypeEnum, IServiceScope scope)
         {
             var attributeDefinitions = Enumerable.Empty<AttributeDefinition>();
-            if (AttributeDefinitionsDictionary.ContainsKey(entityTypeEnum))
-            {
-                attributeDefinitions = AttributeDefinitionsDictionary.GetValueOrDefault(entityTypeEnum);
-            }
-            else
-            {
-                var attributeDefinitionRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeDefinitionRepository>();
-                var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>().GetOrCreate(NullUserSession.Instance);
-                attributeDefinitionRepository.Attach(uow);
-                attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum).ToHashSet();
-                AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
-            }
+            //if (AttributeDefinitionsDictionary.ContainsKey(entityTypeEnum))
+            //{
+            //    attributeDefinitions = AttributeDefinitionsDictionary.GetValueOrDefault(entityTypeEnum);
+            //}
+            //else
+            //{
+            //    var attributeDefinitionRepository = scope.ServiceProvider.GetRequiredService<IAttributeDefinitionRepository>();
+            //    var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWorkFactory<IEFDatabaseContext>>().GetOrCreate(NullUserSession.Instance);
+            //    attributeDefinitionRepository.Attach(uow);
+            //    attributeDefinitions = attributeDefinitionRepository.FindBy(a => a.EntityTypeId == entityTypeEnum).ToHashSet();
+            //    AttributeDefinitionsDictionary.Add(entityTypeEnum, attributeDefinitions);
+            //}
 
             return new EntityItem
             {
@@ -126,8 +126,8 @@
         private void UpdateEntity(IServiceScope scope)
         {
             var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork<IEFDatabaseContext>>();
-            var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
-            var attributeRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeValueRepository>();
+            var repository = scope.ServiceProvider.GetRequiredService<IEntityRepository>();
+            var attributeRepository = scope.ServiceProvider.GetRequiredService<IAttributeValueRepository>();
 
             repository.Attach(uow);
             attributeRepository.Attach(uow);
@@ -215,10 +215,10 @@
             CancellationTokenSource = new CancellationTokenSource();
             var services = new ServiceCollection();
             services.AddScoped<IEntityService, EntityService>();
-            services.AddScoped<IEFEntityRepository, EFEntityRepostiory>();
-            services.AddScoped<IEFAttributeDefinitionRepository, EFAttributeDefinitionRepository>();
-            services.AddScoped<IEFAttributeValueRepository, EFAttributeValueRepository>();
-            services.AddScoped<ILinkRepository, EFLinkRepository>();
+            services.AddScoped<IEntityRepository, EntityRepostiory>();
+            services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
+            services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
+            services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
             RegisterServices(services, isRepoDb: false);
         }
 
@@ -278,8 +278,8 @@
                 uow.BeginTransaction();
                 try
                 {
-                    var repository = scope.ServiceProvider.GetRequiredService<IEFEntityRepository>();
-                    var attributeRepository = scope.ServiceProvider.GetRequiredService<IEFAttributeValueRepository>();
+                    var repository = scope.ServiceProvider.GetRequiredService<IEntityRepository>();
+                    var attributeRepository = scope.ServiceProvider.GetRequiredService<IAttributeValueRepository>();
 
                     repository.Attach(uow);
                     attributeRepository.Attach(uow);

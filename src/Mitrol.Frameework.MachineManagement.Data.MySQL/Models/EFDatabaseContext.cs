@@ -18,7 +18,8 @@
         public DbSet<Entity> Entities { get; set; }
         public DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         public DbSet<AttributeValue> AttributeValues { get; set; }
-        public DbSet<Link> Links { get; set; }
+        public DbSet<EntityLink> EntityLinks { get; set; }
+        public DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
 
         public void SetSession(IUserSession session)
         {

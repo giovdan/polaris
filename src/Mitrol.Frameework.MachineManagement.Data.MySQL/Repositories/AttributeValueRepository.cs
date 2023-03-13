@@ -13,9 +13,9 @@
     using System.Threading.Tasks;
     
 
-    public class EFAttributeValueRepository : BaseRepository<AttributeValue>, IEFAttributeValueRepository
+    public class AttributeValueRepository : BaseRepository<AttributeValue>, IAttributeValueRepository
     {
-        public EFAttributeValueRepository(IServiceFactory serviceFactory, IDatabaseContextFactory databaseContextFactory) : base(serviceFactory, databaseContextFactory)
+        public AttributeValueRepository(IServiceFactory serviceFactory, IDatabaseContextFactory databaseContextFactory) : base(serviceFactory, databaseContextFactory)
         {
 
         }

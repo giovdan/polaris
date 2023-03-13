@@ -4,7 +4,7 @@
     using Mitrol.Framework.Domain.Core.Models;
     using System.ComponentModel.DataAnnotations.Schema;
     [Table("Link")]
-    public class Link: BaseEntity
+    public class EntityLink: BaseEntity
     {
         public EntityRelationshipTypeEnum RelationTypeId { get; set; }
         public long RelatedEntityId { get; set; }
