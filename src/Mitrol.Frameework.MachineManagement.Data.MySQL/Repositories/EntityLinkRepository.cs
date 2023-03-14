@@ -90,7 +90,7 @@
 
         public void RemoveChildLinks(long parentId)
         {
-            UnitOfWork.Context.Database.ExecuteSqlRaw($"DELETE FROM INTO `EntityLink` WHERE EntityId = {parentId}");
+            UnitOfWork.Context.Database.ExecuteSqlRaw($"DELETE FROM INTO `EntityLink` WHERE EntityId = {parentId} AND ");
         }
 
     }
