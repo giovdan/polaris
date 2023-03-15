@@ -1,0 +1,9 @@
+{
+  "MySQL": {
+    "Server": "127.0.0.1",
+    "Database":  "db_polaris",
+    "Port": 34306,
+    "Username": "root",
+    "Password": "/Lj3AhOUtKcSqbj+f64Jzg=="
+  }
+}
