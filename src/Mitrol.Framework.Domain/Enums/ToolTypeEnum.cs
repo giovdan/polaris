@@ -391,6 +391,49 @@
             => ts == ToolTypeEnum.TS70
             || ts == ToolTypeEnum.TS80;
 
+        public static EntityTypeEnum ToEntityType(this ToolTypeEnum ts, ProcessingTechnologyEnum processTechonology)
+        {
+            var entityType = EntityTypeEnum.NotDefined;
+            switch(ts)
+            {
+                case ToolTypeEnum.TS51:
+                    {
+                        if (processTechonology == ProcessingTechnologyEnum.PlasmaHPR)
+                        {
+                            entityType = EntityTypeEnum.ToolTS51HPR;
+                        } else if (processTechonology == ProcessingTechnologyEnum.PlasmaXPR)
+                        {
+                            entityType = EntityTypeEnum.ToolTS51XPR;
+                        }
+                        else
+                        {
+                            entityType = EntityTypeEnum.ToolTS51;
+                        }
+                    }
+                    break;
+                case ToolTypeEnum.TS53:
+                    {
+                        if (processTechonology == ProcessingTechnologyEnum.PlasmaHPR)
+                        {
+                            entityType = EntityTypeEnum.ToolTS53HPR;
+                        }
+                        else if (processTechonology == ProcessingTechnologyEnum.PlasmaXPR)
+                        {
+                            entityType = EntityTypeEnum.ToolTS53XPR;
+                        }
+                        else
+                        {
+                            entityType = EntityTypeEnum.ToolTS53;
+                        }
+                    }
+                    break;
+                default:
+                    entityType = (EntityTypeEnum)ts;
+                    break;
+            }
+
+            return entityType;
+        }
         /// <summary>
         ///  Get ToolRange Type from ToolType
         /// </summary>
