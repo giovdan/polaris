@@ -75,7 +75,7 @@ BEGIN
         WHEN pParentTypeId = 256 AND pSubParentTypeId = 12 THEN 208
         WHEN pParentTypeId = 256 AND pSubParentTypeId = 13 THEN 209
         WHEN pParentTypeId = 256 AND pSubParentTypeId = 14 THEN 210		
-		WHEN pParentTypeId = 512 THEN 125
+		WHEN pParentTypeId = 512 THEN 121
 		WHEN pParentTypeId = 1024 AND pSubParentTypeId = 1 THEN 108
 		WHEN pParentTypeId = 1024 AND pSubParentTypeId = 2 THEN 109
 		WHEN pParentTypeId = 1024 AND pSubParentTypeId = 3 THEN 110
@@ -89,6 +89,33 @@ BEGIN
 		WHEN pParentTypeId = 1024 AND pSubParentTypeId = 12 THEN 118
 		WHEN pParentTypeId = 1024 AND pSubParentTypeId = 13 THEN 119
 		WHEN pParentTypeId = 1024 AND pSubParentTypeId = 14 THEN 120
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 1 THEN 224
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 2 THEN 225
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 3 THEN 226
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 4 THEN 227
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 5 THEN 228
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 6 THEN 229
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 7 THEN 230
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 8 THEN 231
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 9 THEN 232
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 10 THEN 233
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 11 THEN 234
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 12 THEN 235
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 13 THEN 236
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 14 THEN 237
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 16 THEN 238
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 17 THEN 239
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 18 THEN 240
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 19 THEN 241
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 21 THEN 242
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 22 THEN 243
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 23 THEN 244
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 25 THEN 245
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 26 THEN 246
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 27 THEN 247
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 28 THEN 248
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 29 THEN 249
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 30 THEN 250
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 1  THEN 211
         WHEN pParentTypeId = 8192 AND pSubParentTypeId = 2  THEN 212
         WHEN pParentTypeId = 8192 AND pSubParentTypeId = 3  THEN 213
@@ -101,7 +128,8 @@ BEGIN
         WHEN pParentTypeId = 8192 AND pSubParentTypeId = 11 THEN 220
         WHEN pParentTypeId = 8192 AND pSubParentTypeId = 12 THEN 221
         WHEN pParentTypeId = 8192 AND pSubParentTypeId = 13 THEN 222
-        WHEN pParentTypeId = 8192 AND pSubParentTypeId = 14 THEN 223		
+        WHEN pParentTypeId = 8192 AND pSubParentTypeId = 14 THEN 223
+		WHEN pParentTypeId = 16384 THEN 251		
 		ELSE 0
 	END;	
 		
