@@ -1,28 +1,11 @@
 {
-  "gitCommitHash": "ea4eed1ec179f80a542b1133a6be6c409651aa6c",
-  "gitCommitDate": "Tue, 14 Mar 2023 10:31:29 +0100",
-  "gitRefs": "HEAD -> @newversion",
-  "buildDate": "Wed, 15 Mar 2023 09:57:25 +0100",
+  "gitCommitHash": "382bc67f01aea3848e8b32f9cd34c01a4735f7ef",
+  "gitCommitDate": "Wed, 15 Mar 2023 15:58:40 +0100",
+  "gitRefs": "HEAD -> master, origin/master",
+  "buildDate": "Thu, 16 Mar 2023 08:24:43 +0100",
   "gitUncommittedFiles": [
     {
-      "status": "M",
-      "filename": "bin/DBServer/init/006._machine.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/init/009.db_users.sql"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeScopeEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/EntityTypeEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/ToolTypeEnum.cs"
+      "status": ""
     }
   ]
 }
