@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mitrol.Framework.Domain.Enums
 {
-    public enum GroupEnum
+    public enum BuiltInGroupEnum
     {
         ADMINS = 1,
         SUPERUSERS = 2,

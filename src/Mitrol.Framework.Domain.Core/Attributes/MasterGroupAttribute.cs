@@ -8,9 +8,9 @@
     [Obsolete]
     public class MasterGroupAttribute: Attribute
     {
-        public List<GroupEnum> MastersGroup { get; internal set; }
+        public List<BuiltInGroupEnum> MastersGroup { get; internal set; }
 
-        public MasterGroupAttribute(params GroupEnum[] masterGroups)
+        public MasterGroupAttribute(params BuiltInGroupEnum[] masterGroups)
         {
             MastersGroup = masterGroups.ToList();
         }

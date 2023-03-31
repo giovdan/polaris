@@ -30,7 +30,7 @@
         /// Culture of the Logged User
         /// </summary>
         string Culture { get; }
-        GroupEnum Group { get; }
+        IEnumerable<GroupItem> Groups { get; }
         IEnumerable<string> Permissions { get; }
         long UserId { get; set; }
         string MachineName { get; set; }
@@ -38,6 +38,7 @@
         string FullName { get; }
         UserConfiguration Configuration { get; set; }
         MeasurementSystemEnum ConversionSystem { get; set; }
+        HashSet<ProtectionLevelEnum> GetProtectionLevels();
         bool HasPermission(params PermissionEnum[] permission);
     }
 }

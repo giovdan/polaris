@@ -1,5 +1,6 @@
 ﻿namespace Mitrol.Framework.Domain.Models
 {
+    using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Enums;
     using System;
     using System.Collections.Generic;

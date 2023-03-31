@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS `AttributeDefinition` (
 	`TypeName` TEXT NULL DEFAULT NULL,
 	`OverrideType` INT(11) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`Id`),
-	INDEX `IDX_AttributeDefinition_DisplayName` (`DisplayName`)  
+	INDEX `IDX_AttributeDefinition_DisplayName` (`DisplayName`),  
+	UNIQUE INDEX `IDX_AttributeDefinition_EnumId_DisplayName` (`EnumId`,`DisplayName`),
 ) ENGINE=InnoDB DEFAULT COLLATE=utf8mb4_bin;
 
 CREATE TABLE IF NOT EXISTS `AttributeDefinitionLink`

@@ -24,8 +24,8 @@
         [DefaultValue(OverrideTypeEnum.None)]
         public OverrideTypeEnum OverrideTypeId { get; set; }
         public string TypeName { get; set; }
-        [DefaultValue(GroupEnum.USERS)]
-        public GroupEnum Owner { get; set; }
+        [DefaultValue(BuiltInGroupEnum.USERS)]
+        public BuiltInGroupEnum Owner { get; set; }
         [DefaultValue(AttributeDefinitionGroupEnum.Generic)]
         public AttributeDefinitionGroupEnum GroupId { get; set; }
         [DefaultValue(0)]
