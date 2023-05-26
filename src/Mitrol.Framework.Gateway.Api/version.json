@@ -1,64 +1,12 @@
 {
-  "gitCommitHash": "5cf6b889be59cfc305c888de83f9ffd09b1d4d83",
-  "gitCommitDate": "Thu, 16 Mar 2023 16:45:50 +0100",
+  "gitCommitHash": "2671d87584c9e58cea4990973c3d2b2fb92d21f4",
+  "gitCommitDate": "Fri, 31 Mar 2023 08:44:23 +0200",
   "gitRefs": "HEAD -> master",
-  "buildDate": "Fri, 31 Mar 2023 08:43:41 +0200",
+  "buildDate": "Mon, 03 Apr 2023 08:27:21 +0200",
   "gitUncommittedFiles": [
     {
       "status": "M",
-      "filename": "bin/DBServer/init/006._machine.sql"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Attributes/MasterGroupAttribute.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/EntityTypeEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/ErrorCodesEnum.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.Domain/Enums/GroupEnum.cs"
-    },
-    {
-      "status": "M",
       "filename": "src/Mitrol.Framework.Domain/Enums/PermissionEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Interfaces/IUserSession.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Mitrol.Framework.Domain.csproj"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Models/NullUserSession.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Models/Result.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Models/UserSession.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinition.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Views/AttributeDefinitionMaster.cs"
     }
   ]
 }

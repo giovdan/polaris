@@ -12,23 +12,16 @@
     {
         public AttributeDefinitionEnum EnumId { get; set; }
         public string DisplayName { get; set; }
-        public string HelpImage { get; set; }
         [Required()]
+        [Column(TypeName = "ENUM ('Geometric', 'Process', 'Identifier', 'Generic')")]
         public AttributeTypeEnum AttributeType { get; set; }
         [Required()]
         public AttributeDataFormatEnum DataFormat { get; set; }
-        [DefaultValue(ClientControlTypeEnum.Edit)]
-        public ClientControlTypeEnum ControlType { get; set; }
         [DefaultValue(AttributeKindEnum.Number)]
+        [Column(TypeName = "ENUM ('Number','String','Enum','Bool','Date')")]
         public AttributeKindEnum AttributeKind { get; set; }
         [DefaultValue(OverrideTypeEnum.None)]
         public OverrideTypeEnum OverrideTypeId { get; set; }
         public string TypeName { get; set; }
-        [DefaultValue(BuiltInGroupEnum.USERS)]
-        public BuiltInGroupEnum Owner { get; set; }
-        [DefaultValue(AttributeDefinitionGroupEnum.Generic)]
-        public AttributeDefinitionGroupEnum GroupId { get; set; }
-        [DefaultValue(0)]
-        public int Priority { get; set; }
     }
 }
