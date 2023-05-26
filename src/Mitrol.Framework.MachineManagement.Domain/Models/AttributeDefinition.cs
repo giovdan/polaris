@@ -1,6 +1,5 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Domain.Models
 {
-    using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Core.Models.Database;
     using Mitrol.Framework.Domain.Enums;
     using System.ComponentModel;
@@ -20,8 +19,9 @@
         [DefaultValue(AttributeKindEnum.Number)]
         [Column(TypeName = "ENUM ('Number','String','Enum','Bool','Date')")]
         public AttributeKindEnum AttributeKind { get; set; }
-        [DefaultValue(OverrideTypeEnum.None)]
-        public OverrideTypeEnum OverrideTypeId { get; set; }
         public string TypeName { get; set; }
+        [DefaultValue(OverrideTypeEnum.None)]
+        [Column(TypeName = "ENUM ('None','DeltaValue','DeltaPercentage")]
+        public OverrideTypeEnum OverrideTypeId { get; set; }
     }
 }

@@ -5,22 +5,29 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
     [Table("AttributeDefinitionLink")]
     public class AttributeDefinitionLink : BaseEntity
     {
         public long AttributeDefinitionId { get; set; }
         public EntityTypeEnum EntityTypeId { get; set; }
-        [Required()]
-        public AttributeDataFormatEnum DataFormat { get; set; }
         [DefaultValue(ClientControlTypeEnum.Edit)]
+        [Column(TypeName = "ENUM('Edit','Label','Combo','ListBox','Check','Override','Image','MultiValue')")]
         public ClientControlTypeEnum ControlType { get; set; }
-        [DefaultValue(AttributeKindEnum.Number)]
-        public AttributeKindEnum AttributeKind { get; set; }
+        public bool IsCodeGenerator { get; set; }
+        public bool IsSubFilter { get; set; }
+        [Column(TypeName = "ENUM('Optional','Fundamental','Preview')")]
+        public AttributeScopeEnum AttributeScopeId { get; set; }
+        [Column(TypeName = "ENUM('Critical','High','Medium','Normal','ReadOnly')")]
+        public ProtectionLevelEnum ProtectionLevel { get; set; }
+        [Column(TypeName = "ENUM('DataDefault','LastInserted')")]
+        public AttributeBehaviorEnum DefaultBehavior { get; set; }
+        public decimal? LastInsertedValue { get; set; }
+        public string LastInsertedTextValue { get; set; }
         [DefaultValue(AttributeDefinitionGroupEnum.Generic)]
         public AttributeDefinitionGroupEnum GroupId { get; set; }
         [DefaultValue(0)]
         public int Priority { get; set; }
-
 
         public virtual AttributeDefinition AttributeDefinition { get; set; }
     }

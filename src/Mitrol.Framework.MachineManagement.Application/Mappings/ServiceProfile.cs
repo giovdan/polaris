@@ -20,7 +20,7 @@
             CreateMap<AttributeValue, AttributeItem>()
                 .ForPath(dest => dest.Value.CurrentValue, opt => opt.MapFrom(s => s.Value))
                 .ForPath(dest => dest.Value.CurrentValueId, opt => opt.MapFrom(s => s.Value))
-                .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.AttributeDefinition.EnumId));
+                .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeDefinition.EnumId));
 
             CreateMap<AttributeItem, AttributeValue>()
                 .ForMember(dest => dest.Value, opt => opt.Ignore())

@@ -24,6 +24,8 @@ namespace Mitrol.Framework.Domain.Core.Models
 
         [NotMapped]
         public bool PreserveUpdatedOn { get; set; }
+
+        public string TimeZoneId { get; set; }
     }
 
     public abstract class AuditableExtendedEntity: AuditableEntity

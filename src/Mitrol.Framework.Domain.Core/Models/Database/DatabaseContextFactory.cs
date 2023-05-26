@@ -1,8 +1,8 @@
-﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Models
+﻿namespace Mitrol.Framework.Domain.Core.Models
 {
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
-    
+
     public class DatabaseContextFactory : IDatabaseContextFactory
     {
         private readonly IServiceFactory _serviceFactory;

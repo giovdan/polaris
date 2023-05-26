@@ -72,7 +72,7 @@
                            {
                                AttributeDefinitionId = a.Id,
                                AttributeKind = attributeInfo.AttributeKind,
-                               Value = new AttributeValueItem
+                               Value = new AttributeItemValue
                                {
                                    CurrentValue = attributeInfo.AttributeKind != AttributeKindEnum.Enum
                                                ? attributeValue : null,
@@ -145,7 +145,8 @@
             var attributes = attributeRepository.FindBy(a => a.EntityId == latest.Id)
                 .Select(a =>
                 {
-                    var attributeInfo = a.AttributeDefinition.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                    var attributeInfo = a.AttributeDefinitionLink.AttributeDefinition
+                            .EnumId.GetEnumAttribute<AttributeInfoAttribute>();
                     switch (attributeInfo.AttributeKind)
                     {
                         case AttributeKindEnum.Number:
@@ -294,7 +295,9 @@
                     var attributes = attributeRepository.FindBy(a => a.EntityId == latest.Id)
                         .Select(a =>
                         {
-                            var attributeInfo = a.AttributeDefinition.EnumId.GetEnumAttribute<AttributeInfoAttribute>();
+                            var attributeInfo = a.AttributeDefinitionLink
+                                        .AttributeDefinition.EnumId
+                                        .GetEnumAttribute<AttributeInfoAttribute>();
                             switch (attributeInfo.AttributeKind)
                             {
                                 case AttributeKindEnum.Number:

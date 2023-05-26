@@ -7,6 +7,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Mitrol.Framework.Domain;
     using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models.Core;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;

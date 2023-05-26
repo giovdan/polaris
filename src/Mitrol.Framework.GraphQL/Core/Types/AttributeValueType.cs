@@ -3,7 +3,7 @@
     using HotChocolate.Types;
     using Mitrol.Framework.MachineManagement.Application.Models;
 
-    public class AttributeValueType: ObjectType<AttributeValueItem>
+    public class AttributeValueType: ObjectType<AttributeItemValue>
     {
         
     }

@@ -24,11 +24,11 @@
         {
             try
             {
-                StringBuilder insertQuery = new($"REPLACE INTO `AttributeValue` (`EntityId`, `AttributeDefinitionId`, `Value`, `TextValue`) VALUES ");
+                StringBuilder insertQuery = new($"REPLACE INTO `AttributeValue` (`EntityId`, `AttributeDefinitionLinkId`, `Value`, `TextValue`) VALUES ");
 
                 foreach (var item in items)
                 {
-                    insertQuery.Append($"({item.EntityId},{item.AttributeDefinitionId}, {item.Value ?? 0}, '{item.TextValue}'),");
+                    insertQuery.Append($"({item.EntityId},{item.AttributeDefinitionLinkId}, {item.Value ?? 0}, '{item.TextValue}'),");
                 }
 
                 insertQuery.Length -= 1;
@@ -79,7 +79,8 @@
         public IEnumerable<AttributeValue> FindBy(Expression<Func<AttributeValue, bool>> predicate)
         {
             return UnitOfWork.Context.AttributeValues
-                        .Include(a => a.AttributeDefinition)
+                        .Include(a => a.AttributeDefinitionLink)
+                        .ThenInclude(a => a.AttributeDefinition)
                         .Include(a => a.Entity)
                         .Where(predicate);
         }
@@ -97,7 +98,8 @@
         public AttributeValue Get(long id)
         {
             return UnitOfWork.Context.AttributeValues
-                        .Include(a => a.AttributeDefinition)
+                        .Include(a => a.AttributeDefinitionLink)
+                        .ThenInclude(a => a.AttributeDefinition)
                         .SingleOrDefault(item => item.Id == id);
         }
 

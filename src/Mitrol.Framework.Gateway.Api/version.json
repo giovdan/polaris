@@ -1,12 +1,88 @@
 {
-  "gitCommitHash": "2671d87584c9e58cea4990973c3d2b2fb92d21f4",
-  "gitCommitDate": "Fri, 31 Mar 2023 08:44:23 +0200",
-  "gitRefs": "HEAD -> master",
-  "buildDate": "Mon, 03 Apr 2023 08:27:21 +0200",
+  "gitCommitHash": "1f420216ebc65b6df1b2954949ab33caa2a5c930",
+  "gitCommitDate": "Fri, 26 May 2023 16:09:22 +0200",
+  "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
+  "buildDate": "Fri, 26 May 2023 17:18:25 +0200",
   "gitUncommittedFiles": [
     {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/DatabaseContextFactory.cs"
+    },
+    {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/PermissionEnum.cs"
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IAuditableEntity.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IUnitOfWorkFactory.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Audit/AuditableEntity.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/BaseDbContext.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/BaseEntityWithRowVersion.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDataFormatEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Mitrol.Framework.Domain.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.GraphQL/Core/Types/AttributeValueType.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mappings/ServiceProfile.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/AttributeItem.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinition.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinitionLink.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeValue.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/DetailIdentifier.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Entity.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/EFCore/EntityTest.cs"
     }
   ]
 }

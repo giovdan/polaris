@@ -22,7 +22,7 @@
         public DateTime? UpdatedOn { get; set; }
         [NotMapped]
         public bool PreserveUpdatedOn { get; set; }
-
+        public string TimeZoneId { get; set; }
         public Entity()
         {
             Code = Guid.NewGuid().ToString();

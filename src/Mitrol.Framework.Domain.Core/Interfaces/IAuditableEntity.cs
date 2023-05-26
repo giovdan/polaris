@@ -9,5 +9,6 @@ namespace Mitrol.Framework.Domain.Core.Interfaces
         string UpdatedBy { get; set; }
         DateTime? UpdatedOn { get; set; }
         bool PreserveUpdatedOn { get; set; }
+        string TimeZoneId { get; set; }
     }
 }
