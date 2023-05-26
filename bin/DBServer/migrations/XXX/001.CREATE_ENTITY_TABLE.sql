@@ -1,117 +1,47 @@
-CREATE DATABASE IF NOT EXISTS _machine;
-
-USE _machine;
-
-CREATE TABLE IF NOT EXISTS `entity` (
-	`Id` INT(11) NOT NULL AUTO_INCREMENT,
-	`DisplayName` VARCHAR(32) NOT NULL DEFAULT '',
-	`EntityTypeId` INT(11) NOT NULL DEFAULT 0,
-	`HashCode` VARCHAR(500) NOT NULL,
-	`SecondaryKey` INT(11) NULL,
-	`Status` ENUM ('Available','Unavailable','Warning', 'Alarm', 'NoIconToDisplay', 'ToBeDeleted') NOT NULL,
-	`CreatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL',
-	`CreatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
-	`UpdatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL',
-	`UpdatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
-	`RowVersion` TEXT NOT NULL DEFAULT uuid(),
-	PRIMARY KEY (`Id`),
-	INDEX `IDX_Entity_DisplayName` (`DisplayName`, EntityTypeId),
-	UNIQUE INDEX `IDX_Entity_HashCode` (`HashCode`)
-) ENGINE=InnoDB DEFAULT COLLATE=utf8mb4_bin;
-
-CREATE TABLE IF NOT EXISTS `entityLink` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `RelatedEntityId` INT(11) NOT NULL,
-  `EntityId` INT(11) NOT NULL,
-  `RelationTypeId` INT(11) NOT NULL,  
-  `RowNumber` INT(11) NOT NULL DEFAULT(1),
-  `Level` INT(11) NOT NULL,
-  PRIMARY KEY (`Id`),
-  FOREIGN KEY (EntityId) REFERENCES entity(id),
-  FOREIGN KEY (RelatedEntityId) REFERENCES entity(id)
-) ENGINE=INNODB;
+USE machine;
 
 
 CREATE TABLE IF NOT EXISTS `entitytype` (
   `Id` int(11) NOT NULL,
-  `DisplayName` VARCHAR(50) NOT NULL,
+  `DisplayName` VARCHAR(500) NOT NULL,
   `IsManaged` BOOLEAN DEFAULT false,
   PRIMARY KEY (`Id`)
-) ENGINE=INNODB;
-
-CREATE TABLE IF NOT EXISTS `AttributeDefinition` (
-	`Id` INT(11) NOT NULL AUTO_INCREMENT,
-	`EnumId` INT(11) NOT NULL DEFAULT '0',
-	`DisplayName` VARCHAR(50) NULL DEFAULT NULL,
-	`DataFormat` INT(11) NOT NULL DEFAULT 0,
-	`AttributeType` INT(11) NOT NULL,
-	`AttributeKind` INT(11) NOT NULL DEFAULT 1,
-	`TypeName` TEXT NULL DEFAULT NULL,
-	`OverrideType` INT(11) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`Id`),
-	INDEX `IDX_AttributeDefinition_DisplayName` (`DisplayName`),  
-	UNIQUE INDEX `IDX_AttributeDefinition_EnumId_DisplayName` (`EnumId`,`DisplayName`),
 ) ENGINE=InnoDB DEFAULT COLLATE=utf8mb4_bin;
 
-CREATE TABLE IF NOT EXISTS `AttributeDefinitionLink`
-(
+CREATE TABLE IF NOT EXISTS `entity` (
 	`Id` INT(11) NOT NULL AUTO_INCREMENT,
-	`EntityTypeId` INT(11) NOT NULL,
-	`AttributeDefinitionId` INT(11) NOT NULL,
-	`ControlType` INT(11) NULL DEFAULT 0,
-	`HelpImage` VARCHAR(200) NULL DEFAULT NULL,
-	`IsCodeGenerator` BOOLEAN NOT NULL DEFAULT FALSE,	
-	`IsSubFilter` BOOLEAN NOT NULL DEFAULT FALSE,
-	`AttributeScopeId` ENUM ('Optional', 'Fundamental', 'Preview') NOT NULL DEFAULT 'Optional',	
-	`DefaultBehavior` ENUM ('DataDefault', 'LastInserted') DEFAULT 'DataDefault',	
-	`LastInsertedValue` DECIMAL(12,6) NULL,
-	`LastInsertedTextValue` TEXT NULL,
-	`Owner` INT(11) NOT NULL DEFAULT 0,
-	`GroupId` INT(11) NOT NULL DEFAULT 0,
-	`Priority` INT(11) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`Id`),	
-	FOREIGN KEY (AttributeDefinitionId) REFERENCES AttributeDefinition(id),
-	INDEX `IDX_AttributeDefinitionLink_EntityType` (`EntityTypeId`, AttributeDefinitionId)  		
-) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
-
-
-CREATE TABLE IF NOT EXISTS `AttributeValue` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `EntityId` INT NOT NULL,
-  `AttributeDefinitionLinkId` INT NOT NULL,
-  `Value` decimal(10,3),
-  `TextValue` TEXT, 
-  `CreatedBy` varchar(32) NOT NULL DEFAULT 'MITROL',
-  `CreatedOn` datetime NOT NULL DEFAULT current_timestamp(),    
-  `UpdatedBy` varchar(32) NOT NULL DEFAULT 'MITROL',
-  `UpdatedOn` datetime NOT NULL DEFAULT current_timestamp(),  
-  `RowVersion` TEXT NOT NULL DEFAULT uuid(),
-  PRIMARY KEY (`Id`),
-  FOREIGN KEY (EntityId) REFERENCES entity(id),
-  FOREIGN KEY (AttributeDefinitionLinkId) REFERENCES AttributeDefinitionLink(id)
-) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
-
-
-CREATE TABLE IF NOT EXISTS migrationlog
-(
-	OldId INT(11),
-	OldEntityTypeId INT(11),
-	NewId INT(11),
-	EntityTypeId INT(11),
-	OldTable TEXT,
-	IsDone BOOLEAN
-);
-
-CREATE TABLE IF NOT EXISTS migratedtype
-(
-	`Id` int(11) NOT NULL AUTO_INCREMENT,
-	EntityTypeId INT NOT NULL,
-	ParentTypeId INT NOT NULL,
-	SubParentTypeId INT NOT NULL,
-	ProcessingTechnology ENUM ('Default','PlasmaHPR','PlasmaXPR') NOT NULL DEFAULT 'Default',
+	`DisplayName` VARCHAR(100) NOT NULL DEFAULT '',
+	`EntityTypeId` INT(11) NOT NULL DEFAULT 0,
+	`HashCode` CHAR(64)  NOT NULL,
+	`SecondaryKey` INT(11) NULL,
+	`Status` ENUM ('Available','Unavailable','Warning', 'Alarm', 'NoIconToDisplay', 'ToBeDeleted'
+				, 'Original', 'ModifiedByCustomer'
+				, 'ModifiedByFICEP', 'ToBeSkipped'
+				, 'Empty', 'InProgress', 'Processed'
+				, 'Executed', 'RQLoad', 'RQAck'
+				, 'NotAvailable', 'Aborted', 'NotReady') NOT NULL,
+	`Priority` INT NOT NULL DEFAULT 1,
+	`CreatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL',
+	`CreatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
+	`UpdatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL',
+	`UpdatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
+	`RowVersion` TEXT NOT NULL,
 	PRIMARY KEY (`Id`),
-	FOREIGN KEY (EntityTypeId) REFERENCES entitytype(id)
-) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
+	FOREIGN KEY (EntityTypeId) REFERENCES entitytype(id),
+	UNIQUE INDEX `IDX_Entity_DisplayName` (`DisplayName`, EntityTypeId) USING BTREE,
+	INDEX `IDX_Entity_HashCode` (`HashCode`) USING BTREE	
+) ENGINE=InnoDB DEFAULT COLLATE=utf8mb4_bin;
+
+
+CREATE TABLE IF NOT EXISTS `entityLink` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `RelatedEntityHashCode` CHAR(64) NOT NULL,
+  `EntityHashCode` CHAR(64) NOT NULL,
+  `RelationType` ENUM('Child','ForeignKey', 'Sibling') NOT NULL COLLATE 'utf8mb4_bin',
+  `RowNumber` INT(11) NOT NULL DEFAULT(1),
+  `Level` INT(11) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT COLLATE=utf8mb4_bin;
 
 REPLACE INTO entitytype
 (DisplayName, Id,  IsManaged)
@@ -293,13 +223,18 @@ VALUES
 ('OperationStiff', 239,false),
 ('OperationFHol', 240,false),
 ('OperationDHol', 241,false),
-('OperationPathVertex', 242,false),
+('OperationPathV', 242,false),
 ('OperationPathS', 243,false),
 ('OperationPathM', 244,false),
 ('OperationCope', 245,false),
 ('OperationMark', 246,false),
-('OperationVertex', 247,false),
-('OperationToolTechnology', 248,false),
-('OperationBHol', 249,false),
-('OperationMSaw', 250, false),
-('Material', 251, false);	
+('OperationToolTechnology', 247,false),
+('OperationBHol', 248,false),
+('OperationMSaw', 249,false),
+('OperationSense', 250,false),
+('Material', 251,false),
+('VertexPathC', 252,false),
+('VertexPathS', 253,false),
+('VertexPathM', 254,false),	
+('OperationSense', 255,false),
+('VertexShape', 256,false);;
