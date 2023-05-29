@@ -8,18 +8,25 @@
     using Mitrol.Framework.Domain;
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Core.Models;
+    using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models.Core;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Models;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
-    
+    using System.Threading;
+
     public class BaseUnitTest
     {
         public IConfiguration Configuration { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
+        internal Dictionary<EntityTypeEnum, IEnumerable<AttributeDefinition>> AttributeDefinitionsDictionary { get; set; }
+        protected CancellationTokenSource CancellationTokenSource { get; private set; }
+
         public string ConnectionString
         {
             get
@@ -32,7 +39,7 @@
             }
         }
 
-        public void RegisterServices(IServiceCollection services, bool isRepoDb = true)
+        public void RegisterServices(IServiceCollection services)
         {
             services.AddSingleton<IServiceFactory, ServiceFactory>();
 
@@ -41,6 +48,11 @@
             services.AddTransient<IDatabaseContext, EFDatabaseContext>();
             services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
             services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
+            services.AddScoped<IEntityRepository, EntityRepostiory>();
+            services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
+            services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
+            services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
+
             services.AddDbContext<EFDatabaseContext>(options =>
             {
                 options.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
@@ -101,6 +113,8 @@
 
         public BaseUnitTest()
         {
+            CancellationTokenSource = new CancellationTokenSource();
+            AttributeDefinitionsDictionary = new Dictionary<EntityTypeEnum, IEnumerable<AttributeDefinition>>();
             BuildConfiguration();
         }
 

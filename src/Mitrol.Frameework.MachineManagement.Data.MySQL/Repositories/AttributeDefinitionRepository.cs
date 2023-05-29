@@ -2,7 +2,7 @@
 {
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,8 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    public class AttributeDefinitionRepository: BaseRepository<AttributeDefinition>, IAttributeDefinitionRepository
+    public class AttributeDefinitionRepository: BaseRepository<AttributeDefinition>
+                , IAttributeDefinitionRepository
     {
         public AttributeDefinitionRepository(IServiceFactory serviceFactory
                         , IDatabaseContextFactory databaseContextFactory) : base(serviceFactory, databaseContextFactory)

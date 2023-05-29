@@ -5,7 +5,6 @@
     /// <summary>
     /// Tipologie di utensili
     /// </summary>
-    //[TypeConverter(typeof(EnumCustomNameTypeConverter))]
     [DefaultValue("NotDefined")]
     public enum ToolTypeEnum : int
     {
@@ -434,27 +433,5 @@
 
             return entityType;
         }
-        /// <summary>
-        ///  Get ToolRange Type from ToolType
-        /// </summary>
-        /// <param name="toolType"></param>
-        /// <returns></returns>
-        //public static ToolRangeTypeEnum GetToolRangeType(this ToolTypeEnum toolType)
-        //{
-        //    var plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
-        //    var toolRangeType = ToolRangeTypeEnum.None;
-        //    switch (plantUnit)
-        //    {
-        //        case PlantUnitEnum.DrillingMachine:
-        //            toolRangeType = ToolRangeTypeEnum.Drill;
-        //            break;
-        //        case PlantUnitEnum.PlasmaTorch:
-        //        case PlantUnitEnum.OxyCutTorch:
-        //            toolRangeType = ToolRangeTypeEnum.Cut;
-        //            break;
-        //    }
-
-        //    return toolRangeType;
-        //}
     }
 }

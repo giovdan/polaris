@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.Domain.Models
 {
     using FluentValidation.Results;
+    using Mitrol.Framework.Domain.Extensions;
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Linq;

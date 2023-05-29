@@ -1,12 +1,56 @@
 {
-  "gitCommitHash": "f57b7f332d37924073129c7dc2d6bac8062cd815",
-  "gitCommitDate": "Fri, 26 May 2023 17:19:29 +0200",
-  "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Mon, 29 May 2023 08:31:57 +0200",
+  "gitCommitHash": "e7cf847dcf9f0e59d2e933d11ab17fb3f8b69577",
+  "gitCommitDate": "Mon, 29 May 2023 10:03:55 +0200",
+  "gitRefs": "HEAD -> master",
+  "buildDate": "Mon, 29 May 2023 11:42:01 +0200",
   "gitUncommittedFiles": [
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IAttributeDefinitionRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IAttributeValueRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEFDatabaseContext.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEntityLinkRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Interfaces/IEntityRepository.cs"
+    },
     {
       "status": "M",
       "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFDatabaseContext.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFUnitOfWork.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFUnitOfWorkFactory.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeDefinitionRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/BaseRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EntityLinkRepository.cs"
     },
     {
       "status": "M",
@@ -14,19 +58,55 @@
     },
     {
       "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Mitrol.Framework.Domain.Core.csproj"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/BaseService.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/InternalBaseService.cs"
+    },
+    {
+      "status": "M",
       "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Entity.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/MasterIdentifier.cs"
+      "filename": "src/Mitrol.Framework.GraphQL/Startup.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/MigratedType.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Core/BaseService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/MachineManagementExtensions.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mitrol.Framework.MachineManagement.Application.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/ToolDetailItem.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/ToolService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Mitrol.Framework.MachineManagement.Domain.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/EFCore/EntityTest.cs"
     }
   ]
 }

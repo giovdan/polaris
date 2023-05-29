@@ -4,7 +4,7 @@
     using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
 
     public class EFDatabaseContext: BaseDbContext, IEFDatabaseContext

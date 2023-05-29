@@ -11,23 +11,24 @@
     public class Query
     {
         [UseSorting]
-        public IQueryable<EntityListItem> GetEntities(IEntityService entityService)
+        public IQueryable<ToolListItem> GetTools(IToolService toolService)
         {
-            entityService.SetSession(NullUserSession.Instance);
-            return entityService.GetAll().AsQueryable();
+            toolService.SetSession(NullUserSession.Instance);
+            return toolService.GetAll().AsQueryable();
         }
 
-        public EntityItem GetEntity(IEntityService entityService, long id)
+        public ToolDetailItem GetTool(IToolService toolService, long id)
         {
-            entityService.SetSession(NullUserSession.Instance);
-            var result = entityService.Get(id);
+            toolService.SetSession(NullUserSession.Instance);
+            var result = toolService.Get(id);
             return result.Success ? result.Value : null;
         }
 
-        public IEnumerable<AttributeItem> GetAttributeDefinitionByType(IEntityService entityService, EntityTypeEnum type)
-        {
-            entityService.SetSession(NullUserSession.Instance);
-            return entityService.GetAttributesByType(type);
-        }
+        //public IEnumerable<AttributeItem> GetAttributeDefinitionByType(
+        //        IEntityService entityService, EntityTypeEnum type)
+        //{
+        //    entityService.SetSession(NullUserSession.Instance);
+        //    return entityService.GetAttributesByType(type);
+        //}
     }
 }

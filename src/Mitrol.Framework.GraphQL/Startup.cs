@@ -18,7 +18,6 @@ namespace Mitrol.Framework.GraphQL
     using System;
     using HotChocolate.Types.Descriptors;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Models;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
     using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Services;
@@ -26,6 +25,7 @@ namespace Mitrol.Framework.GraphQL
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Core.Helpers;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
 
     public class Startup
     {
@@ -43,7 +43,7 @@ namespace Mitrol.Framework.GraphQL
             services.AddScoped<IEntityRepository, EntityRepostiory>();
             services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
             services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
-            services.AddScoped<IEntityService, EntityService>();
+            services.AddScoped<IToolService, ToolService>();
 
             //Scoped
             services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
@@ -90,7 +90,7 @@ namespace Mitrol.Framework.GraphQL
             services
                 .AddGraphQLServer()
                 .AddConvention<INamingConventions, EnumNamingConvention>()
-                .RegisterService<IEntityService>()
+                .RegisterService<IToolService>()
                 .AddSorting()
                 .AddType<AttributeValueType>()
                 .AddQueryType<Query>()

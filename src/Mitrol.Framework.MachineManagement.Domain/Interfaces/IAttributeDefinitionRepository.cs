@@ -1,4 +1,4 @@
-﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces
+﻿namespace Mitrol.Framework.MachineManagement.Domain.Interfaces
 {
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.Domain.Core.Interfaces;

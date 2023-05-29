@@ -4,7 +4,7 @@
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
 
     public class BaseService : Disposable, IApplicationService
     {

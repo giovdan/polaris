@@ -1,10 +1,9 @@
-﻿
-namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
+﻿namespace Mitrol.Framework.MachineManagement.Data.MySQL.Repositories
 {
     using Microsoft.EntityFrameworkCore;
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using System;
     using System.Collections.Generic;

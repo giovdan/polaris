@@ -8,11 +8,11 @@ namespace Mitrol.Framework.GraphQL.Core
 
     public class Mutation
     {
-        public EntityItem CreateEntity(IEntityService entityService, EntityItem entity)
+        public ToolDetailItem CreateTool(IToolService toolService, ToolDetailItem tool)
         {
-            entityService.SetSession(NullUserSession.Instance);
-            var result = entityService.Create(entity);
-            return result.Success? result.Value : null;
+            toolService.SetSession(NullUserSession.InternalSessionInstance);
+            var result = toolService.CreateTool(tool);
+            return result.Success ? result.Value : null;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿
-
-namespace Mitrol.Framework.Domain
+﻿namespace Mitrol.Framework.Domain.Extensions
 {
     using System;
     using System.IO;
