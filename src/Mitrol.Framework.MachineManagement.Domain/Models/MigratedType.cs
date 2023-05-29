@@ -3,7 +3,7 @@
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Enums;
 
-    public class MigratedType: BaseEntity
+    public class MigratedType : BaseEntity
     {
         public EntityTypeEnum EntityType { get; set; }
         public long ParentTypeId { get; set; }

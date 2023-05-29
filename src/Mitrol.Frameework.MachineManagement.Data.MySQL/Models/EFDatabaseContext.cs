@@ -30,7 +30,7 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Entity>()
-                .HasIndex(u => u.Code)
+                .HasIndex(u => u.DisplayName)
                 .IsUnique();
 
             modelBuilder.Entity<Entity>().Property(t => t.Status)

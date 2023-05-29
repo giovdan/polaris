@@ -6,30 +6,16 @@
     using Mitrol.Framework.Domain.Enums;
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
-
     [Table("Entity")]
-    public class Entity : BaseEntityWithRowVersion, IAuditableEntity
+    public class Entity : BaseAuditableEntityWithRowVersion
     {
-        public string Code { get; set; }
         public string DisplayName { get; set; }
         public EntityTypeEnum EntityTypeId { get; set; }
+        public string HashCode { get; set; }
         public long? SecondaryKey { get; set; }
-        public long? MasterIdentifierId { get; set; }
+        [Column(TypeName = "ENUM ('Available','Unavailable','Warning','Alarm','NoIconToDisplay','ToBeDeleted','Original','ModifiedByCustomer','ModifiedByFICEP','ToBeSkipped','Empty','InProgress','Processed','Executed','RQLoad','RQAck','NotAvailable','Aborted','NotReady')")]
         public EntityStatusEnum Status { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
-        [NotMapped]
-        public bool PreserveUpdatedOn { get; set; }
-        public string TimeZoneId { get; set; }
-        public Entity()
-        {
-            Code = Guid.NewGuid().ToString();
-            DisplayName = $"{EntityTypeId.ToString().ToUpper()}_{Code}";
-        }
-
-        public virtual MasterIdentifier MasterIdentifier { get; set; }
+        public int Priority { get; set; }
     }
 
 }
