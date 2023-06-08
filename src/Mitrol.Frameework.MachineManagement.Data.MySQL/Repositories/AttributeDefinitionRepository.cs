@@ -19,10 +19,16 @@
 
         }
 
-        #region < Read >
         public IEnumerable<AttributeDefinition> FindBy(Expression<Func<AttributeDefinition, bool>> predicate)
         {
             return UnitOfWork.Context.AttributeDefinitions.Where(predicate);
+        }
+
+        public IEnumerable<AttributeDefinition> FindBy<TKey>
+            (Expression<Func<AttributeDefinition, bool>> predicate
+                , Expression<Func<AttributeDefinition, TKey>> orderBy)
+        {
+            return UnitOfWork.Context.AttributeDefinitions.Where(predicate).OrderBy(orderBy);
         }
 
         public Task<IEnumerable<AttributeDefinition>> FindByAsync(Expression<Func<AttributeDefinition, bool>> predicate)
@@ -44,38 +50,7 @@
         {
             return Task.Factory.StartNew(() => Get(id));
         }
-        #endregion
-
-        public AttributeDefinition Add(AttributeDefinition entity)
-        {
-            return UnitOfWork.Context.AttributeDefinitions.Add(entity).Entity;
-        }
-
-        public Task<AttributeDefinition> AddAsync(AttributeDefinition entity)
-        {
-            return Task.Factory.StartNew(() => Add(entity));
-        }
-
-        public int BatchInsert(IEnumerable<AttributeDefinition> items)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int BulkInsert(IEnumerable<AttributeDefinition> items)
-        {
-            throw new NotImplementedException();
-        }
-
         
 
-        public void Remove(AttributeDefinition entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AttributeDefinition Update(AttributeDefinition entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

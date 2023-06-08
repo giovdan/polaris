@@ -9,7 +9,7 @@
     public class BaseService : Disposable, IApplicationService
     {
         protected IServiceFactory ServiceFactory { get; }
-        protected IUnitOfWorkFactory<IDatabaseContext> UnitOfWorkFactory { get; private set; }
+        protected IUnitOfWorkFactory<IEFDatabaseContext> UnitOfWorkFactory { get; private set; }
         protected IMapper Mapper { get; set; }
         protected IUserSession UserSession { get; set; }
         public IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
@@ -17,7 +17,7 @@
         public BaseService(IServiceFactory serviceFactory)
         {
             ServiceFactory = serviceFactory;
-            UnitOfWorkFactory = serviceFactory.GetService<IUnitOfWorkFactory<IDatabaseContext>>();
+            UnitOfWorkFactory = serviceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>();
             Mapper = serviceFactory.GetService<IMapper>();
         }
 

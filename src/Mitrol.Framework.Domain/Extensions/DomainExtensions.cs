@@ -15,6 +15,8 @@
     using System.Text;
     public static class DomainExtensions
     {
+        public const string GENERIC_LABEL = "LBL";
+
         private static DirectoryInfo StartUpDirectoryInfo { get; set; }
 
         public static DirectoryInfo GetStartUpDirectoryInfo(string currentPath = null, string fileFilter = "*.init")
@@ -43,14 +45,16 @@
             return !string.IsNullOrEmpty(solutionLocation) ? new DirectoryInfo($"{solutionLocation}\\bin\\config") : null;
         }
 
-        public static IConfigurationRoot GetConfiguration()
+        public static IConfigurationRoot GetConfiguration(bool isTest = false)
         {
             try
             {
 
                 return new ConfigurationBuilder()
                     .SetBasePath(GetStartUpDirectoryInfo().FullName)
-                    .AddJsonFile(@"bin\config\RepoDbVsEF.Data.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile(isTest ?
+                          @"bin\config\TestDb.Data.json"
+                        : @"bin\config\RepoDbVsEF.Data.json", optional: false, reloadOnChange: true)
                     .Build();
             }
             catch (Exception ex)

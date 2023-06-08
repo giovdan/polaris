@@ -1,13 +1,13 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Domain.Models
 {
-    using Mitrol.Framework.Domain.Core.Models.Database;
+    using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Enums;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("AttributeDefinition")]
-    public class AttributeDefinition : BaseEntityWithRowVersion
+    public class AttributeDefinition : BaseEntity
     {
         public AttributeDefinitionEnum EnumId { get; set; }
         public string DisplayName { get; set; }
@@ -22,6 +22,6 @@
         public string TypeName { get; set; }
         [DefaultValue(OverrideTypeEnum.None)]
         [Column(TypeName = "ENUM ('None','DeltaValue','DeltaPercentage")]
-        public OverrideTypeEnum OverrideTypeId { get; set; }
+        public OverrideTypeEnum OverrideType { get; set; }
     }
 }

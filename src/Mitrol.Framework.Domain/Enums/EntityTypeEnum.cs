@@ -1,5 +1,7 @@
 ﻿namespace Mitrol.Framework.Domain.Enums
 {
+    using Mitrol.Framework.Domain.Attributes;
+    using System.Collections.Generic;
     using System.ComponentModel;
 
     public enum EntityTypeEnum
@@ -201,9 +203,89 @@
             return (ProfileTypeEnum)entityType;
         }
 
+        public static string DisplayName(this EntityTypeEnum entityType)
+        {
+            return entityType.ToToolType().ToString();
+        }
+
+
+
+        public static IEnumerable<EntityTypeEnum> GetToolEntityTypes()
+        {
+            return new[]
+            {
+                EntityTypeEnum.ToolTS15,
+                EntityTypeEnum.ToolTS16,
+                EntityTypeEnum.ToolTS17,
+                EntityTypeEnum.ToolTS18,
+                EntityTypeEnum.ToolTS19,
+                EntityTypeEnum.ToolTS20,
+                EntityTypeEnum.ToolTS32 ,
+                EntityTypeEnum.ToolTS33 ,
+                EntityTypeEnum.ToolTS34 ,
+                EntityTypeEnum.ToolTS35 ,
+                EntityTypeEnum.ToolTS36 ,
+                EntityTypeEnum.ToolTS38 ,
+                EntityTypeEnum.ToolTS39 ,
+                EntityTypeEnum.ToolTS40 ,
+                EntityTypeEnum.ToolTS41 ,
+                EntityTypeEnum.ToolTS50 ,
+                EntityTypeEnum.ToolTS51 ,
+                EntityTypeEnum.ToolTS52 ,
+                EntityTypeEnum.ToolTS53 ,
+                EntityTypeEnum.ToolTS54 ,
+                EntityTypeEnum.ToolTS55 ,
+                EntityTypeEnum.ToolTS56 ,
+                EntityTypeEnum.ToolTS57 ,
+                EntityTypeEnum.ToolTS61 ,
+                EntityTypeEnum.ToolTS62 ,
+                EntityTypeEnum.ToolTS68 ,
+                EntityTypeEnum.ToolTS69 ,
+                EntityTypeEnum.ToolTS70 ,
+                EntityTypeEnum.ToolTS71 ,
+                EntityTypeEnum.ToolTS73 ,
+                EntityTypeEnum.ToolTS74 ,
+                EntityTypeEnum.ToolTS75 ,
+                EntityTypeEnum.ToolTS76 ,
+                EntityTypeEnum.ToolTS77 ,
+                EntityTypeEnum.ToolTS78 ,
+                EntityTypeEnum.ToolTS79 ,
+                EntityTypeEnum.ToolTS80 ,
+                EntityTypeEnum.ToolTS87 ,
+                EntityTypeEnum.ToolTS88 ,
+                EntityTypeEnum.ToolTS89 ,
+                EntityTypeEnum.ToolTS51XPR,
+                EntityTypeEnum.ToolTS51HPR,
+                EntityTypeEnum.ToolTS53XPR,
+                EntityTypeEnum.ToolTS53HPR
+            };
+        }
+
+        /// <summary>
+        /// Get related plant unit from entityType
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public static PlantUnitEnum GetPlantUnit(this EntityTypeEnum entityType)
+        {
+            var toolType = entityType.ToToolType();
+            var plantUnit = PlantUnitEnum.None;
+            if (toolType != ToolTypeEnum.NotDefined)
+            {
+                plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
+            }
+
+            return plantUnit;
+        }
+
+        /// <summary>
+        /// Get related tool type from entityType
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
         public static ToolTypeEnum ToToolType(this EntityTypeEnum entityType)
         {
-            ToolTypeEnum toolType = Enums.ToolTypeEnum.NotDefined;
+            ToolTypeEnum toolType = ToolTypeEnum.NotDefined;
             switch (entityType)
             {
                 case EntityTypeEnum.ToolTS51HPR:

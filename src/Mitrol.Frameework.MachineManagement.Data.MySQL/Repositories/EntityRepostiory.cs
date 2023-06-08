@@ -92,5 +92,10 @@
             return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == entity.Id);
         }
 
+        public IEnumerable<Entity> FindBy<TKey>(Expression<Func<Entity, bool>> predicate, Expression<Func<Entity, TKey>> orderBy)
+        {
+            return UnitOfWork.Context.Entities.Where(predicate)
+                        .OrderBy(orderBy);
+        }
     }
 }

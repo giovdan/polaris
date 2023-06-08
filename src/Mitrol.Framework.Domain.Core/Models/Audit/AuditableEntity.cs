@@ -22,8 +22,8 @@ namespace Mitrol.Framework.Domain.Core.Models
 
         public DateTime? UpdatedOn { get; set; }
 
-        [NotMapped]
-        public bool PreserveUpdatedOn { get; set; }
+        //[NotMapped]
+        //public bool PreserveUpdatedOn { get; set; }
 
         public string TimeZoneId { get; set; }
     }

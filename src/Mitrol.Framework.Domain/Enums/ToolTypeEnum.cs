@@ -1,5 +1,6 @@
 ﻿namespace Mitrol.Framework.Domain.Enums
 {
+    using Mitrol.Framework.Domain.Attributes;
     using System.ComponentModel;
 
     /// <summary>
@@ -9,53 +10,100 @@
     public enum ToolTypeEnum : int
     {
         All = 1,
+        [PlantUnit(PlantUnitEnum.None)]
         NotDefined = 0,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS11 = 11,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS12 = 12,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS13 = 13,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS14 = 14,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS15 = 15,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS16 = 16,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS17 = 17,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS18 = 18,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS19 = 19,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         TS20 = 20,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS32 = 32,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS33 = 33,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS34 = 34,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS35 = 35,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS36 = 36,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS38 = 38,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS39 = 39,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS40 = 40,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS41 = 41,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         TS50 = 50,
+        [PlantUnit(PlantUnitEnum.OxyCutTorch)]
         TS51 = 51,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         TS52 = 52,
+        [PlantUnit(PlantUnitEnum.OxyCutTorch)]
         TS53 = 53,
+        [PlantUnit(PlantUnitEnum.OxyCutTorch)]
         TS54 = 54,
+        [PlantUnit(PlantUnitEnum.SawingMachine)]
         TS55 = 55,
+        [PlantUnit(PlantUnitEnum.SawingMachine)]
         TS56 = 56,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS57 = 57,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS61 = 61,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS62 = 62,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS68 = 68,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS69 = 69,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS70 = 70,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS71 = 71,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS73 = 73,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS74 = 74,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS75 = 75,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS76 = 76,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS77 = 77,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS78 = 78,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         TS79 = 79,
+        [PlantUnit(PlantUnitEnum.PalpingMachine)]
         TS80 = 80,
+        [PlantUnit(PlantUnitEnum.CharMarker)]
         TS86 = 86,
+        [PlantUnit(PlantUnitEnum.CharMarker)]
         TS87 = 87,
+        [PlantUnit(PlantUnitEnum.CharMarker)]
         TS88 = 88,
+        [PlantUnit(PlantUnitEnum.InkJetMarker)]
         TS89 = 89
     }
+
 
     public static class ToolTypeEnumExtensions
     {

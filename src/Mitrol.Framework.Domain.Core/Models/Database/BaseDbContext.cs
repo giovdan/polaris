@@ -48,7 +48,8 @@
             {
                 //Check for AuditableEntity
                 var entity = entry.Entity as IAuditableEntity;
-                if (entity != null && !entity.PreserveUpdatedOn)
+                if (entity != null 
+                    /* && !entity.PreserveUpdatedOn */)
                 {
                     DateTime now = DateTime.UtcNow;
                     entity.TimeZoneId = TimeZoneInfo.Local.Id;

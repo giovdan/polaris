@@ -6,18 +6,20 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    public interface IReadOnlyRepository<T> where T : BaseEntity
+    public interface IReadOnlyRepository<TEntity, TConnection> where TEntity : BaseEntity
     {
-        IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
+        void Attach(IUnitOfWork<TConnection> unitOfWork);
+        IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
 
-        IEnumerable<T> FindBy<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> orderBy);
+        IEnumerable<TEntity> FindBy<TKey>(Expression<Func<TEntity, bool>> predicate
+                        , Expression<Func<TEntity, TKey>> orderBy);
 
-        Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
 
-        T Get(long id);
+        TEntity Get(long id);
 
-        IEnumerable<T> GetAll();
+        IEnumerable<TEntity> GetAll();
 
-        Task<T> GetAsync(long id);
+        Task<TEntity> GetAsync(long id);
     }
 }

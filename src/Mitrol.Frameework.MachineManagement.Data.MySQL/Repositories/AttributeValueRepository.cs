@@ -127,5 +127,15 @@
         {
             UnitOfWork.Context.AttributeValues.UpdateRange(attributeValues);
         }
+
+        public IEnumerable<AttributeValue> FindBy<TKey>(Expression<Func<AttributeValue, bool>> predicate, Expression<Func<AttributeValue, TKey>> orderBy)
+        {
+            return UnitOfWork.Context.AttributeValues
+                    .Include(a => a.AttributeDefinitionLink)
+                    .ThenInclude(a => a.AttributeDefinition)
+                    .Include(a => a.Entity)
+                    .Where(predicate)
+                    .OrderBy(orderBy);
+        }
     }
 }

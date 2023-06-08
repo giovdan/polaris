@@ -19,6 +19,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Threading;
+    using Mitrol.Framework.MachineManagement.Application.Mappings;
 
     public class BaseUnitTest
     {
@@ -32,9 +33,9 @@
             get
             {
                 var mySQLSection = new MySQLSection();
-                DomainExtensions.GetConfiguration().GetSection("MySQL").Bind(mySQLSection);
+                DomainExtensions.GetConfiguration(isTest: true).GetSection("MySQL").Bind(mySQLSection);
                 return
-                 ($"Server={mySQLSection.Server};port={mySQLSection.Port};Database={mySQLSection.Database};Uid={mySQLSection.Username};Pwd={SimpleStringCipher.Instance.Decrypt(mySQLSection.Password)}");
+                 ($"Server={mySQLSection.Server};port={mySQLSection.Port};Database=machine;Uid={mySQLSection.Username};Pwd={SimpleStringCipher.Instance.Decrypt(mySQLSection.Password)}");
 
             }
         }
@@ -42,7 +43,6 @@
         public void RegisterServices(IServiceCollection services)
         {
             services.AddSingleton<IServiceFactory, ServiceFactory>();
-
             services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
             services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
             services.AddTransient<IDatabaseContext, EFDatabaseContext>();
@@ -52,6 +52,12 @@
             services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
             services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
             services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.DisableConstructorMapping();
+                cfg.AddProfile(new ServiceProfile());
+            });
 
             services.AddDbContext<EFDatabaseContext>(options =>
             {

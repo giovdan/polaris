@@ -7,7 +7,7 @@
     public class CodeGeneratorItem: IConvertable
     {
         [JsonIgnore]
-        public long MasterIdentifierId { get; set; }
+        public string HashCode { get; set; }
 
         [JsonProperty("Value")]
         public object Value { get; set; }

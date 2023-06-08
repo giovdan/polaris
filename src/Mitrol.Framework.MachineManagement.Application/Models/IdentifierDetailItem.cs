@@ -7,10 +7,10 @@
     public class IdentifierDetailItem: DetailItem<string>
     {
         [JsonIgnore()]
-        public AttributeDataFormatEnum ItemDataFormat { get; set; }
+        public string HashCode { get; set; }
 
         [JsonIgnore()]
-        public long MasterId { get; set; }
+        public AttributeDataFormatEnum ItemDataFormat { get; set; }
 
         [JsonProperty("IsMainFilter")]
         public bool IsMainFilter { get; set; }

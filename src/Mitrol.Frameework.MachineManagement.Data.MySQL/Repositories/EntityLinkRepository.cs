@@ -93,5 +93,9 @@
             UnitOfWork.Context.Database.ExecuteSqlRaw($"DELETE FROM INTO `EntityLink` WHERE EntityId = {parentId} AND ");
         }
 
+        public IEnumerable<EntityLink> FindBy<TKey>(Expression<System.Func<EntityLink, bool>> predicate, Expression<System.Func<EntityLink, TKey>> orderBy)
+        {
+            return UnitOfWork.Context.EntityLinks.Where(predicate).OrderBy(orderBy);
+        }
     }
 }

@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
 
     public interface IEFDatabaseContext: IDatabaseContext
     {
@@ -16,5 +17,7 @@
         DbSet<AttributeValue> AttributeValues { get; set; }
         DbSet<EntityLink> EntityLinks { get; set; }
         DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
+        DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
+        DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
     }
 }

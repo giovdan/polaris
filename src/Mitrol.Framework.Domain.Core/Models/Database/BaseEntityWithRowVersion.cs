@@ -15,7 +15,7 @@ namespace Mitrol.Framework.Domain.Core.Models.Database
         public DateTime CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public bool PreserveUpdatedOn { get; set; }
+        //public bool PreserveUpdatedOn { get; set; }
         public string TimeZoneId { get; set; }
     }
 }

@@ -47,13 +47,7 @@
         /// Codice identificativo del tool
         /// </summary>
         [JsonProperty("Code")]
-        public virtual string Code {
-            get
-            {
-                var code = s_toolTypeEnumTypeConverter.ConvertToString((ToolTypeEnum)ToolType);
-                return $"{code} - {MachineManagementExtensions.ToString(CodeGenerators)}";
-            }
-        }
+        public string Code { get; set; }
 
         [JsonProperty("StatusLocalizationKey")]
         public string StatusLocalizationKey { get; set; }
@@ -71,8 +65,8 @@
         [JsonIgnore()]
         public IEnumerable<CodeGeneratorItem> CodeGenerators { get; set; }
 
-        [JsonProperty("MasterId")]
-        public long MasterId { get; set; }
+        [JsonProperty("HashCode")]
+        public string HashCode { get; set; }
 
         [JsonIgnore()]
         public virtual PlantUnitEnum PlantUnit { get; set; }

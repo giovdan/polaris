@@ -81,71 +81,11 @@
             Source = UpdateSourceEnum.Application;
         }
 
-        public override string Code
-        {
-            get
-            {
-                //Costruisce il codice univoco del tool basandosi sugli attributi "identificatori"
-                //Recupera l'atttributo Internal Code o DisplayName per il toolType
-                var code = s_toolTypeEnumTypeConverter.ConvertToString(ToolType);
-                return $"{code} - {MachineManagementExtensions.ToString(CodeGenerators)}";
-            }
-        }
+        public string Code { get; set; }
     }
 
     public static class ToolDetailItemExtensions
     {
-        public static IEnumerable<EntityTypeEnum> GetToolEntityTypes()
-        {
-            return new List<EntityTypeEnum>
-            {
-                EntityTypeEnum.ToolTS15,
-                EntityTypeEnum.ToolTS16,
-                EntityTypeEnum.ToolTS17,
-                EntityTypeEnum.ToolTS18,
-                EntityTypeEnum.ToolTS19,
-                EntityTypeEnum.ToolTS20,
-                EntityTypeEnum.ToolTS32,
-                EntityTypeEnum.ToolTS33,
-                EntityTypeEnum.ToolTS34,
-                EntityTypeEnum.ToolTS35,
-                EntityTypeEnum.ToolTS36,
-                EntityTypeEnum.ToolTS38,
-                EntityTypeEnum.ToolTS39,
-                EntityTypeEnum.ToolTS40,
-                EntityTypeEnum.ToolTS41,
-                EntityTypeEnum.ToolTS50,
-                EntityTypeEnum.ToolTS51,
-                EntityTypeEnum.ToolTS52,
-                EntityTypeEnum.ToolTS53,
-                EntityTypeEnum.ToolTS54,
-                EntityTypeEnum.ToolTS55,
-                EntityTypeEnum.ToolTS56,
-                EntityTypeEnum.ToolTS57,
-                EntityTypeEnum.ToolTS61,
-                EntityTypeEnum.ToolTS62,
-                EntityTypeEnum.ToolTS68,
-                EntityTypeEnum.ToolTS69,
-                EntityTypeEnum.ToolTS70,
-                EntityTypeEnum.ToolTS71,
-                EntityTypeEnum.ToolTS73,
-                EntityTypeEnum.ToolTS74,
-                EntityTypeEnum.ToolTS75,
-                EntityTypeEnum.ToolTS76,
-                EntityTypeEnum.ToolTS77,
-                EntityTypeEnum.ToolTS78,
-                EntityTypeEnum.ToolTS79,
-                EntityTypeEnum.ToolTS80,
-                EntityTypeEnum.ToolTS87,
-                EntityTypeEnum.ToolTS88,
-                EntityTypeEnum.ToolTS89,
-                EntityTypeEnum.ToolTS51XPR,
-                EntityTypeEnum.ToolTS51HPR,
-                EntityTypeEnum.ToolTS53XPR,
-                EntityTypeEnum.ToolTS53HPR
-            };
-        }
-
         /// <summary>
         /// Get Attribute Value
         /// </summary>

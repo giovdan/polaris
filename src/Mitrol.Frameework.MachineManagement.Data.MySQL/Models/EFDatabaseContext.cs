@@ -3,9 +3,11 @@
     using Microsoft.EntityFrameworkCore;
     using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Models;
+    using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
 
     public class EFDatabaseContext: BaseDbContext, IEFDatabaseContext
     {
@@ -20,6 +22,8 @@
         public DbSet<AttributeValue> AttributeValues { get; set; }
         public DbSet<EntityLink> EntityLinks { get; set; }
         public DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
+        public DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
+        public DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
 
         public void SetSession(IUserSession session)
         {
@@ -46,15 +50,26 @@
                 .HasIndex(u => u.DisplayName)
                 .IsUnique();
 
-            modelBuilder.Entity<AttributeDefinition>()
-                .Property(c => c.RowVersion)
-                .IsRowVersion()
-                .ValueGeneratedOnAddOrUpdate();
+            modelBuilder.Entity<AttributeDefinition>().Property(a => a.AttributeKind)
+                .HasDefaultValue(AttributeKindEnum.Number)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<AttributeDefinition>().Property(a => a.AttributeType)
+                .HasDefaultValue(AttributeTypeEnum.Generic)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<AttributeDefinition>().Property(a => a.OverrideType)
+                .HasDefaultValue(OverrideTypeEnum.None)
+                .HasConversion<string>();
 
             modelBuilder.Entity<AttributeValue>()
                 .Property(c => c.RowVersion)
                 .IsRowVersion()
                 .ValueGeneratedOnAddOrUpdate();
+
+            #region Views
+            modelBuilder.Entity<DetailIdentifierMaster>().ToView("DetailIdentifiersView").HasNoKey();
+            #endregion
         }
 
     }
