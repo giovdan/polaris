@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `_attributevalue` (
 	`CreatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
 	`UpdatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL' COLLATE 'utf8mb4_bin',
 	`UpdatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
+	`TimeZoneId` MEDIUMTEXT NULL DEFAULT 'W. Europe Standard Time' COLLATE 'utf8mb4_unicode_ci',	
 	`RowVersion` TEXT NOT NULL COLLATE 'utf8mb4_bin',
 	PRIMARY KEY (`Id`) USING BTREE,
 	INDEX `EntityId` (`EntityId`) USING BTREE,
