@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    public interface IDetailIdentifierRepository: IReadOnlyRepository<DetailIdentifier, IEFDatabaseContext>
+    public interface IDetailIdentifierRepository: IReadOnlyRepository<DetailIdentifier, IMachineManagentDatabaseContext>
     {
         IEnumerable<DetailIdentifierMaster> GetIdentifiers(Expression<Func<DetailIdentifierMaster, bool>> predicate);
     }

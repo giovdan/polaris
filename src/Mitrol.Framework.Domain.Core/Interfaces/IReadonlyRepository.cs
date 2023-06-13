@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.Domain.Core.Interfaces
 {
     using Mitrol.Framework.Domain.Core.Models;
+    using Mitrol.Framework.Domain.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;

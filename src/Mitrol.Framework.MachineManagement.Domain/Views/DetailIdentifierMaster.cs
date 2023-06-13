@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Domain.Views
 {
     using Mitrol.Framework.Domain.Enums;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
@@ -22,5 +23,12 @@
         public AttributeDataFormatEnum DataFormat { get; set; }
         public bool IsCodeGenerator { get; set; }
         public string TypeName { get; set; }
+        public AttributeDefinitionGroupEnum GroupId { get; set; }
+        public AttributeDefinitionEnum EnumId { get; set; }
+        [Column(TypeName = "ENUM ('Geometric', 'Process', 'Identifier', 'Generic')")]
+        public AttributeTypeEnum AttributeType { get; set; }
+        [DefaultValue(ClientControlTypeEnum.Edit)]
+        [Column(TypeName = "ENUM('Edit','Label','Combo','ListBox','Check','Override','Image','MultiValue')")]
+        public ClientControlTypeEnum ControlType { get; set; }
     }
 }

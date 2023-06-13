@@ -49,7 +49,8 @@
             return newAttribute;
         }
 
-        public static object GetAttributeValue(this AttributeValue attributeValue, MeasurementSystemEnum conversionSystem)
+        public static object GetAttributeValue(this AttributeValue attributeValue
+                , MeasurementSystemEnum conversionSystem = MeasurementSystemEnum.MetricSystem)
         {
             object value = null;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mitrol.Framework.Domain.Core.Attributes;
 using Mitrol.Framework.Domain.Core.Extensions;
-using Mitrol.Framework.Domain.Core.Interfaces;
+using Mitrol.Framework.Domain.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

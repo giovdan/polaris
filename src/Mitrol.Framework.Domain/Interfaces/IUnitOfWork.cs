@@ -1,6 +1,5 @@
-﻿namespace Mitrol.Framework.Domain.Core.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
-    using Mitrol.Framework.Domain.Interfaces;
     using System;
     using System.Data;
 

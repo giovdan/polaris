@@ -7,19 +7,14 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    /// <summary>
-    /// Classe che rappresenta un elemento della lista dei tools
-    /// </summary>
-    public class ToolListItem
+    public class ToolBaseItem
     {
         protected static TypeConverter s_toolTypeEnumTypeConverter = TypeDescriptor.GetConverter(typeof(ToolTypeEnum));
 
-        public ToolListItem()
+        public ToolBaseItem()
         {
-            Identifiers = new List<IdentifierDetailItem>();
-            CodeGenerators = new List<CodeGeneratorItem>();
+            CodeGenerators = Array.Empty<CodeGeneratorItem>();
         }
-
         /// <summary>
         /// Identificativo del tool
         /// </summary>
@@ -56,8 +51,6 @@
         [JsonProperty("UsedForExecution")]
         public bool UsedForExecution { get; set; }
 
-        [JsonIgnore()]
-        public IEnumerable<IdentifierDetailItem> Identifiers { get; set; }
 
         /// <summary>
         /// Lista di attributi per la generazione del codice del tool
@@ -72,6 +65,21 @@
         public virtual PlantUnitEnum PlantUnit { get; set; }
 
         public ToolListItem Clone() => this.MemberwiseClone() as ToolListItem;
+
+    }
+
+    /// <summary>
+    /// Classe che rappresenta un elemento della lista dei tools
+    /// </summary>
+    public class ToolListItem: ToolBaseItem
+    {
+        public ToolListItem():base()
+        {
+            Identifiers = new List<IdentifierDetailItem>();
+        }
+
+        [JsonIgnore()]
+        public IEnumerable<IdentifierDetailItem> Identifiers { get; set; }
     }
 
     public class LastUpdatedToolListItem: ToolListItem

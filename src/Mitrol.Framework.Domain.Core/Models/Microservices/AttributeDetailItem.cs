@@ -33,7 +33,7 @@
                 return false;
             else
             {
-                return first.AttributeDefinitionId == second.AttributeDefinitionId;
+                return first.AttributeDefinitionLinkId == second.AttributeDefinitionLinkId;
             }
         }
 
@@ -46,7 +46,7 @@
 
             var hashCode = 792638326;
 
-            hashCode = hashCode * -1521134295 + EqualityComparer<long>.Default.GetHashCode(obj.AttributeDefinitionId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<long>.Default.GetHashCode(obj.AttributeDefinitionLinkId);
 
             return hashCode;
         }
@@ -83,9 +83,6 @@
 
         [JsonIgnore()]
         public string TextValue { get; set; }
-
-        [JsonIgnore(), Obsolete]
-        public long AttributeValueId { get; set; }
 
         [JsonIgnore()]
         public AttributeDefinitionGroupEnum GroupId { get; set; }
@@ -253,7 +250,8 @@
         /// </summary>
         /// <param name="attributeDetail"></param>
         /// <param name="value"></param>
-        public static void SetAttributeValue(this AttributeDetailItem attributeDetail, object value)
+        public static void SetAttributeValue(this AttributeDetailItem attributeDetail, object value
+                                            , MeasurementSystemEnum measurementSystem)
         {
             attributeDetail.DbValue = value;
             switch (attributeDetail.AttributeKind)
@@ -261,10 +259,33 @@
                 case AttributeKindEnum.String:
                 case AttributeKindEnum.Number:
                 case AttributeKindEnum.Bool:
-                    attributeDetail.Value.CurrentValue = value;
+                    if (attributeDetail.AttributeKind == AttributeKindEnum.Number 
+                            && measurementSystem != MeasurementSystemEnum.MetricSystem
+                            && decimal.TryParse(value.ToString(), out var decimalValue))
+                    {
+                        attributeDetail.Value.CurrentValue = ConvertToHelper.Convert(
+                                    conversionSystemFrom: MeasurementSystemEnum.MetricSystem,
+                                    conversionSystemTo: measurementSystem,
+                                    dataFormat: attributeDetail.ItemDataFormat,
+                                    value: decimalValue);
+                    }
+                    else
+                    {
+                        attributeDetail.Value.CurrentValue = value;
+                    }
                     break;
                 case AttributeKindEnum.Enum:
-                    attributeDetail.Value.CurrentValueId = int.Parse(value.ToString());
+                    attributeDetail.Value.CurrentValue = 0;
+                    if (int.TryParse(value.ToString(), out var intValue))
+                    {
+                        attributeDetail.Value.CurrentValueId = intValue;
+                    }
+                    else if (!string.IsNullOrEmpty(attributeDetail.TypeName))
+                    {
+                        var enumType = Type.GetType(attributeDetail.TypeName);
+                        var converter = TypeDescriptor.GetConverter(enumType);
+                        attributeDetail.Value.CurrentValue = converter.ConvertFrom(value);
+                    }
                     break;
             }
         }

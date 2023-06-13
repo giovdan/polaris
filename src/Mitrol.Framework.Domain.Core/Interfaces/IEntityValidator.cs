@@ -6,8 +6,8 @@
 
     public interface IHasAttributes
     {
-        List<AttributeDetailItem> Attributes { get; set; }
-        List<AttributeDetailItem> Identifiers { get; set; }
+        IEnumerable<AttributeDetailItem> Attributes { get; set; }
+        IEnumerable<AttributeDetailItem> Identifiers { get; set; }
     }
 
 

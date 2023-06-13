@@ -9,16 +9,16 @@
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
 
-    public class EFUnitOfWork : IUnitOfWork<IEFDatabaseContext>
+    public class UnitOfWork : IUnitOfWork<IMachineManagentDatabaseContext>
     {
-        public EFUnitOfWork(IDatabaseContextFactory databaseContextFactory)
+        public UnitOfWork(IDatabaseContextFactory databaseContextFactory)
         {
             UserSession = null;
             Id = Guid.NewGuid().ToString();
-            Context = databaseContextFactory.Create() as IEFDatabaseContext;
+            Context = databaseContextFactory.Create() as IMachineManagentDatabaseContext;
         }
 
-        public IEFDatabaseContext Context { get; set; }
+        public IMachineManagentDatabaseContext Context { get; set; }
 
         IUserSession _session;
         public IUserSession Session

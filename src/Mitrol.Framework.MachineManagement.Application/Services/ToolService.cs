@@ -14,16 +14,28 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ToolService : BaseService, IToolService
+    public class ToolService : MachineManagementBaseService, IToolService
     {
-        private IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
-        private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
-        
         public ToolService(IServiceFactory serviceFactory) : base(serviceFactory)
         {
 
         }
 
+        private IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
+        private IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
+        private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
+
+        private AttributeDetailItem ApplyCustomMapping(DetailIdentifierMaster identifier
+                        , long entityId
+                        , MeasurementSystemEnum conversionSystem)
+        {
+            var attributeDetail = Mapper.Map<AttributeDetailItem>(identifier);
+            attributeDetail.EntityId = entityId;
+            attributeDetail.SetAttributeValue(identifier.Value, conversionSystem);
+            return attributeDetail;
+        }
+
+ 
         public Result Boot(IUserSession userSession)
         {
             return Result.Ok();
@@ -39,6 +51,8 @@
             return Result.Ok(new ToolDetailItem());
         }
 
+
+
         public Result<ToolDetailItem> Get(long toolId)
         {
             var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
@@ -53,17 +67,43 @@
             }
 
             var toolDetail = Mapper.Map<ToolDetailItem>(entity);
+            var identifiers = DetailIdentifierRepository.GetIdentifiers(identifier =>
+                        identifier.HashCode == entity.HashCode)
+                        .OrderBy(i => i.Priority);
+            var attributes = AttributeValueRepository.FindBy(a => a.EntityId == toolId)
+                        .OrderBy(i => i.Priority);
+
+            var protectionLevels = UserSession.GetProtectionLevels();
+
+            toolDetail.CodeGenerators = Mapper.Map<IEnumerable<CodeGeneratorItem>>(identifiers.Where(i => i.IsCodeGenerator));
+
+            toolDetail.Identifiers = identifiers.Select(i => ApplyCustomMapping(i, toolId, UserSession.ConversionSystem));
+
+            toolDetail.Attributes = attributes.Select(a =>
+                                    {
+                                        var attributeDetail = Mapper.Map<AttributeDetailItem>(a);
+                                        attributeDetail.SetAttributeValue(
+                                            a.AttributeDefinitionLink.AttributeDefinition
+                                                .AttributeKind == AttributeKindEnum.String
+                                                ? a.TextValue
+                                                : a.Value, UserSession.ConversionSystem);
+                                        attributeDetail.EntityId = toolId;
+                                        attributeDetail.IsReadonly = !protectionLevels.Contains(attributeDetail.ProtectionLevel);
+                                        return attributeDetail;
+                                    });
 
             return Result.Ok(toolDetail);
         }
 
-        private ToolListItem ApplyCustomMapping(ToolListItem tool
+        private ToolListItem ApplyCustomMapping(Entity entity
                                 , IEnumerable<IdentifierDetailItem> identifiers
                                 , IEnumerable<CodeGeneratorItem> codeGenerators
                                 , MeasurementSystemEnum conversionSystem)
         {
+            var tool = Mapper.Map<ToolListItem>(entity);
             tool.Identifiers = identifiers;
             tool.CodeGenerators = codeGenerators;
+            tool.InnerId = entity.Id;
             return tool;
         }
         /// <summary>
@@ -89,15 +129,13 @@
                 .OrderBy(x => x.Priority)
                 .Select(item => Mapper.Map<CodeGeneratorItem>(item).ApplyCustomMapping(UserSession.ConversionSystem))
                 .ToLookup(cg => cg.HashCode);
+
+            var entities = EntityRepository.FindBy(e => entityTypes.Contains(e.EntityTypeId));
             return
-                Mapper.Map<IEnumerable<ToolListItem>>
-                    (EntityRepository.FindBy(e => entityTypes.Contains(e.EntityTypeId)))
-                    .Select(tool => ApplyCustomMapping(tool
-                                        , identifiersLookup[tool.HashCode]
-                                        , codeGeneratorsLookup[tool.HashCode]
+                entities.Select(entity => ApplyCustomMapping(entity
+                                        , identifiersLookup[entity.HashCode]
+                                        , codeGeneratorsLookup[entity.HashCode]
                                         , UserSession.ConversionSystem));
         }
-
-
     }
 }

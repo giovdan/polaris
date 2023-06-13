@@ -7,6 +7,7 @@
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
@@ -53,7 +54,11 @@
 
         public IEnumerable<Entity> FindBy(Expression<Func<Entity, bool>> predicate)
         {
-            return UnitOfWork.Context.Entities.Where(predicate);
+            var query = UnitOfWork.Context.Entities.Where(predicate);
+
+            Debug.WriteLine(query.ToQueryString());
+
+            return query;
         }
 
         public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate)

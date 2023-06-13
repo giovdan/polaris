@@ -79,9 +79,9 @@
         public IEnumerable<AttributeValue> FindBy(Expression<Func<AttributeValue, bool>> predicate)
         {
             return UnitOfWork.Context.AttributeValues
+                        .Include(a => a.Entity)
                         .Include(a => a.AttributeDefinitionLink)
                         .ThenInclude(a => a.AttributeDefinition)
-                        .Include(a => a.Entity)
                         .Where(predicate);
         }
 

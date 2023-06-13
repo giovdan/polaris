@@ -37,7 +37,7 @@ namespace Mitrol.Framework.GraphQL
 
             
 
-            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+            services.AddTransient<IUnitOfWork<IMachineManagentDatabaseContext>, MachineManagement.Data.MySQL.Models.UnitOfWork>();
 
 
             services.AddScoped<IEntityRepository, EntityRepostiory>();
@@ -46,14 +46,14 @@ namespace Mitrol.Framework.GraphQL
             services.AddScoped<IToolService, ToolService>();
 
             //Scoped
-            services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
+            services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, MachineManagement.Data.MySQL.Models.UnitOfWorkFactory>();
             services.AddScoped<IServiceFactory, ServiceFactory>();
             services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
 
             //Transient
-            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
-            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
-            services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IEFDatabaseContext);
+            services.AddTransient<IDatabaseContext, MachineManagementDatabaseContext>();
+            services.AddTransient<IUnitOfWork<IMachineManagentDatabaseContext>, MachineManagement.Data.MySQL.Models.UnitOfWork>();
+            services.AddTransient(provider => provider.GetService<IDatabaseContext>() as IMachineManagentDatabaseContext);
 
             //services.AddTransient<IDatabaseContext, EFDatabaseContext>();
             var containerBuilder = new ContainerBuilder();
@@ -72,10 +72,10 @@ namespace Mitrol.Framework.GraphQL
 
             RegisterService(services);
 
-            services.AddDbContext<EFDatabaseContext>(options =>
+            services.AddDbContext<MachineManagementDatabaseContext>(options =>
             {
                 string connectionString = WebApiHelper.Instance
-                                .GetConnectionString<EFDatabaseContext>("MySQL");
+                                .GetConnectionString<MachineManagementDatabaseContext>("MySQL");
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
                 options.EnableSensitiveDataLogging();

@@ -9,9 +9,9 @@
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Views;
 
-    public class EFDatabaseContext: BaseDbContext, IEFDatabaseContext
+    public class MachineManagementDatabaseContext: BaseDbContext, IMachineManagentDatabaseContext
     {
-        public EFDatabaseContext(DbContextOptions options) : base(options)
+        public MachineManagementDatabaseContext(DbContextOptions options) : base(options)
         {
 
         }

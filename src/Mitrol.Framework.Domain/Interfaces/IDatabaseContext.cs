@@ -1,4 +1,4 @@
-﻿namespace Mitrol.Framework.Domain.Core.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Infrastructure;

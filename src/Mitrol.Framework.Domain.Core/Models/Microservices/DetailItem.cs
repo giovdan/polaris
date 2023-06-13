@@ -14,8 +14,8 @@
         [JsonProperty("Value")]
         public T Value { get; set; }
 
-        [JsonProperty("AttributeDefinitionId")]
-        public long AttributeDefinitionId { get; set; }
+        [JsonProperty("AttributeDefinitionLinkId")]
+        public long AttributeDefinitionLinkId { get; set; }
 
         [JsonIgnore()]
         public long EntityId { get; set; }

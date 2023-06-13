@@ -43,10 +43,10 @@
         public void RegisterServices(IServiceCollection services)
         {
             services.AddSingleton<IServiceFactory, ServiceFactory>();
-            services.AddScoped<IUnitOfWorkFactory<IEFDatabaseContext>, EFUnitOfWorkFactory>();
-            services.AddTransient<IEFDatabaseContext, EFDatabaseContext>();
-            services.AddTransient<IDatabaseContext, EFDatabaseContext>();
-            services.AddTransient<IUnitOfWork<IEFDatabaseContext>, EFUnitOfWork>();
+            services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, Mitrol.Framework.MachineManagement.Data.MySQL.Models.UnitOfWorkFactory>();
+            services.AddTransient<IMachineManagentDatabaseContext, MachineManagementDatabaseContext>();
+            services.AddTransient<IDatabaseContext, MachineManagementDatabaseContext>();
+            services.AddTransient<IUnitOfWork<IMachineManagentDatabaseContext>, Mitrol.Framework.MachineManagement.Data.MySQL.Models.UnitOfWork>();
             services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
             services.AddScoped<IEntityRepository, EntityRepostiory>();
             services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
@@ -59,7 +59,7 @@
                 cfg.AddProfile(new ServiceProfile());
             });
 
-            services.AddDbContext<EFDatabaseContext>(options =>
+            services.AddDbContext<MachineManagementDatabaseContext>(options =>
             {
                 options.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
             });

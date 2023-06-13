@@ -1,22 +1,18 @@
-﻿namespace Mitrol.Framework.MachineManagement.Application.Core
+﻿namespace Mitrol.Framework.Domain.Models
 {
     using AutoMapper;
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.Domain.Models;
-    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
 
     public class BaseService : Disposable, IApplicationService
     {
         protected IServiceFactory ServiceFactory { get; }
-        protected IUnitOfWorkFactory<IEFDatabaseContext> UnitOfWorkFactory { get; private set; }
         protected IMapper Mapper { get; set; }
         protected IUserSession UserSession { get; set; }
 
         public BaseService(IServiceFactory serviceFactory)
         {
             ServiceFactory = serviceFactory;
-            UnitOfWorkFactory = ServiceFactory.GetService<IUnitOfWorkFactory<IEFDatabaseContext>>();
             Mapper = serviceFactory.GetService<IMapper>();
         }
 

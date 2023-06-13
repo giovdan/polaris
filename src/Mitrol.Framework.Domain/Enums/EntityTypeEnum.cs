@@ -3,6 +3,7 @@
     using Mitrol.Framework.Domain.Attributes;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     public enum EntityTypeEnum
     {
@@ -285,21 +286,27 @@
         /// <returns></returns>
         public static ToolTypeEnum ToToolType(this EntityTypeEnum entityType)
         {
+            var definedToolTypes = GetToolEntityTypes()
+                        .ToList();
             ToolTypeEnum toolType = ToolTypeEnum.NotDefined;
-            switch (entityType)
+            if (definedToolTypes.Contains(entityType))
             {
-                case EntityTypeEnum.ToolTS51HPR:
-                case EntityTypeEnum.ToolTS51XPR:
-                    toolType = ToolTypeEnum.TS51;
-                    break;
-                case EntityTypeEnum.ToolTS53HPR:
-                case EntityTypeEnum.ToolTS53XPR:
-                    toolType = ToolTypeEnum.TS53;
-                    break;
-                default:
-                    toolType = (ToolTypeEnum)entityType;
-                    break;
+                switch (entityType)
+                {
+                    case EntityTypeEnum.ToolTS51HPR:
+                    case EntityTypeEnum.ToolTS51XPR:
+                        toolType = ToolTypeEnum.TS51;
+                        break;
+                    case EntityTypeEnum.ToolTS53HPR:
+                    case EntityTypeEnum.ToolTS53XPR:
+                        toolType = ToolTypeEnum.TS53;
+                        break;
+                    default:
+                        toolType = (ToolTypeEnum)entityType;
+                        break;
+                }
             }
+
 
             return toolType;
         }

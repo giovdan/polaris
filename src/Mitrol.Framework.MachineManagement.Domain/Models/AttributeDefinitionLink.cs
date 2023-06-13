@@ -11,6 +11,7 @@
     {
         public long AttributeDefinitionId { get; set; }
         public EntityTypeEnum EntityTypeId { get; set; }
+        public string HelpImage { get; set; }
         [DefaultValue(ClientControlTypeEnum.Edit)]
         [Column(TypeName = "ENUM('Edit','Label','Combo','ListBox','Check','Override','Image','MultiValue')")]
         public ClientControlTypeEnum ControlType { get; set; }

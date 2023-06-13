@@ -14,7 +14,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ToolDetailItem : ToolListItem, IEntityWithImage, IHasAttributes
+    public class ToolDetailItem : ToolBaseItem, IEntityWithImage, IHasAttributes
     {
         [JsonProperty("NumberOfCopies")]
         public int NumberOfCopies { get; set; }
@@ -54,10 +54,10 @@
             => DomainExtensions.GetEnumAttribute<ToolTypeEnum, PlantUnitAttribute>(ToolType)?.PlantUnit ?? PlantUnitEnum.None;
 
         [JsonProperty("Identifiers")]
-        public List<AttributeDetailItem> Identifiers { get; set; }
+        public IEnumerable<AttributeDetailItem> Identifiers { get; set; }
 
         [JsonProperty("Attributes")]
-        public List<AttributeDetailItem> Attributes { get; set; }
+        public IEnumerable<AttributeDetailItem> Attributes { get; set; }
 
         [JsonProperty("LifeColor")]
         public StatusColorEnum LifeColor { get; set; }
@@ -124,7 +124,7 @@
         {
             throw new NotImplementedException();
             // Recupero gli attributi di stato legati al tipo di tool (stabiliti dal toolStatusHandler)
-            //var toolStatusAttributeDefinitions = toolStatusHandler.GetToolStatusAttributeDefinitions();
+            var toolStatusAttributeDefinitions = toolStatusHandler.GetToolStatusAttributeDefinitions();
 
             //return toolDetail.Attributes.Where(a => toolStatusAttributeDefinitions.Contains(a.EnumId))
             //            .Select(a =>

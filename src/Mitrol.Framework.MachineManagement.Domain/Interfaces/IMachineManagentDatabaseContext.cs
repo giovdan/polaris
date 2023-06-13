@@ -3,11 +3,11 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Infrastructure;
-    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Views;
 
-    public interface IEFDatabaseContext: IDatabaseContext
+    public interface IMachineManagentDatabaseContext: IDatabaseContext
     {
         int SaveChanges();
         EntityEntry Entry(object entity);

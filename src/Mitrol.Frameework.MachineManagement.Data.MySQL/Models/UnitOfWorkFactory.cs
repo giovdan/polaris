@@ -4,22 +4,22 @@
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
 
-    public class EFUnitOfWorkFactory : IUnitOfWorkFactory<IEFDatabaseContext>
+    public class UnitOfWorkFactory : IUnitOfWorkFactory<IMachineManagentDatabaseContext>
     {
         private readonly IServiceFactory _serviceFactory;
         //private Dictionary<string, IUnitOfWork<IEFDatabaseContext>> _unitOfWorks;
-        private IUnitOfWork<IEFDatabaseContext> _currentUnitOfWork;
+        private IUnitOfWork<IMachineManagentDatabaseContext> _currentUnitOfWork;
 
-        public EFUnitOfWorkFactory(IServiceFactory serviceFactory)
+        public UnitOfWorkFactory(IServiceFactory serviceFactory)
         {
             _serviceFactory = serviceFactory;
         }
 
-        public IUnitOfWork<IEFDatabaseContext> GetOrCreate(IUserSession session)
+        public IUnitOfWork<IMachineManagentDatabaseContext> GetOrCreate(IUserSession session)
         {
             if (_currentUnitOfWork == null)
             {
-                _currentUnitOfWork = _serviceFactory.GetService<IUnitOfWork<IEFDatabaseContext>>();
+                _currentUnitOfWork = _serviceFactory.GetService<IUnitOfWork<IMachineManagentDatabaseContext>>();
                 _currentUnitOfWork.UserSession = session;
             }
             

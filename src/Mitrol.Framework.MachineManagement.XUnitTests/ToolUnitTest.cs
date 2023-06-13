@@ -51,11 +51,29 @@ namespace Mitrol.Framework.XUnitTests
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var service = scope.ServiceProvider.GetRequiredService<IToolService>();
             service.SetSession(NullUserSession.InternalSessionInstance);
-            var toolId = service.GetAll().LastOrDefault().Id;
+            var tools = service.GetAll();
+            tools.Should().NotBeEmpty();
+            var toolId = tools.LastOrDefault().InnerId;
             var result = service.Get(toolId);
             result.Success.Should().BeTrue();
-            result.Value.Id.Should().BeGreaterThan(0);
-            result.Value.Id.Should().Be(toolId);
+            result.Value.InnerId.Should().BeGreaterThan(0);
+            result.Value.InnerId.Should().Be(toolId);
+            result.Value.CodeGenerators.Should().NotBeEmpty();
+            result.Value.Identifiers.Should().NotBeEmpty();
+            result.Value.Identifiers.Select(i => i.AttributeKind != Domain.Enums.AttributeKindEnum.Enum
+                    ? i.Value.CurrentValue
+                    : i.Value.CurrentValueId)
+                .Should().NotBeNull();
+                        
+            result.Value.Attributes.Should().NotBeEmpty();
+            // Check DisplayName
+            result.Value.Attributes.Any(a => !string.IsNullOrEmpty(a.DisplayName)).Should().BeTrue();
+            // Check valore
+            result.Value.Attributes.Select(i => i.AttributeKind != Domain.Enums.AttributeKindEnum.Enum
+                                ? i.Value.CurrentValue
+                                : i.Value.CurrentValueId)
+                                .Should().NotBeNull();
+
         }
     }
 }
