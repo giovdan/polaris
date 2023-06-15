@@ -121,22 +121,22 @@
         public HashSet<ProtectionLevelEnum> GetProtectionLevels()
         {
             var protectionLevels = new HashSet<ProtectionLevelEnum>();
-            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_READ_CRITICAL))
+            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_CRITICAL_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.Critical);
             }
 
-            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_READ_HIGH))
+            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_HIGH_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.High);
             }
 
-            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_READ_MEDIUM))
+            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_MEDIUM_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.Medium);
             }
 
-            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_READ_NORMAL))
+            if (HasPermission(PermissionEnum.MACHINEPARAMETERS_NORMAL_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.Normal);
             }

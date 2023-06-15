@@ -3,7 +3,7 @@
     using Mitrol.Framework.Domain.Attributes;
     using System.ComponentModel;
 
-    //[TypeConverter(typeof(EnumCustomNameTypeConverter))]
+    [TypeConverter(typeof(EnumCustomNameTypeConverter))]
     public enum AttributeDataFormatEnum
     {
         /// <summary>
@@ -11,7 +11,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("VEL")]
+        [DatabaseDisplayName("VEL")]
         [Description("Velocità")]
         LinearSpeed = 1,
 
@@ -20,7 +20,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0, 0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0, 0)]
-        //[DatabaseDisplayName("RPM")]
+        [DatabaseDisplayName("RPM")]
         [Description("Velocità di rotazione")]
         RotationalSpeed = 2,
 
@@ -29,7 +29,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,4)]
-        //[DatabaseDisplayName("REV")]
+        [DatabaseDisplayName("REV")]
         [Description("Velocità di rivoluzione")]
         RevolutionSpeed = 3,
 
@@ -38,7 +38,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("VP")]
+        [DatabaseDisplayName("VP")]
         [Description("Velocità periferica")]
         PeripheralSpeed = 4,
 
@@ -47,8 +47,8 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7, 2)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7, 2)]
-        //[EnumSerializationName("Angle")]
-        //[DatabaseDisplayName("ANG")]
+        [EnumSerializationName("Angle")]
+        [DatabaseDisplayName("ANG")]
         [Description("Angolo")]
         Angle = 5,
 
@@ -57,7 +57,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,1)]
-        //[DatabaseDisplayName("WGT")]
+        [DatabaseDisplayName("WGT")]
         [Description("Peso")]
         Weight = 6,
 
@@ -66,7 +66,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("LWG")]
+        [DatabaseDisplayName("LWG")]
         [Description("Peso lineare")]
         LinearWeight = 7,
 
@@ -75,7 +75,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,2)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,4)]
-        //[DatabaseDisplayName("SWG")]
+        [DatabaseDisplayName("SWG")]
         [Description("Peso Specifico")]
         SpecificWeight = 8,
 
@@ -84,7 +84,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,2)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("SUR")]
+        [DatabaseDisplayName("SUR")]
         [Description("Superficie")]
         Surface = 9,
 
@@ -93,7 +93,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("LSU")]
+        [DatabaseDisplayName("LSU")]
         [Description("Superficie")]
         LinearSurface = 10,
 
@@ -102,7 +102,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("WSU")]
+        [DatabaseDisplayName("WSU")]
         [Description("Superficie su peso")]
         WeightSurface = 11,
 
@@ -111,7 +111,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0, 0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0, 0)]
-        //[DatabaseDisplayName("PRS")]
+        [DatabaseDisplayName("PRS")]
         [Description("Pressione")]
         Pressure = 12,
 
@@ -120,7 +120,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0,0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0,0)]
-        //[DatabaseDisplayName("PPS")]
+        [DatabaseDisplayName("PPS")]
         [Description("Pressione per apparecchiatura Plasma")]
         PlasmaPressure = 13,
 
@@ -129,8 +129,8 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7, 2)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7, 5)]
-        //[EnumSerializationName("Length")]
-        //[DatabaseDisplayName("LEN")]
+        [EnumSerializationName("Length")]
+        [DatabaseDisplayName("LEN")]
         [Description("Lunghezza")]
         Length = 14,
 
@@ -139,7 +139,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,5)]
-        //[DatabaseDisplayName("DMR")]
+        [DatabaseDisplayName("DMR")]
         [Description("Diametro")]
         Diameter = 15,
 
@@ -148,7 +148,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("DST")]
+        [DatabaseDisplayName("DST")]
         [Description("Distanza")]
         Distance = 16,
 
@@ -157,8 +157,8 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0)]
-        //[EnumSerializationName("AsIs")]
-        //[DatabaseDisplayName("ASIS")]
+        [EnumSerializationName("AsIs")]
+        [DatabaseDisplayName("ASIS")]
         [Description("Valore senza conversione")]
         AsIs = 17,
 
@@ -167,7 +167,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7,3)]
-        //[DatabaseDisplayName("SCT")]
+        [DatabaseDisplayName("SCT")]
         [Description("Sezione")]
         Section = 18,
 
@@ -176,7 +176,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 1,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 1,1)]
-        //[DatabaseDisplayName("VOLT")]
+        [DatabaseDisplayName("VOLT")]
         [Description("Tensione")]
         ElectricalPotential = 19,
 
@@ -185,7 +185,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0, 0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0, 0)]
-        //[DatabaseDisplayName("AMP")]
+        [DatabaseDisplayName("AMP")]
         [Description("Corrente Elettrica")]
         ElectricCurrent = 20,
 
@@ -194,7 +194,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 1,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 1,1)]
-        //[DatabaseDisplayName("sec")]
+        [DatabaseDisplayName("sec")]
         [Description("Tempo in secondi")]
         TimeInSeconds = 21,
 
@@ -203,7 +203,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0)]
-        //[DatabaseDisplayName("TEM")]
+        [DatabaseDisplayName("TEM")]
         [Description("Tempo")]
         Time = 22,
 
@@ -212,7 +212,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 2,2)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3,3)]
-        //[DatabaseDisplayName("AR")]
+        [DatabaseDisplayName("AR")]
         [Description("Area")]
         Area = 23,
 
@@ -221,7 +221,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 1,1)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 1,1)]
-        //[DatabaseDisplayName("ms")]
+        [DatabaseDisplayName("ms")]
         [Description("Tempo in millisecondi")]
         TimeInMilliseconds = 24,
 
@@ -230,7 +230,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 0,0)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 0,0)]
-        //[DatabaseDisplayName("min")]
+        [DatabaseDisplayName("min")]
         [Description("Tempo in minuti")]
         TimeInMinutes = 25,
 
@@ -239,7 +239,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("DIS")]
+        [DatabaseDisplayName("DIS")]
         [Description("dis")]
         PaxeDis = 26,
 
@@ -248,7 +248,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("DISS")]
+        [DatabaseDisplayName("DISS")]
         [Description("dis/s")]
         PaxeLinearSpeed = 27,
 
@@ -257,7 +257,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("DISSS")]
+        [DatabaseDisplayName("DISSS")]
         [Description("dis/s²")]
         PaxeAcceleration = 28,
 
@@ -266,7 +266,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("GAIN")]
+        [DatabaseDisplayName("GAIN")]
         [Description("1/s")]
         PaxeGain = 29,
 
@@ -275,7 +275,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("IMPE")]
+        [DatabaseDisplayName("IMPE")]
         [Description("i/rev")]
         PaxeImpe = 30,
 
@@ -284,7 +284,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("REVE")]
+        [DatabaseDisplayName("REVE")]
         [Description("rev")]
         PaxeReve = 31,
 
@@ -293,7 +293,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("VEL8")]
+        [DatabaseDisplayName("VEL8")]
         [Description("dis/8V")]
         PaxeScaleDrive = 32,
 
@@ -302,7 +302,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("PERC")]
+        [DatabaseDisplayName("PERC")]
         [Description("%")]
         Percentage = 33,
 
@@ -311,7 +311,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("MV")]
+        [DatabaseDisplayName("MV")]
         [Description("mV")]
         MilliVolts = 34,
 
@@ -320,7 +320,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("SCANS")]
+        [DatabaseDisplayName("SCANS")]
         [Description("sc")]
         Scans = 35,
 
@@ -329,7 +329,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("BIT")]
+        [DatabaseDisplayName("BIT")]
         [Description("Valore bit")]
         Bit = 36,
 
@@ -338,7 +338,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("TGAIN")]
+        [DatabaseDisplayName("TGAIN")]
         [Description("Guadagno del trasduttore")]
         TransducerGain = 37,
 
@@ -347,7 +347,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("BOOL")]
+        [DatabaseDisplayName("BOOL")]
         [Description("Valore booleano")]
         Bool = 38,
 
@@ -356,7 +356,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("BITSC")]
+        [DatabaseDisplayName("BITSC")]
         [Description("Coefficiente di accelerazione")]
         AccelerationCoefficient = 39,
 
@@ -365,8 +365,8 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 7)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7)]
-        //[EnumSerializationName("AngularSpeed")]
-        //[DatabaseDisplayName("ANGSPEED")]
+        [EnumSerializationName("AngularSpeed")]
+        [DatabaseDisplayName("ANGSPEED")]
         [Description("Velocità angolare")]
         AngularSpeed = 40,
 
@@ -375,7 +375,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("ANGACC")]
+        [DatabaseDisplayName("ANGACC")]
         [Description("Accelerazione angolare")]
         AngularAcceleration = 41,
         /// <summary>
@@ -383,7 +383,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 3)]
-        //[DatabaseDisplayName("VELSEC")]
+        [DatabaseDisplayName("VELSEC")]
         [Description("Velocità lineare in sec")]
         LinearSpeedSec = 42,
 
@@ -392,7 +392,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7)]
-        //[DatabaseDisplayName("LinearForwardSpeed")]
+        [DatabaseDisplayName("LinearForwardSpeed")]
         [Description("Velocità di avanzamento")]
         LinearForwardSpeed = 43,
 
@@ -401,7 +401,7 @@
         /// </summary>
         [DecimalPrecision(MeasurementSystemEnum.MetricSystem, 3)]
         [DecimalPrecision(MeasurementSystemEnum.ImperialSystem, 7)]
-        //[DatabaseDisplayName("SectionForwardSpeed")]
+        [DatabaseDisplayName("SectionForwardSpeed")]
         [Description("Velocità di avanzamento")]
         SectionForwardSpeed = 44,
     }

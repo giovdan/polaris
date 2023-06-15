@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mitrol.Framework.Domain.Enums
+﻿namespace Mitrol.Framework.Domain.Enums
 {
     public enum BuiltInGroupEnum
     {

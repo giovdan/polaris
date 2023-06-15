@@ -2,6 +2,7 @@
 {
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.MachineManagement.Domain.Enums;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;

@@ -9,13 +9,4 @@
         Fundamental = 1,
         Preview = 2,
     }
-
-    /// <summary>
-    /// Enumerato che definisce come valorizzare il default dell'attributo
-    /// </summary>
-    public enum AttributeBehavior: int
-    {
-        DataDefault = 0, 
-        LastInserted = 1
-    }
 }

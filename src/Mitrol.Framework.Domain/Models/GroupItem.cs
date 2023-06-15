@@ -95,22 +95,22 @@ namespace Mitrol.Framework.Domain.Models
                 .Where(p => p.Value)
                 .Select(p => (PermissionEnum)p.Id);
 
-            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_READ_CRITICAL))
+            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_CRITICAL_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.Critical);
             }
 
-            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_READ_HIGH))
+            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_HIGH_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.High);
             }
 
-            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_READ_MEDIUM))
+            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_MEDIUM_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.Medium);
             }
 
-            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_READ_NORMAL))
+            if (groupPermissions.Contains(PermissionEnum.MACHINEPARAMETERS_NORMAL_READ))
             {
                 protectionLevels.Add(ProtectionLevelEnum.Normal);
             }

@@ -1,20 +1,128 @@
 {
-  "gitCommitHash": "ed5bcbab28c84a1af342412f90250ff8dba61a35",
-  "gitCommitDate": "Tue, 13 Jun 2023 13:53:43 +0200",
+  "gitCommitHash": "90774dc3a6056d46a242104b5a751a937a31c6bc",
+  "gitCommitDate": "Thu, 15 Jun 2023 14:59:05 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Thu, 15 Jun 2023 09:22:34 +0200",
+  "buildDate": "Thu, 15 Jun 2023 17:21:48 +0200",
   "gitUncommittedFiles": [
     {
       "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/996_FIX_VIEWS.sql"
+      "filename": "src/Mitrol.Framework.Domain/Attributes/EnumFieldAttribute.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Configurations/Setup/GridPosition.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/MachineManagementDatabaseContext.cs"
+      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDataFormatEnum.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
+      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDefinitionEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDefinitionGroupEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeScopeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/BuiltInGroupEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ClientControlTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/DatabaseDisplayNameEnum.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Enums/EnumCustomNameTypeConverter.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ErrorCodesEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/MeasurementSystemEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/NotificationTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/NozzleShapeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/OperationTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/OverrideTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ParameterCategoryEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/PermissionEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/PlantUnitEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ProcessingTechnologyEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ProfileTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ProtectionLevelEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ToolTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/UnitEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Extensions/DomainExtensions.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Mitrol.Framework.Domain.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Models/GroupItem.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain/Models/ParameterCodes.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Models/UserSession.cs"
     },
     {
       "status": "M",
@@ -22,19 +130,15 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolService.cs"
-    },
-    {
-      "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/ToolService.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IAttributeValueRepository.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinition.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IMachineManagentDatabaseContext.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Views/ToolStatusAttribute.cs"
     }
   ]
 }

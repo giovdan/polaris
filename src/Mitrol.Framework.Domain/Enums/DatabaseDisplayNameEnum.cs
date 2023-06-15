@@ -53,9 +53,9 @@ namespace Mitrol.Framework.Domain.Enums
         RadialOverlap = 48,
         RadialFeed = 49,
         RadialDepth = 50,
-        [Obsolete]
+        [Obsolete] 
         CountersinkRevolutionSpeed = 51,
-        [Obsolete]
+        [Obsolete] 
         CountersinkFeedRateSpeed = 52,
         StartPosition = 53,
         FastApproachPosition = 54,
@@ -247,14 +247,14 @@ namespace Mitrol.Framework.Domain.Enums
         Oy = 244,
         SpecificWeight = 245,
         ProfileCode = 248,
-        MaterialCode = 249,
+		MaterialCode = 249,
         StockItemType = 250,
-        HeatNumber = 251,
-        Supplier = 252,
-        Quantity = 253,
+        HeatNumber=251,
+        Supplier=252,
+        Quantity=253,
         ToolHolderName = 254,
         PlasmaTorchTableIdUnitC = 255,
-        PlasmaTorchTableIdUnitD = 256,
+        PlasmaTorchTableIdUnitD=256,
         OxyCutTorchTableIdUnitC = 257,
         OxyCutTorchTableIdUnitD = 258,
         PlasmaTorchMarkIdUnitC = 259,
@@ -380,8 +380,8 @@ namespace Mitrol.Framework.Domain.Enums
         MillingLength = 379,
         Remnant = 380,
         CuttingSpeed = 381,
-        ForwardSpeed = 382,
-        StartForwardSpeed = 383,
+        ForwardSpeed= 382,
+        StartForwardSpeed= 383,
         CountersinkCuttingSpeed = 384,
         CountersinkForwardSpeed = 385,
         ToolForTechnology = 386,
@@ -393,7 +393,7 @@ namespace Mitrol.Framework.Domain.Enums
         ToolWorkType = 392,
         ToolForPlasmaCutProcessing = 393,
         Zprobed = 394,
-        ToolCategory = 395,
+        ToolCategory=395,
         ArcVoltageReal = 396,
         WebInitialAngle = 397,
         WebFinalAngle = 398,
@@ -450,13 +450,6 @@ namespace Mitrol.Framework.Domain.Enums
         RemainingPieceLength = 450,
         BarsNumber = 451,
         ReservedBars = 452,
-        LoadedBars = 453,
-        Contract = 454,
-        Project = 455,
-        Drawing = 456,
-        Assembly = 457,
-        Part = 458,
-        OriginsCalculated = 459,
-        ExecutionDate = 460
+        LoadedBars = 453
     }
 }

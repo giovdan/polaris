@@ -1,5 +1,6 @@
 ﻿namespace Mitrol.Framework.Domain.Enums
 {
+    using Mitrol.Framework.MachineManagement.Domain.Enums;
     using System;
 
     public enum UnitEnum
@@ -8,26 +9,32 @@
         /// Non definito
         /// </summary>
         None = 0,
+
         /// <summary>
         /// Lato destro
         /// </summary>
         A = 1,
+
         /// <summary>
         /// Lato sinistro
         /// </summary>
         B = 2,
+
         /// <summary>
         /// Lato superiore
         /// </summary>
         C = 3,
+
         /// <summary>
         /// Lato inferiore
         /// </summary>
         D = 4,
+
         /// <summary>
         /// Lato destro e sinistro
         /// </summary>
         AB = 5,
+
         /// <summary>
         /// Tutti i lati (segatrice)
         /// </summary>

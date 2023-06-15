@@ -3,8 +3,8 @@
     public enum MeasurementSystemEnum
     {
         MetricSystem = 1,
-        ImperialSystem = 2,
-        FractionalImperialSystem = 3
+        ImperialSystem =2,
+        FractionalImperialSystem =3
     }
 
     public static class MeasurementSystemEnumExtensions

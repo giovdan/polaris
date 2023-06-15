@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Domain.Models
 {
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.MachineManagement.Domain.Enums;
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
 

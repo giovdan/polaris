@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.Domain.Attributes
 {
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.MachineManagement.Domain.Enums;
     using System;
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]

@@ -203,6 +203,10 @@ namespace Mitrol.Framework.Domain.Core.Enums
         /// </summary>
         ERR_USR017,
         /// <summary>
+        /// GROUPNAME_ALREADY_EXISTS
+        /// </summary>
+        ERR_USR018, 
+        /// <summary>
         /// OLDPASSWORD_CHANGEPASSWORD_INVALID
         /// </summary>
         ERR_PWD001,
@@ -1067,6 +1071,15 @@ namespace Mitrol.Framework.Domain.Core.Enums
         /// GROUP_PERMISSIONS_NOTSPECIFIED
         /// </summary>
         ERR_GRP002,
+        /// <summary>
+        /// GROUP_ID_NOTSPECIFIED
+        /// </summary>
+        ERR_GRP003,
+        /// <summary>
+        /// GROUP_BASEGROUPID_NOTSPECIFIED
+        /// </summary>
+        ERR_GRP004,
+        
     }
 
     public static class ErrorCodesEnumExtensions

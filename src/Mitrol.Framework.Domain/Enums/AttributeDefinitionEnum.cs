@@ -98,6 +98,21 @@ namespace Mitrol.Framework.Domain.Enums
         [BitEnableFor(UnitEnum.D)]
         ToolEnableD = 162,
 
+        [Description("Tipologia di tool")]
+        [EnumSerializationName("TS")]
+        [DatabaseDisplayName(DatabaseDisplayNameEnum.TS)]
+        ToolType = 254,
+
+        [Description("Tool Type per Probe Technology")]
+        [EnumSerializationName("ProbeTS")]
+        [DatabaseDisplayName(DatabaseDisplayNameEnum.ProbeTS)]
+        ProbeTS = 298,
+
+        [Description("Tool Type per Tecnologia pre foro")]
+        [EnumSerializationName("PreHoleTS")]
+        [DatabaseDisplayName(DatabaseDisplayNameEnum.PreHoleTS)]
+        PreHoleTS = 301,
+
         [Description("Soglia preallarme vita lama")]
         [EnumSerializationName("WarningBladeLife")]
         [DatabaseDisplayName(DatabaseDisplayNameEnum.WarningBladeLife)]
@@ -112,5 +127,7 @@ namespace Mitrol.Framework.Domain.Enums
         [EnumSerializationName("BladeLife")]
         [DatabaseDisplayName(DatabaseDisplayNameEnum.BladeLife)]
         BladeLife = 378,
+
+
     }
 }

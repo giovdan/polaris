@@ -227,5 +227,13 @@
             }
         }
 
+        public static IEnumerable<TKey> Duplicates<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            return source?.GroupBy(keySelector)
+                .Where(g => g.Count() > 1)
+                .Select(y => y.Key)
+                .ToList();
+        }
+
     }
 }

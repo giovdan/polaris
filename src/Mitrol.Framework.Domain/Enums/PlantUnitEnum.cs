@@ -14,21 +14,21 @@
 
         [DatabaseDisplayName("DRILL")]
         [Description("Foratrice")]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Drill)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Drill)]
         DrillingMachine = 1,
 
         [DatabaseDisplayName("PLASMA")]
         [Description("Torcia Plasma")]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Cut)]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Mark, SubRangeTypeEnum.Mark)]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.TrueHole, SubRangeTypeEnum.TrueHole)]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Bevel, SubRangeTypeEnum.Bevel)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Cut)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Mark, SubRangeTypeEnum.Mark)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.TrueHole, SubRangeTypeEnum.TrueHole)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Bevel, SubRangeTypeEnum.Bevel)]
         PlasmaTorch = 2,
 
         [DatabaseDisplayName("OXY")]
         [Description("Torcia Ossitaglio")]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Cut)]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Bevel, SubRangeTypeEnum.Bevel)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Cut)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Bevel, SubRangeTypeEnum.Bevel)]
         OxyCutTorch = 4,
 
         [DatabaseDisplayName("PUNCH")]
@@ -57,7 +57,7 @@
 
         [DatabaseDisplayName("SAW")]
         [Description("Unità segatrice")]
-        //[RelatedToolRangeType(ToolRangeTypeEnum.Saw)]
+        [RelatedToolRangeType(ToolRangeTypeEnum.Saw)]
         SawingMachine = 512,
 
         All = DrillingMachine | PlasmaTorch | OxyCutTorch | PunchingMachine

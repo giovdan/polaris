@@ -1,5 +1,6 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Application.Services
 {
+    using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Models.Microservices;
     using Mitrol.Framework.Domain.Enums;
@@ -13,6 +14,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Configuration.Extensions;
+
 
     public class ToolService : MachineManagementBaseService, IToolService
     {
@@ -24,8 +28,33 @@
         private IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
         private IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
         private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
+        private IMachineConfigurationService MachineConfigurationService => ServiceFactory.GetService<IMachineConfigurationService>();
 
         #region < Private Methods >
+        /// <summary>
+        /// Get Real Processing Technology based on toolType
+        /// </summary>
+        /// <param name="processingTechnology"></param>
+        /// <param name="toolType"></param>
+        /// <returns></returns>
+        private ProcessingTechnologyEnum GetRealProcessTechnology(ProcessingTechnologyEnum processingTechnology
+                        , ToolTypeEnum toolType)
+        {
+            var plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>().PlantUnit;
+            if (processingTechnology != ProcessingTechnologyEnum.Default)
+            {
+                var plantUnitToApply = processingTechnology.GetEnumAttribute<TechnologyRelatedToAttribute>();
+                //Se l'attributo RelatedToAttribute è All oppure il tipo di plant unit non è collegato al ToolType
+                //la tecnologia di elaborazione non può essere associata al tool
+                if (plantUnitToApply.PlantUnit == PlantUnitEnum.All ||
+                    (plantUnitToApply.PlantUnit != PlantUnitEnum.All &&
+                        plantUnit != plantUnitToApply.PlantUnit))
+                    processingTechnology = ProcessingTechnologyEnum.Default;
+            }
+
+            return processingTechnology;
+        }
+
         private ToolListItem ApplyCustomMapping(Entity entity
                                 , IEnumerable<IdentifierDetailItem> identifiers
                                 , IEnumerable<CodeGeneratorItem> codeGenerators
@@ -105,10 +134,13 @@
                                         return attributeDetail;
                                     });
 
-
             var toolStatusAttributes = AttributeValueRepository
                                         .GetToolStatusAttributes(a => a.EntityId == toolId)
                                         .ToHashSet();
+
+            var processingTechnology = GetRealProcessTechnology(
+                            MachineConfigurationService.ConfigurationRoot.Setup.Pla.GetProcessingTechnology()
+                            , entity.EntityTypeId.ToToolType());
 
             return Result.Ok(toolDetail);
         }

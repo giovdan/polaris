@@ -4,11 +4,11 @@
 
     public enum NotificationTypeEnum
     {
-        //[DatabaseDisplayName("ALL")]
+        [DatabaseDisplayName("ALL")]
         Alarm = 1,
-        //[DatabaseDisplayName("MSG")]
+        [DatabaseDisplayName("MSG")]
         Message = 2,
-        //[DatabaseDisplayName("OPERMSG")]
+        [DatabaseDisplayName("OPERMSG")]
         Info = 4,
         All = Alarm | Message,
     }

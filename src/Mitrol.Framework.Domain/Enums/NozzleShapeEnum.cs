@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-
-namespace Mitrol.Framework.Domain.Enums
+﻿namespace Mitrol.Framework.Domain.Enums
 {
+    using Mitrol.Framework.Domain.Attributes;
+    using System.ComponentModel;
+
     /// <summary>
     /// Tipologia di forma dell'ugello
     /// </summary>
@@ -20,9 +18,10 @@ namespace Mitrol.Framework.Domain.Enums
         /// <summary>
         /// Diritto
         /// </summary>
-
+       
         [EnumCustomName("Straight")]
         [EnumSerializationName("Straight")]
+        [EnumField("Diritto", true, "LBL_NOZZLESHAPE_STRAIGHT")]
         Straight = 0,
 
         /// <summary>
@@ -30,6 +29,7 @@ namespace Mitrol.Framework.Domain.Enums
         /// </summary>
         [EnumCustomName("Bevel")]
         [EnumSerializationName("Bevel")]
+        [EnumField("Bevel", true, "LBL_NOZZLESHAPE_BEVEL")]
         Bevel = 1
     }
 }

@@ -7,19 +7,19 @@
     [Flags]
     public enum AttributeTypeEnum : int
     {
-        //[DatabaseDisplayName("Geometric")]
+        [DatabaseDisplayName("Geometric")]
         [Description("Attributo geometrico")]
         Geometric = 1,
-        //[DatabaseDisplayName("Process")]
+        [DatabaseDisplayName("Process")]
         [Description("Attributo di processo")]
         Process = 2,
-        //[DatabaseDisplayName("Identifier")]
+        [DatabaseDisplayName("Identifier")]
         [Description("Attributo Identificativo")]
         Identifier = 4,
-        //[DatabaseDisplayName("Generic")]
+        [DatabaseDisplayName("Generic")]
         [Description("Attributo generico")]
         Generic = 8,
-        //[DatabaseDisplayName("All")]
+        [DatabaseDisplayName("All")]
         [Description("Tutti gli attributi")]
         All = Geometric | Process | Identifier | Generic
     }

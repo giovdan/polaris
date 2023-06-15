@@ -8,7 +8,7 @@
         [DatabaseDisplayName("GEN")]
         [Description("Generale")]
         GEN = 1,
-
+        
         [DatabaseDisplayName("BAR")]
         [Description("Barriera")]
         BAR = 2,
