@@ -66,72 +66,72 @@ BEGIN
 	
 	IF newId > 0 THEN
 		SET pParameters = CONCAT(' Parameters => ',newId,'_',pEntityTypeId,'_',iPieceId,'_',pParentTypeId);
-		SET pContext = CONCAT('Inserimento record nella tabella _attributevalue, ',pParameters);		
-		INSERT INTO _attributevalue
+		SET pContext = CONCAT('Inserimento record nella tabella attributevalue, ',pParameters);		
+		INSERT INTO attributevalue
 		(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion
 			,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn)
 		SELECT newId, adl.Id as AttributeDefinitionLinkId
 			, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
 			, UUID() AS RowVersion
 			, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn 
-			FROM attributevalue av 
-			INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
-	      INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+			FROM attributevalue_old av 
+			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
+	      INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 	      INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
 			WHERE av.ParentId = iPieceId AND av.ParentTypeId = pParentTypeId
 	      AND _ad.EnumId NOT IN (390,391,392,393,394) 
-			AND NOT EXISTS(SELECT Id FROM _attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
+			AND NOT EXISTS(SELECT Id FROM attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
 	
-		SET pContext = CONCAT('Inserimento record nella tabella _detailidentifier , Parameter: Contract');		
-		SET pContractAttributeId = (SELECT Id FROM _attributedefinition WHERE DisplayName = 'Contract');
-		INSERT INTO _detailidentifier
+		SET pContext = CONCAT('Inserimento record nella tabella detailidentifier , Parameter: Contract');		
+		SET pContractAttributeId = (SELECT Id FROM attributedefinition WHERE DisplayName = 'Contract');
+		INSERT INTO detailidentifier
 		(HashCode, AttributeDefinitionLinkId, VALUE, Priority)
 		SELECT pHashCode, Id, pContract, 1 FROM attributedefinitionlink adl 
 		WHERE 
 			AttributeDefinitionId = pContractAttributeId
-			AND NOT EXISTS (SELECT Id FROM _detailidentifier WHERE HashCode = pHashCode 
+			AND NOT EXISTS (SELECT Id FROM detailidentifier WHERE HashCode = pHashCode 
 												AND AttributeDefinitionLinkId = adl.Id 
 												AND adl.Priority = 1);
 	
-		SET pContext = CONCAT('Inserimento record nella tabella _detailidentifier , Parameter: Project');
-		SET pProjectAttributeId = (SELECT Id FROM _attributedefinition WHERE DisplayName = 'Project');		
-		INSERT INTO _detailidentifier
+		SET pContext = CONCAT('Inserimento record nella tabella detailidentifier , Parameter: Project');
+		SET pProjectAttributeId = (SELECT Id FROM attributedefinition WHERE DisplayName = 'Project');		
+		INSERT INTO detailidentifier
 		(HashCode, AttributeDefinitionLinkId, `Value`, Priority)
 		SELECT pHashCode, Id, pProject, 2 FROM attributedefinitionlink adl WHERE 
 				AttributeDefinitionId = pProjectAttributeId
-				AND NOT EXISTS (SELECT Id FROM _detailidentifier 
+				AND NOT EXISTS (SELECT Id FROM detailidentifier 
 													WHERE HashCode = pHashCode AND AttributeDefinitionLinkId = 
 													adl.Id AND adl.Priority = 2);														
 	
-		SET pContext = CONCAT('Inserimento record nella tabella _detailidentifier , Parameter: Drawing');															
-		SET pDrawingAttributeId = (SELECT Id FROM _attributedefinition WHERE DisplayName = 'Drawing');
-		INSERT INTO _detailidentifier
+		SET pContext = CONCAT('Inserimento record nella tabella detailidentifier , Parameter: Drawing');															
+		SET pDrawingAttributeId = (SELECT Id FROM attributedefinition WHERE DisplayName = 'Drawing');
+		INSERT INTO detailidentifier
 		(HashCode, AttributeDefinitionLinkId, VALUE, Priority)
 		SELECT pHashCode, Id, pDrawing, 3 FROM attributedefinitionlink adl WHERE 
 				AttributeDefinitionId = pDrawingAttributeId
-				AND NOT EXISTS (SELECT Id FROM _detailidentifier 
+				AND NOT EXISTS (SELECT Id FROM detailidentifier 
 													WHERE HashCode = pHashCode AND AttributeDefinitionLinkId = 
 													adl.Id AND adl.Priority = 3);														
 	
-		SET pContext = CONCAT('Inserimento record nella tabella _detailidentifier , Parameter: Assembly');
-		SET pAssemblyAttributeId = (SELECT Id FROM _attributedefinition WHERE DisplayName = 'Assembly');
-		INSERT INTO _detailidentifier
+		SET pContext = CONCAT('Inserimento record nella tabella detailidentifier , Parameter: Assembly');
+		SET pAssemblyAttributeId = (SELECT Id FROM attributedefinition WHERE DisplayName = 'Assembly');
+		INSERT INTO detailidentifier
 		(HashCode, AttributeDefinitionLinkId, VALUE, Priority)
 		SELECT pHashCode, Id, pAssembly, 4 FROM 
 			attributedefinitionlink adl 
 			WHERE 
 				AttributeDefinitionId = pAssemblyAttributeId
-				AND NOT EXISTS (SELECT Id FROM _detailidentifier 
+				AND NOT EXISTS (SELECT Id FROM detailidentifier 
 													WHERE HashCode = pHashCode AND AttributeDefinitionLinkId = 
 													adl.Id AND adl.Priority = 4);														
 	
-		SET pContext = CONCAT('Inserimento record nella tabella _detailidentifier , Parameter: Part');													
-		SET pPartAttributeId = (SELECT Id FROM _attributedefinition WHERE DisplayName = 'Part');	
-		INSERT INTO _detailidentifier
+		SET pContext = CONCAT('Inserimento record nella tabella detailidentifier , Parameter: Part');													
+		SET pPartAttributeId = (SELECT Id FROM attributedefinition WHERE DisplayName = 'Part');	
+		INSERT INTO detailidentifier
 		(HashCode, AttributeDefinitionLinkId, VALUE, Priority)
 		SELECT pHashCode, Id, pPart, 5 FROM attributedefinitionlink adl WHERE 
 				AttributeDefinitionId  = pPartAttributeId
-				AND NOT EXISTS (SELECT Id FROM _detailidentifier 
+				AND NOT EXISTS (SELECT Id FROM detailidentifier 
 													WHERE HashCode = pHashCode AND AttributeDefinitionLinkId = 
 													adl.Id AND adl.Priority = 5);																																																								
 		INSERT INTO migratedentity

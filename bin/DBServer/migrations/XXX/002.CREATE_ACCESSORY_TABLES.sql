@@ -1,6 +1,6 @@
 USE machine;
 
-CREATE TABLE IF NOT EXISTS `_attributedefinition` (
+CREATE TABLE IF NOT EXISTS `attributedefinition` (
 	`Id` INT(11) NOT NULL AUTO_INCREMENT,
 	`EnumId` INT(11) NOT NULL DEFAULT '0',
 	`DisplayName` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `attributedefinitionlink` (
 	CONSTRAINT `attributedefinitionlink_ibfk_1` FOREIGN KEY (`AttributeDefinitionId`) REFERENCES `machine`.`_attributedefinition` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
-CREATE TABLE IF NOT EXISTS `_attributedefinitiongrouppriority` (
+CREATE TABLE IF NOT EXISTS `attributedefinitiongrouppriority` (
 	`Id` INT(11) NOT NULL AUTO_INCREMENT,
 	`AttributeDefinitionGroupId` INT(11) NULL DEFAULT NULL,
 	`EntityTypeId` INT(11) NULL DEFAULT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `_attributedefinitiongrouppriority` (
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
 
-CREATE TABLE IF NOT EXISTS `_attributevalue` (
+CREATE TABLE IF NOT EXISTS `attributevalue` (
 	`Id` INT(11) NOT NULL AUTO_INCREMENT,
 	`EntityId` INT(11) NOT NULL,
 	`AttributeDefinitionLinkId` INT(11) NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `_attributevalue` (
 	CONSTRAINT `attributevalue_ibfk_2` FOREIGN KEY (`AttributeDefinitionLinkId`) REFERENCES `machine`.`attributedefinitionlink` (`Id`)
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
-CREATE TABLE IF NOT EXISTS `_attributeoverridevalue` (
+CREATE TABLE IF NOT EXISTS `attributeoverridevalue` (
 	`Id` INT(11) NOT NULL AUTO_INCREMENT,
 	`AttributeValueId` INT(11) NOT NULL,
 	`OverrideType` INT(11) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `_attributeoverridevalue` (
 			ON UPDATE NO ACTION ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
-CREATE TABLE IF NOT EXISTS `_detailidentifier` (
+CREATE TABLE IF NOT EXISTS `detailidentifier` (
 	`Id` INT(11) NOT NULL AUTO_INCREMENT,
 	`HashCode` CHAR(64) NOT NULL,
 	`AttributeDefinitionLinkId` INT(11) NOT NULL,

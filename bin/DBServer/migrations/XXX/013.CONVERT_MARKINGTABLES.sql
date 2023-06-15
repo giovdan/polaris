@@ -105,34 +105,34 @@ loop_entities: LOOP
 		# Inserisco in _detailidentfier utilizzando hashCode creato
 		SET pParameters = CONCAT('Parameters =>', pHashCode);
 		SET pContext = CONCAT(oldId, ', Errore => Inserimento _detailidentifier,', pParameters);			
-		INSERT INTO _detailidentifier
+		INSERT INTO detailidentifier
 			(HashCode, AttributeDefinitionLinkId, `Value`, Priority
 				, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 			SELECT pHashCode, adl.Id,  di.Value, adl.Priority 
 				, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
-				FROM detailidentifier di
-			INNER JOIN attributedefinition ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
-			INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+				FROM detailidentifier_old di
+			INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
+			INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 			INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
 						AND adl.EntityTypeId = pEntityTypeId
 			WHERE di.MasterId = pRangeMasterId
-			AND NOT EXISTS (SELECT Id FROM _detailidentifier WHERE HashCode = pHashCode);
+			AND NOT EXISTS (SELECT Id FROM detailidentifier WHERE HashCode = pHashCode);
 	
 		SET pContext = CONCAT(oldId, ', Errore => Inserimento _attributevalue');
-		INSERT INTO _attributevalue
+		INSERT INTO attributevalue
 		(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion
 			, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 		SELECT newId, adl.Id as AttributeDefinitionLinkId
 			, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
 			, UUID() AS RowVersion
 			, av.CreatedBy, av.CreatedOn, av.UpdatedBy, av.UpdatedOn
-			FROM attributevalue av 
-			INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
-	        INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+			FROM attributevalue_old av 
+			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
+	        INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 	        LEFT JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
 			WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId
 	      AND adl.Id IS NOT NULL
-			AND NOT EXISTS(SELECT Id FROM _attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
+			AND NOT EXISTS(SELECT Id FROM attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
 	
 			SET pParameters = CONCAT(',Parameters => ', pEntityTypeId, ',',pParentTypeId, ',', oldId, ',', newId);
 			SET pContext = CONCAT(oldId, ', Errore => Inserimento migratedentity ', pParameters);

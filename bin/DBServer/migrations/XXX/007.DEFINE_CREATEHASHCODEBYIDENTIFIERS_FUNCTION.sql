@@ -71,7 +71,7 @@ BEGIN
 	
 	OPEN curIdentifiers;
 	
-	SET pStringToHash = CONCAT(iMasterId, iEntityTypeId);
+	SET pStringToHash = iEntityTypeId;
 
 	IF iParentMasterId > 0 THEN	
 		SET pStringToHash = CONCAT(pStringToHash, iParentMasterId);

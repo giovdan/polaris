@@ -33,7 +33,7 @@ loop_entities: LOOP
 			, `IsCodeGenerator`, `AttributeScopeId`, `UseLastInsertedAsDefault`, `AttributeDefinitionGroupId`) 
 		SELECT ParentTypeId, pProfileTypeId, Id, 0, '', Priority, 0 AS IsCodeGenerator 
 		, 0 AS AttributeScopeId, 0 AS UseLastInsertedAsDefault, 1 AS `Offset`
-		FROM attributedefinition a 
+		FROM attributedefinition_old a 
 		WHERE a.ParentTypeId = 8192
 		AND a.EnumId IN (273,274)
 		AND NOT EXISTS (SELECT Id FROM profiletypeattribute WHERE AttributeDefinitionId = a.Id AND ProfileTypeId = pProfileTypeId AND ParentTypeId = 8192);
@@ -44,7 +44,7 @@ loop_entities: LOOP
 				, `IsCodeGenerator`, `AttributeScopeId`, `UseLastInsertedAsDefault`, `AttributeDefinitionGroupId`) 
 			SELECT ParentTypeId, 13, Id, 0, '', Priority, 0 AS IsCodeGenerator 
 			, 0 AS AttributeScopeId, 0 AS UseLastInsertedAsDefault, 1 AS `Offset`
-			FROM attributedefinition a 
+			FROM attributedefinition_old a 
 			WHERE a.ParentTypeId = 8192
 			AND a.EnumId IN (246,247,248)
 			AND NOT EXISTS (SELECT Id FROM profiletypeattribute WHERE AttributeDefinitionId = a.Id AND ProfileTypeId = 13 AND ParentTypeId = 8192);		

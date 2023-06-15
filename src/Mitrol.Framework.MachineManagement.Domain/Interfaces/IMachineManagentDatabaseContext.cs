@@ -19,5 +19,6 @@
         DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
         DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
         DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
+        DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
     }
 }

@@ -113,20 +113,20 @@ START TRANSACTION;
 		END IF;	
 													
 		SET pContext = CONCAT('Errore => Inserimento tabella _attributevalue, OperationId: ', iOperationId);	
-		INSERT INTO _attributevalue
+		INSERT INTO attributevalue
 		(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion
 			,CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 		SELECT newId, adl.Id as AttributeDefinitionLinkId
 			, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
 			, UUID() AS RowVersion
 			, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn
-			FROM attributevalue av 
-			INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
-	        INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+			FROM attributevalue_old av 
+			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
+	        INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 	        LEFT JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
 			WHERE av.ParentId = iOperationId AND av.ParentTypeId = pParentTypeId
          AND adl.Id IS NOT NULL
-			AND NOT EXISTS(SELECT Id FROM _attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
+			AND NOT EXISTS(SELECT Id FROM attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
 
 		SET pContext = CONCAT('Errore => Inserimento tabella migratedentity, OperationId: ', iOperationId);	
 		INSERT INTO migratedentity

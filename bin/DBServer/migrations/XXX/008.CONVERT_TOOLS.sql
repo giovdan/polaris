@@ -56,7 +56,7 @@ loop_entities: LOOP
 		END IF;
 
 		# controllo se esistono gli attributi
-		SELECT COUNT(*) INTO attributesCount FROM attributevalue WHERE ParentId = oldId AND ParentTypeId = 2;
+		SELECT COUNT(*) INTO attributesCount FROM attributevalue_old WHERE ParentId = oldId AND ParentTypeId = 2;
 		
 		IF attributesCount > 0 THEN
          SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
@@ -79,19 +79,19 @@ loop_entities: LOOP
 				SELECT LAST_INSERT_ID() INTO newId;
 
 				# Inserisco in _detailidentfier utilizzando hashCode creato
-				INSERT INTO _detailidentifier
+				INSERT INTO detailidentifier
 					(HashCode, AttributeDefinitionLinkId, `Value`, Priority
 					, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 				SELECT pHashCode, adl.Id,  di.Value, adl.Priority
 					, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
-					FROM detailidentifier di
-					INNER JOIN attributedefinition ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
-					INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+					FROM detailidentifier_old di
+					INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
+					INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 					INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
 								AND adl.EntityTypeId = pEntityTypeId
 					WHERE di.MasterId = pToolMasterId;
 	
-				INSERT INTO _attributevalue
+				INSERT INTO attributevalue
 				(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue
 					, Priority, RowVersion
 					, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
@@ -99,9 +99,9 @@ loop_entities: LOOP
 					, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
 					, UUID() AS RowVersion
 					, av.CreatedBy, av.CreatedOn, av.UpdatedBy, av.UpdatedOn
-					FROM attributevalue av 
-					INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
-					INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+					FROM attributevalue_old av 
+					INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
+					INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 					LEFT JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
 					WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId
 				 AND adl.Id IS NOT NULL;				

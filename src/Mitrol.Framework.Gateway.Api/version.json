@@ -1,28 +1,16 @@
 {
-  "gitCommitHash": "fc5b5835eb1d002b3141f619efda53fa6bb7eef2",
-  "gitCommitDate": "Mon, 12 Jun 2023 11:50:36 +0200",
+  "gitCommitHash": "ed5bcbab28c84a1af342412f90250ff8dba61a35",
+  "gitCommitDate": "Tue, 13 Jun 2023 13:53:43 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Tue, 13 Jun 2023 13:49:10 +0200",
+  "buildDate": "Thu, 15 Jun 2023 09:22:34 +0200",
   "gitUncommittedFiles": [
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/001.CREATE_ENTITY_TABLE.sql"
-    },
     {
       "status": "M",
       "filename": "bin/DBServer/migrations/XXX/996_FIX_VIEWS.sql"
     },
     {
-      "status": "D",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFDatabaseContext.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFUnitOfWork.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/EFUnitOfWorkFactory.cs"
+      "status": "M",
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/MachineManagementDatabaseContext.cs"
     },
     {
       "status": "M",
@@ -30,119 +18,11 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/BaseRepository.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EntityRepostiory.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IDatabaseContext.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IDatabaseContextFactory.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IEntityValidator.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IReadonlyRepository.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IUnitOfWork.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IUnitOfWorkFactory.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Audit/BaseAuditableDbContext.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/AttributeDetailItem.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/BaseRepository.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/DetailItem.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDefinitionEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/EntityTypeEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Mitrol.Framework.Domain.csproj"
-    },
-    {
-      "status": "M",
       "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.GraphQL/Startup.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Api/Mitrol.Frameework.MachineManagement.Api.csproj"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Core/BaseService.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mappings/ServiceProfile.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/AttributeItem.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/BaseService.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/CodeGeneratorItem.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/EntityItem.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/EntityListItem.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/EntityWithChildren.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/IdentifierDetailItem.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/ToolDetailItem.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/ToolListItem.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolService.cs"
     },
     {
       "status": "M",
@@ -150,47 +30,11 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IAttributeDefinitionRepository.cs"
-    },
-    {
-      "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IAttributeValueRepository.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IDetailIdentifierRepository.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IEFDatabaseContext.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IEntityLinkRepository.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IEntityRepository.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinitionLink.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeValue.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Views/DetailIdentifierMaster.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/ToolUnitTest.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IMachineManagentDatabaseContext.cs"
     }
   ]
 }

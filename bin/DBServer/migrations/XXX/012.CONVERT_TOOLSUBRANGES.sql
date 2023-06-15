@@ -49,8 +49,8 @@ BEGIN
 	
 START TRANSACTION;		
 		SET pContext = CONCAT('Errore => Recupero informazioni dalla tabella, Parameters =>',iToolRangeId);
-		
-		SELECT tsr.Id, tsr.ToolRangeId, tsr.SubRangeTypeId, tr.RangeMasterIdentifierId, tsr.RangeMasterId AS SubRangeMasterIdentifierId
+		SELECT tsr.Id, tsr.ToolRangeId, tsr.SubRangeTypeId, tr.RangeMasterIdentifierId
+			, tsr.RangeMasterId
 			, tsr.RowNumber, tsr.RevisionType, tr.ToolTypeId, tr.ToolMasterIdentifierId
 			, tsr.CreatedBy, tsr.CreatedOn, tsr.UpdatedBy, tsr.UpdatedOn	
 			INTO oldId, pParentId, pSubRangeTypeId, pRangeMasterId, pSubRangeMasterId
@@ -60,6 +60,7 @@ START TRANSACTION;
 			 INNER JOIN toolrange tr ON tr.Id = tsr.ToolRangeId			 
 			 WHERE tsr.Id = iToolRangeId;
 
+		SET pContext = CONCAT('Errore => Recupero informazioni dalla tabella entity per il parent della tabella, Parameters =>',pParentId);
 		SELECT HashCode INTO pRelatedHashCode			 
 		FROM entity e
 		INNER JOIN migratedentity me ON me.EntityId = e.Id AND me.EntityTypeId = e.EntityTypeId
@@ -69,10 +70,14 @@ START TRANSACTION;
 		SET pContext = CONCAT('Errore => Recupero informazioni, Parameters =>',iToolRangeId);						 
 		SET newId = 0;
 		SET pParentTypeId = GetParentTypeFromSubRangeType(pSubRangeTypeId);
+				SET pContext = CONCAT('Errore => Recupero informazioni 2, Parameters =>',iToolRangeId);						 
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pDisplayName = GetSubRangeDisplayValueFromMasterId(pSubRangeMasterId, pSubRangeTypeId);
+				SET pContext = CONCAT('Errore => Recupero informazioni 3, Parameters =>',iToolRangeId);						 		
 		SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
+				SET pContext = CONCAT('Errore => Recupero informazioni 4, Parameters =>',iToolRangeId);						 		
 		SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId, COALESCE(pProcessingTechnology,1));
+				SET pContext = CONCAT('Errore => Recupero informazioni 5, Parameters =>',iToolRangeId);						 		
 		SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pSubRangeMasterId, pRangeMasterId);
 
 		# Inserimento record tabella
@@ -99,35 +104,35 @@ START TRANSACTION;
 														AND EntityHashCode = pHashCode AND RelationType = 'Child');		
 		# Inserisco in _detailidentfier utilizzando hashCode creato
 		SET pParameters = CONCAT('Parameters =>', pHashCode);
-		SET pContext = CONCAT(iToolRangeId, ', Errore => Inserimento _detailidentifier,', pParameters);
-		INSERT INTO _detailidentifier
+		SET pContext = CONCAT(iToolRangeId, ', Errore => Inserimento detailidentifier,', pParameters);
+		INSERT INTO detailidentifier
 			(HashCode, AttributeDefinitionLinkId, `Value`, Priority
 				, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 			SELECT pHashCode, adl.Id,  di.Value, adl.Priority 
 			, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
-			FROM detailidentifier di
-			INNER JOIN attributedefinition ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
-			INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+			FROM detailidentifier_old di
+			INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
+			INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 			INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
 						AND adl.EntityTypeId = pEntityTypeId
 			WHERE di.MasterId = pSubRangeMasterId
-			AND NOT EXISTS (SELECT Id FROM _detailidentifier WHERE HashCode = pHashCode);
+			AND NOT EXISTS (SELECT Id FROM detailidentifier WHERE HashCode = pHashCode);
 			
-		SET pContext = CONCAT(iToolRangeId, ', Errore => Inserimento _attributevalue');
-		INSERT INTO _attributevalue
+		SET pContext = CONCAT(iToolRangeId, ', Errore => Inserimento attributevalue');
+		INSERT INTO attributevalue
 		(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion
 			, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 		SELECT newId, adl.Id as AttributeDefinitionLinkId
 			, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
 			, UUID() AS RowVersion
 			, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn
-			FROM attributevalue av 
-			INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
-			INNER JOIN _attributedefinition _ad ON _ad.EnumId = ad.EnumId
+			FROM attributevalue_old av 
+			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
+			INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
 			INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
 			WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId
 		 AND adl.Id IS NOT NULL
-			AND NOT EXISTS(SELECT Id FROM _attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
+			AND NOT EXISTS(SELECT Id FROM attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
 			
 		SET pParameters = CONCAT(',Parameters => ', pEntityTypeId, ',',pParentTypeId, ',', oldId, ',', newId);
 		SET pContext = CONCAT(iToolRangeId, ', Errore => Inserimento migratedentity ', pParameters);
@@ -192,7 +197,7 @@ END IF //
 
 CALL ConvertToolSubRanges(2) //
 
-DROP PROCEDURE ConvertToolSubRange;
-DROP PROCEDURE ConvertToolSubRanges;
+DROP PROCEDURE ConvertToolSubRange //
+DROP PROCEDURE ConvertToolSubRanges //
 
 DELIMITER ;

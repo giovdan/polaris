@@ -18,7 +18,7 @@ BEGIN
 		  , ptad.AttributeType, ptad.ControlType, ptad.HelpImage
 		  , ptad.ProtectionLevel, ptad.GroupId, ptad.Priority 
 	FROM migratedattribute ptad
-	INNER JOIN _attributedefinition ad ON ad.EnumId = ptad.EnumId
+	INNER JOIN attributedefinition ad ON ad.EnumId = ptad.EnumId
 	WHERE ptad.EntityTypeId > 0 AND NOT EXISTS 
 		(SELECT Id FROM attributedefinitionlink 
 			WHERE AttributeDefinitionId = ad.Id AND EntityTypeId = ptad.EntityTypeId);		
@@ -60,7 +60,7 @@ BEGIN
 		, GetControlType(ad.ControlTypeId) AS ControlType, ad.HelpImage, ad.ProtectionLevel
 		, pta.AttributeDefinitionGroupId, pta.Priority, 'Default' AS ProcessingTechnology
 	FROM profiletypeattribute pta 
-	INNER JOIN attributedefinition ad ON ad.Id = pta.AttributeDefinitionId AND ad.ParentTypeId = pta.ParentTypeId
+	INNER JOIN attributedefinition_old ad ON ad.Id = pta.AttributeDefinitionId AND ad.ParentTypeId = pta.ParentTypeId
 	WHERE ad.ParentTypeId = pParentTypeId
 	AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId AND SubParentTypeId = pta.ProfileTypeId
 					AND EnumId = ad.EnumId);
@@ -274,7 +274,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 				WHEN tta.ProcessingTechnology = 4 THEN 'PlasmaXPR'								
 			END AS ProcessingTechnology	
 		FROM tooltypeattribute tta 
-		INNER JOIN attributedefinition ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
+		INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
 		WHERE tta.ParentTypeId = pParentTypeId	
 		AND GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) > 0
 		AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId AND SubParentTypeId = tta.ToolTypeId
@@ -304,7 +304,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 				, ad.GroupId AS AttributeDefinitionGroupId, tta.Priority
 				, 'Default' AS ProcessingTechnology
 			FROM tooltypeattribute tta 
-			INNER JOIN attributedefinition ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
+			INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
 			WHERE tta.ParentTypeId = pParentTypeId	AND tta.ToolTypeId IN (51,53) 
 			AND tta.ProcessingTechnology = 1
 			AND GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) > 0			
@@ -337,7 +337,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 					WHEN tta.ProcessingTechnology = 4 THEN 'PlasmaXPR'								
 				END AS ProcessingTechnology	
 			FROM tooltypeattribute tta 
-			INNER JOIN attributedefinition ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
+			INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
 			WHERE tta.ParentTypeId = pParentTypeId	AND tta.ToolTypeId IN (51,53) 
 			AND tta.ProcessingTechnology IN (1,2)
 			AND GetEntityType(pParentTypeId, tta.ToolTypeId, 2) > 0
@@ -370,7 +370,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 					WHEN tta.ProcessingTechnology = 4 THEN 'PlasmaXPR'								
 				END AS ProcessingTechnology	
 			FROM tooltypeattribute tta 
-			INNER JOIN attributedefinition ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
+			INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
 			WHERE tta.ParentTypeId = pParentTypeId	AND tta.ToolTypeId IN (51,53) 
 			AND tta.ProcessingTechnology IN (1,4)
 			AND GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) > 0			
@@ -405,7 +405,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 			, ota.AttributeDefinitionGroupId, ota.Priority
 			, 'Default' AS ProcessingTechnology	
 		FROM operationtypeattribute ota 
-		INNER JOIN attributedefinition ad ON ad.Id = ota.AttributeDefinitionId
+		INNER JOIN attributedefinition_old ad ON ad.Id = ota.AttributeDefinitionId
 		WHERE ad.ParentTypeId = pParentTypeId
 				AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId 
 					AND SubParentTypeId = ota.OperationTypeId
@@ -442,7 +442,7 @@ BEGIN
 			, ota.AttributeDefinitionGroupId, ota.Priority
 			, 'Default' AS ProcessingTechnology	
 		FROM operationtypeattribute ota 
-		INNER JOIN attributedefinition ad ON ad.Id = ota.AttributeDefinitionId
+		INNER JOIN attributedefinition_old ad ON ad.Id = ota.AttributeDefinitionId
 		WHERE ad.ParentTypeId = pParentTypeId
 				AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId 
 					AND SubParentTypeId = CONCAT(ota.ParentOperationTypeId, ota.OperationTypeId)
@@ -479,7 +479,7 @@ BEGIN
 			,GetControlType(ad.ControlTypeId), ad.HelpImage, ad.ProtectionLevel
 			,ad.GroupId, ad.Priority
 			,'Default' AS ProcessingTechnology
-		FROM attributedefinition ad 
+		FROM attributedefinition_old ad 
 		WHERE ad.ParentTypeId = pParentTypeId
 				AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId 
 									AND EnumId = ad.EnumId);
@@ -499,43 +499,43 @@ BEGIN
 
 START TRANSACTION;	 
 
-	INSERT INTO _attributedefinition
+	INSERT INTO attributedefinition
 	(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 	SELECT  ad.EnumId,ad.DisplayName,ad.DataFormatId, GetAttributeType(ad.AttributeTypeId), 
 			  GetAttributeKind(ad.AttributeKindId), ad.TypeName, GetOverrideType(ad.OverrideTypeId)
-	FROM attributedefinition ad 
+	FROM attributedefinition_old ad 
 	WHERE ad.ParentTypeId = pParentTypeId 
-	AND NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = ad.EnumId AND DisplayName = ad.DisplayName);							 
+	AND NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = ad.EnumId AND DisplayName = ad.DisplayName);							 
 
 	IF pParentTypeId = 1024 THEN
 		SET pAttributeType = GetAttributeType(2);
 		SET pAttributeKind = GetAttributeKind(4);
 		SET pOverrideType =  GetOverrideType(1);
 		
-		INSERT INTO _attributedefinition
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 390, 'Contract', 17, pAttributeType, pAttributeKind, NULL, pOverrideType	FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 390 AND DisplayName = 'Contract');		
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 390 AND DisplayName = 'Contract');		
 
-		INSERT INTO _attributedefinition
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 391, 'Project', 17, pAttributeType, pAttributeKind, NULL, pOverrideType FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 391 AND DisplayName = 'Project');
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 391 AND DisplayName = 'Project');
 		
-		INSERT INTO _attributedefinition
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 392, 'Drawing', 17, pAttributeType, pAttributeKind, NULL, pOverrideType FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 392 AND DisplayName = 'Drawing');
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 392 AND DisplayName = 'Drawing');
 
-		INSERT INTO _attributedefinition
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 393, 'Assembly', 17, pAttributeType, pAttributeKind, NULL, pOverrideType FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 393 AND DisplayName = 'Assembly');
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 393 AND DisplayName = 'Assembly');
 		
-		INSERT INTO _attributedefinition
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 394, 'Part', 17, pAttributeType, pAttributeKind, NULL, pOverrideType FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 394 AND DisplayName = 'Part');								
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 394 AND DisplayName = 'Part');								
 	END IF;
 
 	IF pParentTypeId = 8192 THEN
@@ -543,16 +543,16 @@ START TRANSACTION;
 		SET pAttributeKind = GetAttributeKind(8);
 		SET pOverrideType =  GetOverrideType(1);
 				
-		INSERT INTO _attributedefinition
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 395, 'OriginsCalculated', 17, pAttributeType, pAttributeKind, NULL, pOverrideType
 			FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 395 AND DisplayName = 'OriginsCalculated');		
-		INSERT INTO _attributedefinition
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 395 AND DisplayName = 'OriginsCalculated');		
+		INSERT INTO attributedefinition
 		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
 		SELECT 396, 'ExecutionDate', 17, pAttributeType, pAttributeKind, NULL, pOverrideType
 			FROM DUAL
-		WHERE NOT EXISTS (SELECT Id FROM _attributedefinition WHERE EnumId = 395 AND DisplayName = 'ExecutionDate');				
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 395 AND DisplayName = 'ExecutionDate');				
 	END IF;
 	
 	#INSERIMENTO LINKS

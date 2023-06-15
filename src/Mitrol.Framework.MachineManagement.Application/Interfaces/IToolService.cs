@@ -11,5 +11,6 @@ namespace Mitrol.Framework.MachineManagement.Application.Interfaces
         Result<ToolDetailItem> CreateTool(ToolDetailItem toolDetail);
         IEnumerable<ToolListItem> GetAll();
         Result<ToolDetailItem> Get(long toolId);
+        Result<ToolDetailItem> GetByToolManagementId(int toolMnagementId);
     }
 }

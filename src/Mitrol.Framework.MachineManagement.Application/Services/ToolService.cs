@@ -25,6 +25,19 @@
         private IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
         private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
 
+        #region < Private Methods >
+        private ToolListItem ApplyCustomMapping(Entity entity
+                                , IEnumerable<IdentifierDetailItem> identifiers
+                                , IEnumerable<CodeGeneratorItem> codeGenerators
+                                , MeasurementSystemEnum conversionSystem)
+        {
+            var tool = Mapper.Map<ToolListItem>(entity);
+            tool.Identifiers = identifiers;
+            tool.CodeGenerators = codeGenerators;
+            tool.InnerId = entity.Id;
+            return tool;
+        }
+
         private AttributeDetailItem ApplyCustomMapping(DetailIdentifierMaster identifier
                         , long entityId
                         , MeasurementSystemEnum conversionSystem)
@@ -34,8 +47,8 @@
             attributeDetail.SetAttributeValue(identifier.Value, conversionSystem);
             return attributeDetail;
         }
+        #endregion < Private Methods >
 
- 
         public Result Boot(IUserSession userSession)
         {
             return Result.Ok();
@@ -92,20 +105,31 @@
                                         return attributeDetail;
                                     });
 
+
+            var toolStatusAttributes = AttributeValueRepository
+                                        .GetToolStatusAttributes(a => a.EntityId == toolId)
+                                        .ToHashSet();
+
             return Result.Ok(toolDetail);
         }
 
-        private ToolListItem ApplyCustomMapping(Entity entity
-                                , IEnumerable<IdentifierDetailItem> identifiers
-                                , IEnumerable<CodeGeneratorItem> codeGenerators
-                                , MeasurementSystemEnum conversionSystem)
+        public Result<ToolDetailItem> GetByToolManagementId(int toolManagementId)
         {
-            var tool = Mapper.Map<ToolListItem>(entity);
-            tool.Identifiers = identifiers;
-            tool.CodeGenerators = codeGenerators;
-            tool.InnerId = entity.Id;
-            return tool;
+            var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
+            EntityRepository.Attach(unitOfWork);
+
+            var tool = EntityRepository.FindBy(e => e.SecondaryKey == toolManagementId)
+                        .SingleOrDefault();
+
+            if (tool == null)
+            {
+                return Result.Fail<ToolDetailItem>(ErrorCodesEnum.ERR_GEN002.ToString());
+            }
+
+            return Get(tool.Id);
         }
+
+        
         /// <summary>
         /// Get All Tools
         /// </summary>

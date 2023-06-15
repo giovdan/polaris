@@ -24,6 +24,7 @@
         public DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
         public DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
         public DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
+        public DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
 
         public void SetSession(IUserSession session)
         {
@@ -69,6 +70,7 @@
 
             #region Views
             modelBuilder.Entity<DetailIdentifierMaster>().ToView("DetailIdentifiersView").HasNoKey();
+            modelBuilder.Entity<ToolStatusAttribute>().ToView("ToolStatusAttributesView").HasNoKey();
             #endregion
         }
 

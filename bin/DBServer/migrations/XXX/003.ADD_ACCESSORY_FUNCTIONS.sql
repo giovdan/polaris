@@ -300,7 +300,7 @@ BEGIN
 		
 		SELECT COALESCE(MAX(ProcessingTechnology),1) INTO pProcessingTechnology FROM 
 			tooltypeattribute tta
-		INNER JOIN attributevalue av ON av.AttributeDefinitionId = tta.AttributeDefinitionId 
+		INNER JOIN attributevalue_old av ON av.AttributeDefinitionId = tta.AttributeDefinitionId 
 										AND av.ParentTypeId = tta.ParentTypeId
 		WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId;
 	END IF;
@@ -336,7 +336,7 @@ BEGIN
 	
 	DECLARE curDetails CURSOR FOR 
 		SELECT ad.DisplayName, di.`Value` FROM detailidentifier di 
-		INNER JOIN attributedefinition ad ON ad.Id = di.AttributeDefinitionId  
+		INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId  
 		WHERE di.MasterId = iMasterId;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -387,8 +387,8 @@ BEGIN
  	
 	DECLARE curAttributeValues CURSOR FOR 	
 		SELECT av.Value, av.TextValue, ad.AttributeKindId
-		FROM attributevalue av 
-			INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
+		FROM attributevalue_old av 
+			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
 		WHERE av.ParentId = iParentId AND av.ParentTypeId = iParentTypeId;
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -435,7 +435,7 @@ BEGIN
 	DECLARE done BOOLEAN DEFAULT(FALSE);
     
 	DECLARE curIdentifiers CURSOR FOR 	
-	SELECT di.Value FROM detailidentifier di WHERE di.MasterId = iMasterId;
+	SELECT di.Value FROM detailidentifier_old di WHERE di.MasterId = iMasterId;
 	
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
@@ -480,8 +480,8 @@ BEGIN
 	 
 	DECLARE curAttributeValues CURSOR FOR 	
 		SELECT av.Value, av.TextValue, ad.AttributeKindId
-		FROM attributevalue av 
-		INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
+		FROM attributevalue_old av 
+		INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
 		WHERE av.ParentId = iParentId AND av.ParentTypeId = iParentTypeId
 			AND ad.AttributeTypeId = 1
 		ORDER BY av.Priority; # Identifiers
@@ -565,5 +565,98 @@ BEGIN
 	
 	RETURN pDisplayName;
 END //
+
+CREATE OR REPLACE FUNCTION `GetSubRangeDisplayValueFromMasterId`(
+	`iMasterId` INT,
+	`iSubRangeTypeId` INT
+)
+RETURNS varchar(2000)
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
+BEGIN
+	DECLARE displayValue VARCHAR(2000) DEFAULT('');
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE detailValue VARCHAR(50);
+   DECLARE pDisplayName VARCHAR(32);
+	
+	DECLARE curDetails CURSOR FOR 
+		SELECT ad.DisplayName, di.`Value` FROM detailidentifier_old di 
+		INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId  
+		WHERE di.MasterId = iMasterId;
+    
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	OPEN curDetails;
+	SET displayValue = UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId));		
+	
+	loop_values: LOOP
+		FETCH curDetails INTO pDisplayName, detailValue;
+		IF done THEN
+			LEAVE loop_values;
+		END IF;	
+		
+		IF detailValue <> '' THEN
+			IF LCASE(pDisplayName) = 'beveltype' THEN
+				SET displayValue = CONCAT(displayValue, ' - ', GetBevelTypeDisplayValue(detailValue));
+			ELSE
+				IF REGEXP_INSTR(detailValue, '^[0-9]+\\.?[0-9]*$') THEN
+					IF CEIL(detailValue) = detailValue THEN
+						SET displayValue = CONCAT(displayValue, ' - ', CEIL(detailValue));			
+					ELSE
+						SET displayValue = CONCAT(displayValue, ' - ', FORMAT(detailValue,2));
+					END IF;	
+				ELSE
+					SET displayValue = CONCAT(displayValue, ' - ', detailValue);			
+				END IF;	
+			END IF;	
+		END IF;	
+	END LOOP;
+	CLOSE curDetails;
+	
+	RETURN UPPER(displayValue);
+END //
+
+CREATE OR REPLACE FUNCTION GetDisplayValueFromToolMasterId(toolMasterId BIGINT, toolTypeId BIGINT)
+RETURNS VARCHAR(100)
+BEGIN
+	DECLARE displayValue VARCHAR(100) DEFAULT('');
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE detailValue VARCHAR(50);
+    
+	DECLARE curDetails CURSOR FOR 
+		SELECT `Value` FROM detailidentifier_old WHERE MasterId = toolMasterId;
+    
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	SELECT DISTINCT InternalCode INTO displayValue FROM tooltype 
+		WHERE Id = toolTypeId;
+        
+	OPEN curDetails;
+	loop_values: LOOP
+		FETCH curDetails INTO detailValue;
+		IF done THEN
+			LEAVE loop_values;
+		END IF;	
+		
+		IF detailValue <> '' AND UPPER(detailValue) <> 'BEVEL' THEN
+			IF REGEXP_INSTR(detailValue, '^[0-9]+\\.?[0-9]*$') THEN
+				IF CEIL(detailValue) = detailValue THEN
+					SET displayValue = CONCAT(displayValue, ' - ', CEIL(detailValue));			
+				ELSE
+					SET displayValue = CONCAT(displayValue, ' - ', FORMAT(detailValue,2));
+				END IF;	
+			ELSE
+				SET displayValue = CONCAT(displayValue, ' - ', detailValue);			
+			END IF;	
+		END IF;	
+	END LOOP;
+	CLOSE curDetails;
+	
+	RETURN UPPER(displayValue);
+END //
+
 DELIMITER ;
 

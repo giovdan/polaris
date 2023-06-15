@@ -76,6 +76,11 @@
             return items.Count();
         }
 
+        public IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(Expression<Func<ToolStatusAttribute, bool>> predicate)
+        {
+            return UnitOfWork.Context.ToolStatusAttributes.Where(predicate);
+        }
+
         public IEnumerable<AttributeValue> FindBy(Expression<Func<AttributeValue, bool>> predicate)
         {
             return UnitOfWork.Context.AttributeValues
