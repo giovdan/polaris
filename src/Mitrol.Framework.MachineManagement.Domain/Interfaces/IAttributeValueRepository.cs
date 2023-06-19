@@ -11,5 +11,6 @@
         int BulkUpdate(IEnumerable<AttributeValue> attributeValues);
         void BatchUpdate(IEnumerable<AttributeValue> attributeValues);
         IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(Expression<Func<ToolStatusAttribute, bool>> predicate);
+        AttributeOverrideValue GetOverrideValue(long attributeValueId);
     }
 }

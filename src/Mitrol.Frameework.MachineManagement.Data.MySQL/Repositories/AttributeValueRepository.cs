@@ -142,5 +142,11 @@
                     .Where(predicate)
                     .OrderBy(orderBy);
         }
+
+        public AttributeOverrideValue GetOverrideValue(long attributeValueId)
+        {
+            return
+                UnitOfWork.Context.AttributeOverrideValues.SingleOrDefault(x => x.AttributeValueId == attributeValueId);
+        }
     }
 }

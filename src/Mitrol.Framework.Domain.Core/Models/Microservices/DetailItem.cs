@@ -20,6 +20,9 @@
         [JsonIgnore()]
         public long EntityId { get; set; }
 
+        [JsonIgnore()]
+        public EntityTypeEnum EntityType { get; set; }
+
         [JsonProperty("EnumId")]
         public AttributeDefinitionEnum EnumId { get; set; }
 

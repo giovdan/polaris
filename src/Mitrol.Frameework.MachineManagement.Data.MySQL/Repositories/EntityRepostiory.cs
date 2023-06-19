@@ -61,35 +61,22 @@
             return query;
         }
 
-        public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate)
-        {
-            return Task.Factory.StartNew(() => FindBy(predicate));
-        }
+        public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate) => Task.Factory.StartNew(() => FindBy(predicate));
 
-        public Entity Get(long id)
-        {
-            return UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == id);
-        }
+        public Entity Get(long id) => UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == id);
 
-        public IEnumerable<Entity> GetAll()
-        {
-            return UnitOfWork.Context.Entities;
-        }
+        public Entity Get(string displayName) => UnitOfWork.Context.Entities.SingleOrDefault(e => e.DisplayName == displayName);
 
-        public Task<Entity> GetAsync(long id)
-        {
-            return Task.Factory.StartNew(() => Get(id));
-        }
+        public IEnumerable<Entity> GetAll() => UnitOfWork.Context.Entities;
+
+        public Task<Entity> GetAsync(long id) => Task.Factory.StartNew(() => Get(id));
 
         public void Remove(Entity entity)
         {
             UnitOfWork.Context.Entities.Remove(entity);
         }
 
-        public Entity Update(Entity entity)
-        {
-            return UnitOfWork.Context.Entities.Update(entity).Entity;
-        }
+        public Entity Update(Entity entity) => UnitOfWork.Context.Entities.Update(entity).Entity;
 
         public Entity RawUpdate(Entity entity)
         {
@@ -98,9 +85,7 @@
         }
 
         public IEnumerable<Entity> FindBy<TKey>(Expression<Func<Entity, bool>> predicate, Expression<Func<Entity, TKey>> orderBy)
-        {
-            return UnitOfWork.Context.Entities.Where(predicate)
+                => UnitOfWork.Context.Entities.Where(predicate)
                         .OrderBy(orderBy);
-        }
     }
 }

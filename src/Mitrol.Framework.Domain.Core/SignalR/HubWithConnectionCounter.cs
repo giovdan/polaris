@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.SignalR;
     using System;
+    using System.Collections.Concurrent;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@
     public abstract class HubWithConnectionCounter<TClient> : Hub<TClient> where TClient : class, IHubWithConnectionCounter
     {
         // Counter for established connections
-        private static int s_onlineClientsCount = 0;
+        private static ConcurrentDictionary<Type, int> s_dictionary = new();
 
         /// <summary>
         /// Called when a new connection is established with the hub.
@@ -21,10 +22,10 @@
         public override Task OnConnectedAsync()
         {
             // Update the connection counter in a thread-safe way
-            Interlocked.Increment(ref s_onlineClientsCount);
-
+            var count = s_dictionary.AddOrUpdate(typeof(TClient), 1, (_, value) => Interlocked.Increment(ref value));
+            
             // Notify to all clients online the new value
-            ConnectedClientCount(s_onlineClientsCount);
+            ConnectedClientCount(count);
 
             // Let the hub handle the rest
             return base.OnConnectedAsync();
@@ -38,10 +39,10 @@
         public override Task OnDisconnectedAsync(Exception exception)
         {
             // Update the connection counter in a thread-safe way
-            Interlocked.Decrement(ref s_onlineClientsCount);
+            var count = s_dictionary.AddOrUpdate(GetType(), 0, (_, value) => Interlocked.Decrement(ref value));
 
             // Notify to all clients online the new value
-            ConnectedClientCount(s_onlineClientsCount);
+            ConnectedClientCount(count);
 
             // Let the hub handle the rest
             return base.OnDisconnectedAsync(exception);
@@ -52,6 +53,6 @@
         /// </summary>
         /// <param name="_">This parameter is ignored server-side.</param>
         /// <returns>A System.Threading.Tasks.Task that represents the asynchronous operation.</returns>
-        public Task ConnectedClientCount(int _) => Clients.All.ConnectedClientCount(s_onlineClientsCount);
+        public Task ConnectedClientCount(int _) => Clients.All.ConnectedClientCount(s_dictionary[typeof(TClient)]);
     }
 }

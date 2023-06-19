@@ -62,6 +62,7 @@
         [JsonProperty("Arguments")]
         public Dictionary<string, string> Arguments { get; set; }
 
+        // TO DO
         //[JsonProperty("CausesAndSolutions")]
         //public CauseSolutionPair[] CausesAndSolutions { get; set; }
 
@@ -85,6 +86,13 @@
 
         [JsonProperty("Type")]
         public NotificationTypeEnum Type { get; set; }
+
+        [JsonProperty("Source")]
+        public NotificationSourceEnum Source { get; set; }
+
+        [JsonProperty("Severity")]
+        public int Severity { get; set; }
+
     }
 
     public class MachineNotificationComparer : EqualityComparer<MachineNotification>

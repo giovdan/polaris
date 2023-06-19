@@ -9,7 +9,7 @@
     /// <summary>
     /// SignalR server contract that it is responsible to signal machine events.
     /// </summary>
-    public interface IMachineEventsHub : IHubWithConnectionCounter, IStationOriginsHub
+    public interface IMachineEventsHub : IHubWithConnectionCounter
     {
         /// <summary>
         /// Registered clients get notified when the active alarm changes.

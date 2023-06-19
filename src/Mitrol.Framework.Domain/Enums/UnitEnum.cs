@@ -1,8 +1,5 @@
 ﻿namespace Mitrol.Framework.Domain.Enums
 {
-    using Mitrol.Framework.MachineManagement.Domain.Enums;
-    using System;
-
     public enum UnitEnum
     {
         /// <summary>

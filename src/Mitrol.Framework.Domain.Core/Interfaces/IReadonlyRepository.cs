@@ -10,10 +10,10 @@
     public interface IReadOnlyRepository<TEntity, TConnection> where TEntity : BaseEntity
     {
         void Attach(IUnitOfWork<TConnection> unitOfWork);
+
         IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
 
-        IEnumerable<TEntity> FindBy<TKey>(Expression<Func<TEntity, bool>> predicate
-                        , Expression<Func<TEntity, TKey>> orderBy);
+        IEnumerable<TEntity> FindBy<TKey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TKey>> orderBy);
 
         Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
 

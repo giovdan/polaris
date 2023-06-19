@@ -25,6 +25,7 @@
         public DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
         public DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
         public DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
+        public DbSet<AttributeOverrideValue> AttributeOverrideValues { get; set; }
 
         public void SetSession(IUserSession session)
         {

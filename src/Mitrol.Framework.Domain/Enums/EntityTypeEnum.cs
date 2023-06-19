@@ -280,6 +280,22 @@
         }
 
         /// <summary>
+        /// Get related parent type from entitytype
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public static ParentTypeEnum ToParentType(this EntityTypeEnum entityType)
+        {
+            ParentTypeEnum parentType = ParentTypeEnum.None;
+            if (entityType.ToToolType() != ToolTypeEnum.NotDefined)
+            {
+                parentType = ParentTypeEnum.Tool;
+            }
+
+            return parentType;
+        }
+
+        /// <summary>
         /// Get related tool type from entityType
         /// </summary>
         /// <param name="entityType"></param>

@@ -26,7 +26,6 @@
         }
 
         private IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
-        private IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
         private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
         private IMachineConfigurationService MachineConfigurationService => ServiceFactory.GetService<IMachineConfigurationService>();
 
@@ -94,7 +93,6 @@
         }
 
 
-
         public Result<ToolDetailItem> Get(long toolId)
         {
             var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
@@ -133,14 +131,18 @@
                                         attributeDetail.IsReadonly = !protectionLevels.Contains(attributeDetail.ProtectionLevel);
                                         return attributeDetail;
                                     });
-
-            var toolStatusAttributes = AttributeValueRepository
-                                        .GetToolStatusAttributes(a => a.EntityId == toolId)
-                                        .ToHashSet();
+            // TODO
+            //var toolStatusAttributes = AttributeValueRepository
+            //                            .GetToolStatusAttributes(a => a.EntityId == toolId)
+            //                            .Select(a =>
+            //                                ApplyCustomMapping(a, MeasurementSystemEnum.MetricSystem
+            //                                                , UserSession.ConversionSystem));
 
             var processingTechnology = GetRealProcessTechnology(
                             MachineConfigurationService.ConfigurationRoot.Setup.Pla.GetProcessingTechnology()
                             , entity.EntityTypeId.ToToolType());
+
+
 
             return Result.Ok(toolDetail);
         }

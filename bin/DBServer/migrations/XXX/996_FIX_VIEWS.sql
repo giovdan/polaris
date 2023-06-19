@@ -6,6 +6,7 @@ RENAME TABLE IF EXISTS attributedefinitionView TO attributedefinitionView_OLD;
 RENAME TABLE IF EXISTS detailidentifiersview TO detailidentifiersview_OLD;
 RENAME TABLE IF EXISTS toollifeattributesview TO toollifeattributesview_OLD;
 RENAME TABLE IF EXISTS ToolStatusAttributesView TO ToolStatusAttributesView_OLD;
+RENAME TABLE IF EXISTS toolrangeminrequiredconsoleview TO toolrangeminrequiredconsoleview_OLD;
 
 CREATE OR REPLACE VIEW attributedefinitionView 
 AS
@@ -78,6 +79,17 @@ FROM attributevalue av
 INNER JOIN attributedefinitionlink adl ON adl.Id = av.AttributeDefinitionLinkId
 INNER JOIN attributedefinition `ad` ON `ad`.`Id` = adl.AttributeDefinitionId
 WHERE `ad`.`DisplayName` in ('BladeLife','MaxBladeLife','WarningBladeLife');
+
+CREATE OR REPLACE VIEW toolrangeminrequiredconsoleview
+AS		
+SELECT e.Id AS EntityId, di.HashCode, CAST(COALESCE(di.Value,-1) AS INT) AS MinRequiredConsole 
+FROM 
+detailidentifier di
+INNER JOIN entity e ON e.HashCode = di.HashCode
+LEFT OUTER JOIN attributedefinitionlink adl ON adl.Id = di.AttributeDefinitionLinkId
+LEFT JOIN entitytype et ON et.Id = adl.EntityTypeId
+LEFT OUTER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
+WHERE et.ParentType = 'ToolRange' AND ad.DisplayName = 'MinRequiredConsole';
 
 COMMIT;	  
 

@@ -1,7 +1,6 @@
 ﻿namespace Mitrol.Framework.Domain.Enums
 {
     using Mitrol.Framework.Domain.Attributes;
-    using Mitrol.Framework.MachineManagement.Domain.Enums;
     using System.ComponentModel;
 
     /// <summary>

@@ -20,6 +20,7 @@
     using System.IO;
     using System.Threading;
     using Mitrol.Framework.MachineManagement.Application.Mappings;
+    using Mitrol.Framework.Domain.Core.Extensions;
 
     public class BaseUnitTest
     {
@@ -129,7 +130,7 @@
             , string environmentName = "Development"
             , string externalConfigFile = null)
         {
-            string directory = DomainExtensions.GetConfigDirectory()?.FullName ?? Directory.GetCurrentDirectory();
+            string directory = CoreExtensions.GetConfigDirectory()?.FullName ?? Directory.GetCurrentDirectory();
             var builder = new ConfigurationBuilder()
                 .SetBasePath(directory)
                 .AddJsonFile($"{jsonAppSettings}.{environmentName}.json", optional: false, reloadOnChange: true);

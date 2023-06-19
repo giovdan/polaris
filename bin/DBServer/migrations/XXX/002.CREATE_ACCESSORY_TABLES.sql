@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `attributevalue` (
 	`EntityId` INT(11) NOT NULL,
 	`AttributeDefinitionLinkId` INT(11) NOT NULL,
 	`DataFormatId` INT(11) NOT NULL,
-	`Value` DECIMAL(12,6) NULL DEFAULT NULL,
+	`Value` DECIMAL(12,7) NULL DEFAULT NULL,
 	`TextValue` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
 	`Priority` INT(11) NOT NULL DEFAULT 999,
 	`CreatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL' COLLATE 'utf8mb4_bin',

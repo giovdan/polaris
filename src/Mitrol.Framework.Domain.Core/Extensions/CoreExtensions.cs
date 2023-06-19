@@ -648,17 +648,6 @@
             return date.ToString("s") + "Z";
         }
 
-        /// <summary>
-        /// Convert DateTime to Epoch
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static long ToUnixTime(this DateTime date)
-        {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return Convert.ToInt64((date - epoch).TotalSeconds);
-        }
-
         ///// <summary>
         ///// Analisi di due valori in base alla tolleranza
         ///// </summary>
@@ -691,5 +680,38 @@
         //    // Analisi senza tolleranza se valori di range o tipo di tolleranza non specificati
         //    return (DomainExtensions.CompareFloatWithInchTolerance(Teo, Ril));
         //}
+
+        /// <summary>
+        /// Analisi di due valori in base alla tolleranza
+        /// </summary>
+        /// <param name="teo"></param>
+        /// <param name="ril"></param>
+        /// <returns></returns>
+        public static bool IsInTolerance(this ToleranceConfiguration tolerance, float Teo, float Ril)
+        {
+            if (tolerance.LowerValue.HasValue && tolerance.UpperValue.HasValue)
+            {
+                // Analisi con tolleranza assoluta
+                if (tolerance.Type == ToleranceTypeEnum.ABS)
+                {
+                    // Se rilevato è minore del teorico meno il valore inferiore
+                    // o  rilevato è maggiore del teorico più il valore superiore
+                    // I valori sono fuori range e torna false; altrimenti true
+                    return (Ril < (Teo - tolerance.LowerValue)) || (Ril > (Teo + tolerance.UpperValue)) is false;
+                }
+                // Analisi con tolleranza percentuale
+                else if (tolerance.Type == ToleranceTypeEnum.PERC)
+                {
+                    // Se rilevato è minore del teorico meno il valore percentuale inferiore
+                    // o  rilevato è maggiore del teorico più il valore percentuale superiore
+                    // I valori sono fuori range e torna false; altrimenti true
+                    return (Ril < (Teo - ((Teo / 100.0F) * tolerance.LowerValue))) ||
+                        (Ril > (Teo + ((Teo / 100.0F) * tolerance.UpperValue))) is false;
+                }
+            }
+
+            // Analisi senza tolleranza se valori di range o tipo di tolleranza non specificati
+            return (DomainExtensions.CompareFloatWithInchTolerance(Teo, Ril));
+        }
     }
 }

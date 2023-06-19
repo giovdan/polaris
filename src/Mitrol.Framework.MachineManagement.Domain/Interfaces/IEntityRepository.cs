@@ -6,5 +6,6 @@
     public interface IEntityRepository : IRepository<Entity, IMachineManagentDatabaseContext>
     {
         Entity RawUpdate(Entity entity);
+        Entity Get(string displayName);
     }
 }
