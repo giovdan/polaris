@@ -78,6 +78,18 @@
                             opt => opt.MapFrom(s => $"{MachineManagementExtensions.LABEL_ATTRIBUTE}_{s.DisplayName.ToUpper()}"))
                 .ForMember(dest => dest.UMLocalizationKey, opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.DataFormat.ToString().ToUpper()}"));
 
+            CreateMap<AttributeDetailItem, ToolStatusAttribute>()
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(s => 
+                                                        s.AttributeKind == AttributeKindEnum.Enum
+                                                        ? s.Value.CurrentValueId
+                                                        : s.AttributeKind != AttributeKindEnum.String 
+                                                            ? decimal.Parse(s.Value.CurrentValue.ToString())
+                                                            : 0))
+                .ForMember(dest => dest.TextValue, opt => opt.MapFrom(s =>
+                                                    s.AttributeKind == AttributeKindEnum.String
+                                                    ? s.Value.CurrentValue.ToString()
+                                                    : string.Empty));
+
             CreateMap<AttributeValue, AttributeDetailItem>()
                 .ForMember(dest => dest.Value, opt => opt.Ignore())
                 .ForMember(dest => dest.AttributeKind
@@ -90,10 +102,11 @@
                     , opt => opt.MapFrom(s => s.AttributeDefinitionLink.ControlType))
                 .ForMember(dest => dest.AttributeType, opt => opt.MapFrom(s => s.AttributeDefinitionLink
                                         .AttributeDefinition.AttributeType))
+                .ForMember(dest => dest.IsCodeGenerator, opt => opt.MapFrom(s => s.AttributeDefinitionLink.IsCodeGenerator))
+                .ForMember(dest => dest.IsStatusAttribute, opt => opt.MapFrom(s => s.AttributeDefinitionLink.IsStatusAttribute))
                 .ForMember(dest => dest.AttributeScopeId, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeScopeId))
                 .ForMember(dest => dest.GroupId, opt => opt.MapFrom(s => s.AttributeDefinitionLink.GroupId))
                 .ForMember(dest => dest.HelpImage, opt => opt.MapFrom(s => s.AttributeDefinitionLink.HelpImage))
-                .ForMember(dest => dest.IsCodeGenerator, opt => opt.MapFrom(s => s.AttributeDefinitionLink.IsCodeGenerator))
                 .ForMember(dest => dest.IsReadonly, opt => opt.Ignore())
                 .ForMember(dest => dest.ItemDataFormat, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeDefinition.DataFormat))
                 .ForMember(dest => dest.LocalizationKey,

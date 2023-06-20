@@ -2,12 +2,14 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Mitrol.Framework.Domain.Core.Enums;
+    using Mitrol.Framework.Domain.Core.Extensions;
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Views;
+    using System.Linq;
 
     public class MachineManagementDatabaseContext: BaseDbContext, IMachineManagentDatabaseContext
     {
@@ -26,8 +28,23 @@
         public DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
         public DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
         public DbSet<AttributeOverrideValue> AttributeOverrideValues { get; set; }
+        public DbSet<MachineParameter> MachineParameters { get; set; }
+        public DbSet<MachineParameterLink> MachineParameterLinks { get; set; }
 
-        public void SetSession(IUserSession session)
+        public void SetEntity<TEntity>(TEntity entity, EntityState entityState)
+            where TEntity: BaseEntity
+        {
+
+            var local = Set<TEntity>().Local.SingleOrDefault(f => f.Id == entity.Id);
+            if (local != null)
+            {
+                Entry(local).State = EntityState.Detached;
+            }
+
+            Entry(entity).State = entityState;
+        }
+
+        public new void SetSession(IUserSession session)
         {
             base.SetSession(session);
         }

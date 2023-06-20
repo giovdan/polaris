@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Views;
@@ -11,6 +12,8 @@
     {
         int SaveChanges();
         EntityEntry Entry(object entity);
+        void SetEntity<TEntity>(TEntity entity, EntityState entityState) where TEntity : BaseEntity;
+
         DatabaseFacade Database { get; }
         DbSet<Entity> Entities { get; set; }
         DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
@@ -21,5 +24,8 @@
         DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
         DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
         DbSet<AttributeOverrideValue> AttributeOverrideValues { get; set; }
+        DbSet<MachineParameter> MachineParameters { get; set; }
+        DbSet<MachineParameterLink> MachineParameterLinks { get; set; }
+        
     }
 }

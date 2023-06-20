@@ -21,49 +21,93 @@
         ProfileN = 12,
         ProfileP = 13,
         ProfileR = 14,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         ToolTS15 = 15,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         ToolTS16 = 16,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         ToolTS17 = 17,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         ToolTS18 = 18,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         ToolTS19 = 19,
+        [PlantUnit(PlantUnitEnum.PunchingMachine)]
         ToolTS20 = 20,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS32 = 32,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS33 = 33,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS34 = 34,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS35 = 35,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS36 = 36,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS38 = 38,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS39 = 39,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS40 = 40,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS41 = 41,
+        [PlantUnit(PlantUnitEnum.Shear)]
         ToolTS50 = 50,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS51 = 51,
+        [PlantUnit(PlantUnitEnum.OxyCutTorch)]
         ToolTS52 = 52,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS53 = 53,
+        [PlantUnit(PlantUnitEnum.OxyCutTorch)]
         ToolTS54 = 54,
+        [PlantUnit(PlantUnitEnum.SawingMachine)]
         ToolTS55 = 55,
+        [PlantUnit(PlantUnitEnum.SawingMachine)]
         ToolTS56 = 56,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS57 = 57,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS61 = 61,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS62 = 62,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS68 = 68,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS69 = 69,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS70 = 70,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS71 = 71,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS73 = 73,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS74 = 74,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS75 = 75,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS76 = 76,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS77 = 77,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS78 = 78,
+        [PlantUnit(PlantUnitEnum.DrillingMachine)]
         ToolTS79 = 79,
+        [PlantUnit(PlantUnitEnum.PalpingMachine)]
         ToolTS80 = 80,
+        [PlantUnit(PlantUnitEnum.CharMarker)]
         ToolTS87 = 87,
+        [PlantUnit(PlantUnitEnum.CharMarker)]
         ToolTS88 = 88,
+        [PlantUnit(PlantUnitEnum.InkJetMarker)]
         ToolTS89 = 89,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS51XPR = 90,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS51HPR = 91,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS53XPR = 92,
+        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS53HPR = 93,
         StockProfileL = 94,
         StockProfileV = 95,

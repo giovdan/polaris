@@ -10,6 +10,7 @@
         // from AttributeValue
         public long Id { get; set; }
         public long EntityId { get; set; }
+        public EntityTypeEnum EntityTypeId { get; set; }
         public AttributeDataFormatEnum DataFormatId { get; set; }
         public int Priority { get; set; }
         public decimal Value { get; set; }
@@ -27,7 +28,7 @@
         public ProtectionLevelEnum ProtectionLevel { get; set; }
         public AttributeDefinitionGroupEnum GroupId { get; set; }
         public PlantUnitEnum PlantUnitId { get; set; }
-
+        
         public override bool Equals(object obj)
         {
             return obj is ToolStatusAttribute attribute &&

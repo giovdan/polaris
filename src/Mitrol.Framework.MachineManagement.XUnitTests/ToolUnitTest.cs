@@ -1,8 +1,13 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Mitrol.Framework.Domain.Enums;
+using Mitrol.Framework.Domain.Interfaces;
 using Mitrol.Framework.Domain.Models;
 using Mitrol.Framework.MachineManagement.Application.Interfaces;
+using Mitrol.Framework.MachineManagement.Application.Models;
+using Mitrol.Framework.MachineManagement.Application.Resolvers;
 using Mitrol.Framework.MachineManagement.Application.Services;
+using Mitrol.Framework.MachineManagement.Application.Validators;
 using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
 using Mitrol.Framework.MachineManagement.Domain.Interfaces;
 using System.Globalization;
@@ -19,8 +24,20 @@ namespace Mitrol.Framework.XUnitTests
         public ToolUnitTest():base()
         {
             var services = new ServiceCollection();
+            services.AddSingleton<DrillStatus>();
+            services.AddSingleton<TorchOxyStatus>();
+            services.AddSingleton<TorchPlaStatus>();
+            services.AddSingleton<SawStatus>();
+
+            services.AddTransient<IResolver<IToolStatus, PlantUnitEnum>, ToolStatusResolver>();
             services.AddScoped<IToolService, ToolService>();
             services.AddScoped<IDetailIdentifierRepository, DetailIdentifierRepository>();
+            services.AddScoped<IMachineParameterRepository, MachineParameterRepository>();
+            services.AddScoped<IEntityValidator<ToolDetailItem>, ToolValidator>();
+            services.AddScoped<IExecutionService, ExecutionService>();
+            services.AddScoped<IMachineConfigurationService, MachineConfigurationService>();
+            services.AddScoped<IMachineParameterService, MachineParameterService>();
+
             RegisterServices(services);
         }
 

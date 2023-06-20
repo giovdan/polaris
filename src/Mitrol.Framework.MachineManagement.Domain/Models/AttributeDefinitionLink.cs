@@ -17,6 +17,7 @@
         public ClientControlTypeEnum ControlType { get; set; }
         public bool IsCodeGenerator { get; set; }
         public bool IsSubFilter { get; set; }
+        public bool IsStatusAttribute { get; set; }
         [Column(TypeName = "ENUM('Optional','Fundamental','Preview')")]
         public AttributeScopeEnum AttributeScopeId { get; set; }
         [Column(TypeName = "ENUM('Critical','High','Medium','Normal','ReadOnly')")]

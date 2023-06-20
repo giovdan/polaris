@@ -53,7 +53,6 @@
             services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
             services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
             services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
-
             services.AddAutoMapper(cfg =>
             {
                 cfg.DisableConstructorMapping();

@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `attributedefinitionlink` (
 	`HelpImage` VARCHAR(200) NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
 	`IsCodeGenerator` TINYINT(1) NOT NULL DEFAULT '0',
 	`IsSubFilter` TINYINT(1) NOT NULL DEFAULT '0',
+	`IsStatusAttribute` TINTINY(1) NOT NULL DEFAULT 0,
 	`AttributeScopeId` ENUM('Optional','Fundamental','Preview') NOT NULL DEFAULT 'Optional' COLLATE 'utf8mb4_bin',
 	`DefaultBehavior` ENUM('DataDefault','LastInserted') NULL DEFAULT 'DataDefault' COLLATE 'utf8mb4_bin',
 	`LastInsertedValue` DECIMAL(12,6) NULL DEFAULT NULL,

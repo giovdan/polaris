@@ -462,18 +462,7 @@
             return result;
         }
 
-        public static void SetEntity<T>(this DbContext dbContext, T entity, EntityState state) where T : BaseEntity
-        {
-            var local = dbContext.Set<T>()
-                                     .Local
-                                     .SingleOrDefault(f => f.Id == entity.Id);
-            if (local != null)
-            {
-                dbContext.Entry(local).State = EntityState.Detached;
-            }
-
-            dbContext.Entry(entity).State = state;
-        }
+        
 
         /// <summary>
         /// Set Cors Policy on service collection
@@ -713,5 +702,6 @@
             // Analisi senza tolleranza se valori di range o tipo di tolleranza non specificati
             return (DomainExtensions.CompareFloatWithInchTolerance(Teo, Ril));
         }
+
     }
 }

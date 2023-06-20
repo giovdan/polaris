@@ -8,6 +8,7 @@
     using Mitrol.Framework.MachineManagement.Application.Models.Setup;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public sealed class ExecutionService : BaseServiceWithEvents, IBootableService, IExecutionService
     {
@@ -18,27 +19,27 @@
 
         public Result Boot(IUserSession userSession)
         {
-            throw new NotImplementedException();
+            return Result.Ok();
         }
 
         public Result CleanUpBeforeBoot(IUserSession userSession)
         {
-            throw new NotImplementedException();
+            return Result.Ok();
         }
 
         public IEnumerable<UnitSetupListItem> GetUnitSetupList()
         {
-            throw new NotImplementedException();
+            return Enumerable.Empty<UnitSetupListItem>();
         }
 
         public Result StartExecution(IUserSession userSession)
         {
-            throw new NotImplementedException();
+            return Result.Ok();
         }
 
         public Result StopExecution(IUserSession userSession)
         {
-            throw new NotImplementedException();
+            return Result.Ok();
         }
 
      

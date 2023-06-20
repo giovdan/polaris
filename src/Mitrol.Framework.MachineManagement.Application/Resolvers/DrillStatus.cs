@@ -1,4 +1,4 @@
-﻿namespace Mitrol.Framework.MachineManagement.Application.Models
+﻿namespace Mitrol.Framework.MachineManagement.Application.Resolvers
 {
     using Mitrol.Framework.Domain.Core.Enums;
     using Mitrol.Framework.Domain.Core.Extensions;

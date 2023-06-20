@@ -3,11 +3,11 @@
     using FluentValidation;
     using Mitrol.Framework.Domain;
     using Mitrol.Framework.Domain.Core.Enums;
-    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Extensions;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Models;
     using System;
     using System.Collections.Generic;
@@ -17,7 +17,7 @@
     /// <summary>
     /// Class for tool validation
     /// </summary>
-    public class ToolValidator : IEntityBaseValidator<ToolDetailItem>
+    public class ToolValidator : IEntityValidator<ToolDetailItem>
     {
         private Dictionary<DatabaseDisplayNameEnum, object> AdditionalInfos { get; set; }
         private IServiceFactory ServiceFactory { get; set; }
@@ -350,73 +350,8 @@
             return errorDetails.Any() ? Result.Fail(errorDetails) : Result.Ok();
         }
 
-        /// <summary>
-        /// Validazione identificatori
-        /// </summary>
-        /// <param name="identifiers"></param>
-        /// <param name="toolType"></param>
-        /// <returns></returns>
-        private Result ValidateIdentifiers(IEnumerable<AttributeDetailItem> identifiers)
-        {
-            if (identifiers.Any())
-            {
-                var errorDetails = identifiers.Select(identifier =>
-                {
-                    var identifierValue = identifier.GetAttributeValue();
-                    ErrorDetail errorDetail = null;
-
-                    // Gitea #512 (Disabilitare momentaneamente validazione magazzino)
-                    if (identifier.AttributeKind == AttributeKindEnum.Enum && !string.IsNullOrEmpty(identifier.TypeName))
-                    {
-                        var enumType = Type.GetType(identifier.TypeName);
-                        var converter = TypeDescriptor.GetConverter(enumType);
-                        var value = converter.ConvertFrom(identifierValue);
-                        // Se non è stato convertito correttamente il valore non è valido
-                        if (enumType != value.GetType())
-                        {
-                            errorDetail = new ErrorDetail(identifier.DisplayName, ErrorCodesEnum.ERR_TLM026.ToString());
-                        }
-                    }
-                    else if (identifier.AttributeKind != AttributeKindEnum.String
-                            && Convert.ToDecimal(identifierValue) <= 0
-                            && identifier.EnumId != AttributeDefinitionEnum.WarehouseId)
-                    {
-                        errorDetail = new ErrorDetail(identifier.DisplayName, ErrorCodesEnum.ERR_TLM026.ToString());
-                    }
-                    else if ((identifier.AttributeKind == AttributeKindEnum.String && identifier.EnumId != AttributeDefinitionEnum.Code)
-                        && (identifierValue?.ToString().IsNullOrWhiteSpace() ?? true))
-                    {
-                        errorDetail = new ErrorDetail(identifier.DisplayName, ErrorCodesEnum.ERR_TLM026.ToString());
-                    }
-
-                    return errorDetail;
-                })
-                .Where(errorDetail => errorDetail != null);
-
-                return errorDetails.Any() ? Result.Fail(errorDetails) : Result.Ok();
-            }
-
-            return Result.Fail(ErrorCodesEnum.ERR_GEN001.ToString());
-        }
-
-        /// <summary>
-        /// Validazione attributi
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private Result ValidateAttributes(IEnumerable<AttributeDetailItem> attributes)
-        {
-            if (AdditionalInfos.TryGetValue(DatabaseDisplayNameEnum.TS, out var toolTypeInfo)
-                && Enum.TryParse<ToolTypeEnum>(toolTypeInfo.ToString(), out var toolType))
-            {
-
-                return Result.AggregateIfFails(ValidateGenericAttributes(attributes)
-                                    , ValidateGeometricAttributes(attributes, toolType)
-                                    , ValidateProcessAttributes(attributes, toolType));
-            }
-
-            return Result.Fail(ErrorCodesEnum.ERR_GEN001.ToString());
-        }
+        
+      
         #endregion < Private Methods >
 
         private class ToolDetailItemValidator : AbstractValidator<ToolDetailItem>
@@ -499,6 +434,78 @@
             return result;
         }
 
-       
+        /// <summary>
+        /// Validazione identificatori
+        /// </summary>
+        /// <param name="identifiers"></param>
+        /// <param name="toolType"></param>
+        /// <returns></returns>
+        public Result ValidateIdentifiers(IEnumerable<AttributeDetailItem> identifiers)
+        {
+            if (identifiers.Any())
+            {
+                var errorDetails = identifiers.Select(identifier =>
+                {
+                    var identifierValue = identifier.GetAttributeValue();
+                    ErrorDetail errorDetail = null;
+
+                    // Gitea #512 (Disabilitare momentaneamente validazione magazzino)
+                    if (identifier.AttributeKind == AttributeKindEnum.Enum && !string.IsNullOrEmpty(identifier.TypeName))
+                    {
+                        var enumType = Type.GetType(identifier.TypeName);
+                        var converter = TypeDescriptor.GetConverter(enumType);
+                        var value = converter.ConvertFrom(identifierValue);
+                        // Se non è stato convertito correttamente il valore non è valido
+                        if (enumType != value.GetType())
+                        {
+                            errorDetail = new ErrorDetail(identifier.DisplayName, ErrorCodesEnum.ERR_TLM026.ToString());
+                        }
+                    }
+                    else if (identifier.AttributeKind != AttributeKindEnum.String
+                            && Convert.ToDecimal(identifierValue) <= 0
+                            && identifier.EnumId != AttributeDefinitionEnum.WarehouseId)
+                    {
+                        errorDetail = new ErrorDetail(identifier.DisplayName, ErrorCodesEnum.ERR_TLM026.ToString());
+                    }
+                    else if ((identifier.AttributeKind == AttributeKindEnum.String && identifier.EnumId != AttributeDefinitionEnum.Code)
+                        && (identifierValue?.ToString().IsNullOrWhiteSpace() ?? true))
+                    {
+                        errorDetail = new ErrorDetail(identifier.DisplayName, ErrorCodesEnum.ERR_TLM026.ToString());
+                    }
+
+                    return errorDetail;
+                })
+                .Where(errorDetail => errorDetail != null);
+
+                return errorDetails.Any() ? Result.Fail(errorDetails) : Result.Ok();
+            }
+
+            return Result.Fail(ErrorCodesEnum.ERR_GEN001.ToString());
+        }
+
+
+        /// <summary>
+        /// Validazione attributi
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public Result ValidateAttributes(IEnumerable<AttributeDetailItem> attributes)
+        {
+            if (AdditionalInfos.TryGetValue(DatabaseDisplayNameEnum.TS, out var toolTypeInfo)
+                && Enum.TryParse<ToolTypeEnum>(toolTypeInfo.ToString(), out var toolType))
+            {
+
+                return Result.AggregateIfFails(ValidateGenericAttributes(attributes)
+                                    , ValidateGeometricAttributes(attributes, toolType)
+                                    , ValidateProcessAttributes(attributes, toolType));
+            }
+
+            return Result.Fail(ErrorCodesEnum.ERR_GEN001.ToString());
+        }
+
+        public Result ValidateIdentifiers(ToolDetailItem model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

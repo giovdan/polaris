@@ -76,6 +76,9 @@
         public bool IsReadonly { get; set; }
 
         [JsonIgnore()]
+        public bool IsStatusAttribute { get; set; }
+
+        [JsonIgnore()]
         public ProtectionLevelEnum ProtectionLevel { get; set; }
 
         [JsonIgnore()]

@@ -2,6 +2,16 @@ USE machine;
 
 START TRANSACTION;
 
+# Aggiornamento IsAttributeStatus
+UPDATE attributedefinitionlink adl
+INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
+SET adl.IsStatusAttribute = 1
+WHERE ad.DisplayName IN ('MaxToolLife','ToolLife','WarningToolLife','ToolLength','AutoSensitiveEnable'
+		,'ToolEnableA','ToolEnableB','ToolEnableC','ToolEnableD'
+		,'NozzleLifeMaxTime','NozzleLifeTime','NozzleLifeWarningTime'
+		,'NozzleLifeMaxIgnitions','NozzleLifeIgnitions','NozzleLifeWarningLimitIgnitions'
+		,'BladeLife','MaxBladeLife','WarningBladeLife');
+		
 RENAME TABLE IF EXISTS attributedefinitionView TO attributedefinitionView_OLD;
 RENAME TABLE IF EXISTS detailidentifiersview TO detailidentifiersview_OLD;
 RENAME TABLE IF EXISTS toollifeattributesview TO toollifeattributesview_OLD;
@@ -91,6 +101,19 @@ LEFT JOIN entitytype et ON et.Id = adl.EntityTypeId
 LEFT OUTER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
 WHERE et.ParentType = 'ToolRange' AND ad.DisplayName = 'MinRequiredConsole';
 
+CREATE OR REPLACE VIEW toolstatusattributesview
+AS		
+SELECT av.Id, av.EntityId, adl.EntityTypeId, av.DataFormatId, av.Priority,av.Value, av.TextValue
+, av.AttributeDefinitionLinkId, ad.EnumId, ad.DisplayName
+, adl.AttributeType, adl.ControlType, ad.AttributeKind, adl.ProtectionLevel, adl.GroupId
+, et.SecondaryKey AS PlantUnitId
+FROM attributevalue av 
+INNER JOIN attributedefinitionlink adl ON adl.Id = av.AttributeDefinitionLinkId
+INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
+INNER JOIN entitytype et ON et.Id = adl.EntityTypeId
+WHERE adl.IsStatusAttribute = 1;
+
+				
 COMMIT;	  
 
 
