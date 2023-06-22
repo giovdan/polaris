@@ -113,6 +113,12 @@ namespace Mitrol.Framework.Domain.Enums
         /// Gantry Travi Orient
         /// </summary>
         [DatabaseDisplayName("Orient")]
-        TANG_GANTRY_T_O = 40
+        TANG_GANTRY_T_O = 40,
+
+        /// <summary>
+        /// Excalibur 5
+        /// </summary>
+        [DatabaseDisplayName("Excalibur5")]
+        TANG_EX5 = 41
     }
 }

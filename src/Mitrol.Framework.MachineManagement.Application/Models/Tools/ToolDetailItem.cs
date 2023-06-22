@@ -120,47 +120,40 @@
         }
 
         private static IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(this ToolDetailItem toolDetail
-            , IToolStatus toolStatusHandler)
+                                        , IToolStatus toolStatusHandler)
         {
-            throw new NotImplementedException();
-            // Recupero gli attributi di stato legati al tipo di tool (stabiliti dal toolStatusHandler)
-            var toolStatusAttributeDefinitions = toolStatusHandler.GetToolStatusAttributeDefinitions();
+            return toolDetail.Attributes.Where(a => a.IsStatusAttribute)
+                        .Select(a =>
+                        {
+                            var attributeValue = a.GetAttributeValue(toolDetail.ConversionSystem);
 
-            //return toolDetail.Attributes.Where(a => toolStatusAttributeDefinitions.Contains(a.EnumId))
-            //            .Select(a =>
-            //            {
-            //                var attributeValue = a.Value.GetAttributeValue(a.AttributeKind, a.ItemDataFormat, a.TypeName,
-            //                                    toolDetail.ConversionSystem);
+                            var toolStatusAttribute = new ToolStatusAttribute
+                            {
+                                AttributeType = a.AttributeType,
+                                AttributeKind = a.AttributeKind,
+                                ControlType = a.ControlType,
+                                DataFormatId = a.ItemDataFormat,
+                                DisplayName = a.DisplayName,
+                                EnumId = a.EnumId,
+                                GroupId = a.GroupId,
+                                Id = a.Id,
+                                ProtectionLevel = a.ProtectionLevel,
+                                EntityId = toolDetail.Id,
+                                PlantUnitId = toolDetail.PlantUnit,
+                                Priority = a.Order
+                            };
 
-            //                var toolStatusAttribute = new ToolStatusAttribute
-            //                {
-            //                    AttributeTypeId = a.AttributeType,
-            //                    AttributeKindId = a.AttributeKind,
-            //                    ControlTypeId = a.ControlType,
-            //                    DataFormatId = a.ItemDataFormat,
-            //                    DisplayName = a.DisplayName,
-            //                    EnumId = a.EnumId,
-            //                    GroupId = a.GroupId,
-            //                    Id = a.Id,
-            //                    ProtectionLevel = a.ProtectionLevel,
-            //                    EntityId = 0
-            //                    PlantUnitId = toolDetail.PlantUnit,
-            //                    Priority = a.Order,
-            //                    TextValue = string.Empty,
-            //                    Value = 0
-            //                };
+                            if (a.AttributeKind == AttributeKindEnum.String)
+                            {
+                                toolStatusAttribute.TextValue = attributeValue.ToString();
+                            }
+                            else
+                            {
+                                toolStatusAttribute.Value = Convert.ToDecimal(attributeValue);
+                            }
 
-            //                if (a.AttributeKind == AttributeKindEnum.String)
-            //                {
-            //                    toolStatusAttribute.TextValue = attributeValue.ToString();
-            //                }
-            //                else 
-            //                {
-            //                    toolStatusAttribute.Value = Convert.ToDecimal(attributeValue);
-            //                }
-
-            //                return toolStatusAttribute;
-            //            });
+                            return toolStatusAttribute;
+                        });
         }
 
         /// <summary>

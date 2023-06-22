@@ -21,6 +21,10 @@
     using System.Threading;
     using Mitrol.Framework.MachineManagement.Application.Mappings;
     using Mitrol.Framework.Domain.Core.Extensions;
+    using Mitrol.Framework.Domain.SignalR.Gateway;
+    using Mitrol.Framework.Domain.Core.SignalR.Gateway;
+    using Mitrol.Framework.Domain.Configuration;
+    using FluentValidation;
 
     public class BaseUnitTest
     {
@@ -43,6 +47,9 @@
 
         public void RegisterServices(IServiceCollection services)
         {
+            services.AddValidatorsFromAssemblyContaining<RootConfigurationValidator>();
+
+            services.AddSingleton<IEventHubClient, EventHubClient>(); 
             services.AddSingleton<IServiceFactory, ServiceFactory>();
             services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, Mitrol.Framework.MachineManagement.Data.MySQL.Models.UnitOfWorkFactory>();
             services.AddTransient<IMachineManagentDatabaseContext, MachineManagementDatabaseContext>();

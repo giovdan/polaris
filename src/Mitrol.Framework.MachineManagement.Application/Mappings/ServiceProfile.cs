@@ -7,6 +7,10 @@
     using Mitrol.Framework.MachineManagement.Domain.Views;
     using Mitrol.Framework.Domain;
     using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.Domain.Configuration;
+    using Mitrol.Framework.Domain.Core.Extensions;
+    using Mitrol.Framework.Domain.Configuration.License;
+    using Mitrol.Framework.Domain.Configuration.Models;
 
     public class ServiceProfile: AutoMapper.Profile
     {
@@ -114,6 +118,142 @@
                 .ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.AttributeDefinitionLink.Priority))
                 .ForMember(dest => dest.UMLocalizationKey, opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.AttributeDefinitionLink.AttributeDefinition.DataFormat.ToString().ToUpper()}"))
                 .ForMember(dest => dest.ProtectionLevel, opt => opt.MapFrom(s => s.AttributeDefinitionLink.ProtectionLevel));
+
+            #region < Configuration >
+
+            CreateMap<RootConfiguration, RootConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<SetupConfiguration, SetupConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<PlantConfiguration, PlantConfiguration>()
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<LicenseConfiguration, LicenseConfiguration>()
+               .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<ReaJetConfiguration, ReaJetConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<MachineConfiguration, MachineConfiguration>()
+                .ForMember(dest => dest.Consoles, opt => opt.MapFrom((s, dest) => dest.Consoles.Merge(s.Consoles)))
+                .ForMember(dest => dest.ToolTypes, opt => opt.MapFrom((s, dest) => dest.ToolTypes.Merge(s.ToolTypes)))
+                .ForMember(dest => dest.SkippedToolTypes, opt => opt.MapFrom((s, dest) => dest.SkippedToolTypes.Merge(s.SkippedToolTypes)))
+                .ForMember(dest => dest.Profiles, opt => opt.MapFrom((s, dest) => dest.Profiles.Merge(s.Profiles)))
+                .ForMember(dest => dest.Operations, opt => opt.MapFrom((s, dest) => dest.Operations.Merge(s.Operations)))
+                .ForMember(dest => dest.ProbeCodes, opt => opt.MapFrom((s, dest) => dest.ProbeCodes.Merge(s.ProbeCodes)))
+                .ForMember(dest => dest.ProgramTypes, opt => opt.MapFrom((s, dest) => dest.ProgramTypes.Merge(s.ProgramTypes)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<GeneralConfiguration, GeneralConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<MacroTypeConfiguration, MacroTypeConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<MitrolConfiguration, MitrolConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<FanucConfiguration, FanucConfiguration>()
+                .ForMember(dest => dest.GFunctions, opt => opt.MapFrom((s, dest) => dest.GFunctions.Merge(s.GFunctions)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<PlcConfiguration, PlcConfiguration>()
+               .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<CncConfiguration, CncConfiguration>()
+                .ForMember(dest => dest.AxisGroups, opt => opt.MapFrom((s, dest) => dest.AxisGroups.Merge(s.AxisGroups, AxisGroupConfigurationComparer.Default)))
+                .ForMember(dest => dest.Axes, opt => opt.MapFrom((s, dest) => dest.Axes.Merge(s.Axes)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<EtherCATConfiguration, EtherCATConfiguration>()
+                .ForMember(dest => dest.Nodes, opt => opt.MapFrom((s, dest) => dest.Nodes.Merge(s.Nodes)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<AxisGroupConfiguration, AxisGroupConfiguration>()
+                .ForMember(dest => dest.AxisNames, opt => opt.MapFrom((s, dest) => dest.AxisNames.Merge(s.AxisNames)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<AxisConfiguration, AxisConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<OverrideConfiguration, OverrideConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<ImportExportConfiguration, ImportExportConfiguration>()
+                .ForMember(dest => dest.Folders, opt => opt.MapFrom((s, dest) => dest.Folders.Merge(s.Folders)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<MarkConfiguration, MarkConfiguration>()
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<FontDefinitionConfiguration, FontDefinitionConfiguration>()
+                .ForMember(dest => dest.Fonts, opt => opt.MapFrom((s, dest) => dest.Fonts.Merge(s.Fonts)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<FontPathDefinitionConfiguration, FontPathDefinitionConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<DrillConfiguration, DrillConfiguration>()
+                .ForMember(dest => dest.Units, opt => opt.MapFrom((s, dest) => dest.Units.Merge(s.Units)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<DrillUnitConfiguration, DrillUnitConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<GridPosition, GridPosition>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<PlaConfiguration, PlaConfiguration>()
+                .ForMember(dest => dest.Torches, opt => opt.MapFrom((s, dest) => dest.Torches.Merge(s.Torches)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<SawConfiguration, SawConfiguration>()
+                .ForMember(dest => dest.Units, opt => opt.MapFrom((s, dest) => dest.Units.Merge(s.Units)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<TorchUnitConfiguration, TorchUnitConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<NodeReference, NodeReference>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<OxyConfiguration, OxyConfiguration>()
+                .ForMember(dest => dest.Torches, opt => opt.MapFrom((s, dest) => dest.Torches.Merge(s.Torches)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<ProgrammingConfiguration, ProgrammingConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<BacklogsConfiguration, BacklogsConfiguration>()
+                .ForMember(dest => dest.Timers, opt => opt.MapFrom((s, dest) => dest.Timers.Merge(s.Timers)))
+                .ForAllOtherMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<BacklogTimerConfiguration, BacklogTimerConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<CleanUpConfiguration, CleanUpConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<RobotConfiguration, RobotConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<ProductionConfiguration, ProductionConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<ToleranceConfiguration, ToleranceConfiguration>()
+                .ForAllMembers(opt => opt.IgnoreIfSourceIsNull());
+
+            CreateMap<ApplicationSetting, ApplicationSettingItem>()
+                .ForMember(dest => dest.SettingKey, opt => opt.Ignore())
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(s => s.DefaultValue));
+
+            CreateMap<BaseInfoItem<int, string>, ListBoxItem>()
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(s => s.Value))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(s => s.Id));
+
+            #endregion < Configuration >
         }
     }
 }

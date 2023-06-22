@@ -41,8 +41,10 @@
     {
         private IApplicationSettingRepository ApplicationSettingRepository => ServiceFactory.GetService<IApplicationSettingRepository>();
 
-        public static RootConfiguration _configurationRoot;
-        
+        private static RootConfiguration _configurationRoot;
+
+        public IRootConfiguration ConfigurationRoot => _configurationRoot;
+
         /// <summary>
         /// Default DI constructor.
         /// </summary>
@@ -976,6 +978,6 @@
             }
         }
 
-        public IRootConfiguration ConfigurationRoot => _configurationRoot;
+        
     }
 }

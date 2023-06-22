@@ -76,11 +76,12 @@
             // Recupero gli attributi collegati allo stato
             IEnumerable<ToolStatusAttribute> toolStatusAttributes =
                     Mapper.ProjectTo<ToolStatusAttribute>(
-                            attributes.Where(a => a.IsStatusAttribute).AsQueryable());
+                            attributes.Where(a => a.IsStatusAttribute).AsQueryable())
+                    .ToHashSet();
 
-            ToolValidator.ValidateAttributes(attributes)
-                    .OnSuccess(() =>
-                    {
+            //ToolValidator.ValidateAttributes(attributes)
+            //        .OnSuccess(() =>
+            //        {
                         var toolstatusHandler = ServiceFactory.Resolve<IToolStatus, PlantUnitEnum>(toolListItem.PlantUnit);
                         if (toolstatusHandler != null)
                         {
@@ -91,12 +92,13 @@
                                                 .Where(a => a.IsStatusAttribute)
                                                 .Select(a => ApplyCustomMapping(a, MeasurementSystemEnum.MetricSystem, conversionSystem)));
                         }
-                    })
-                    .OnFailure(() =>
-                    {
-                        toolListItem.Status = EntityStatusEnum.Alarm;
-                        toolListItem.StatusLocalizationKey = $"{MachineManagementExtensions.LABEL_TOOLSTATUS}_{ EntityStatusEnum.Alarm.ToString().ToUpper()}";
-                    });
+                    //})
+                    //.OnFailure(() =>
+                    //{
+                    //    toolListItem.Status = EntityStatusEnum.Alarm;
+                    //    toolListItem.StatusLocalizationKey = $"{MachineManagementExtensions.LABEL_TOOLSTATUS}_{ EntityStatusEnum.Alarm.ToString().ToUpper()}";
+                    //})
+                    ;
 
             return toolListItem;
         }
@@ -128,14 +130,15 @@
         }
 
 
-        public Result<ToolDetailItem> Get(long toolId)
+        private Result<ToolDetailItem> Get(Entity entity
+                    , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork
+                    , bool onlyQuickAccess = false
+                    , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+                    , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem)
         {
-            var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
-            EntityRepository.Attach(unitOfWork);
             DetailIdentifierRepository.Attach(unitOfWork);
             AttributeValueRepository.Attach(unitOfWork);
 
-            var entity = EntityRepository.Get(toolId);
             if (entity == null)
             {
                 return Result.Fail<ToolDetailItem>(ErrorCodesEnum.ERR_GEN002.ToString());
@@ -145,57 +148,82 @@
             var identifiers = DetailIdentifierRepository.GetIdentifiers(identifier =>
                         identifier.HashCode == entity.HashCode)
                         .OrderBy(i => i.Priority);
-            var attributes = AttributeValueRepository.FindBy(a => a.EntityId == toolId)
+            var attributes = AttributeValueRepository.FindBy(a => a.EntityId == entity.Id)
                         .OrderBy(i => i.Priority);
 
             var protectionLevels = UserSession.GetProtectionLevels();
 
             toolDetail.CodeGenerators = Mapper.Map<IEnumerable<CodeGeneratorItem>>(identifiers.Where(i => i.IsCodeGenerator));
 
-            toolDetail.Identifiers = identifiers.Select(i => ApplyCustomMapping(i, toolId, UserSession.ConversionSystem));
+            toolDetail.Identifiers = identifiers.Select(i => ApplyCustomMapping(i, entity.Id, UserSession.ConversionSystem));
 
             toolDetail.Attributes = attributes.Select(a =>
-                                    {
-                                        var attributeDetail = Mapper.Map<AttributeDetailItem>(a);
-                                        attributeDetail.SetAttributeValue(
-                                            a.AttributeDefinitionLink.AttributeDefinition
-                                                .AttributeKind == AttributeKindEnum.String
-                                                ? a.TextValue
-                                                : a.Value, UserSession.ConversionSystem);
-                                        attributeDetail.EntityId = toolId;
-                                        attributeDetail.IsReadonly = !protectionLevels.Contains(attributeDetail.ProtectionLevel);
-                                        return attributeDetail;
-                                    });
-            // TODO
-            //var toolStatusAttributes = AttributeValueRepository
-            //                            .GetToolStatusAttributes(a => a.EntityId == toolId)
-            //                            .Select(a =>
-            //                                ApplyCustomMapping(a, MeasurementSystemEnum.MetricSystem
-            //                                                , UserSession.ConversionSystem));
+            {
+                var attributeDetail = Mapper.Map<AttributeDetailItem>(a);
+                attributeDetail.SetAttributeValue(
+                    a.AttributeDefinitionLink.AttributeDefinition
+                        .AttributeKind == AttributeKindEnum.String
+                        ? a.TextValue
+                        : a.Value, UserSession.ConversionSystem);
+                attributeDetail.EntityId = entity.Id;
+                attributeDetail.IsReadonly = !protectionLevels.Contains(attributeDetail.ProtectionLevel);
+                // Setta la visibilità dell'attributo in base al suo scope ed alla richiesta in input di avere
+                // solo attributi fondamentali
+                attributeDetail.Hidden = onlyQuickAccess && attributeDetail.AttributeScopeId != AttributeScopeEnum.Fundamental;
+                return attributeDetail;
+            });
+            // Gitea #521 => Effettuo la validazione del tool in base al suo tooltype
+            // In caso di fallimento assegno lo stato di Allarme
+            ToolValidator.Init(ServiceFactory, new Dictionary<DatabaseDisplayNameEnum, object>()
+                                { { DatabaseDisplayNameEnum.TS, toolDetail.ToolType } });
+            var result = ToolValidator.ValidateAttributes(toolDetail.Attributes)
+                    .OnSuccess(() =>
+                    {
+                        var toolStatusHandler = ServiceFactory.Resolve<IToolStatus, PlantUnitEnum>(toolDetail.PlantUnit);
+                        toolDetail.SetToolStatus(toolStatusHandler);
+                    })
+                    .OnFailure(() =>
+                    {
+                        toolDetail.Status = EntityStatusEnum.Alarm;
+                        toolDetail.StatusLocalizationKey = $"{MachineManagementExtensions.LABEL_TOOLSTATUS}_{ EntityStatusEnum.Alarm.ToString().ToUpper()}";
+                    });
 
-            var processingTechnology = GetRealProcessTechnology(
-                            MachineConfigurationService.ConfigurationRoot.Setup.Pla.GetProcessingTechnology()
-                            , entity.EntityTypeId.ToToolType());
+            //var processingTechnology = GetRealProcessTechnology(
+            //                MachineConfigurationService.ConfigurationRoot.Setup.Pla.GetProcessingTechnology()
+            //                , entity.EntityTypeId.ToToolType());
 
+            var rulesHandler = ServiceFactory.Resolve<IEntityRulesHandler<ToolDetailItem>>();
 
+            toolDetail = rulesHandler.Handle(toolDetail);
 
             return Result.Ok(toolDetail);
         }
 
-        public Result<ToolDetailItem> GetByToolManagementId(int toolManagementId)
+        public Result<ToolDetailItem> Get(long toolId
+                    , bool onlyQuickAccess = false
+                    , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+                    , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem)
         {
             var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
             EntityRepository.Attach(unitOfWork);
 
-            var tool = EntityRepository.FindBy(e => e.SecondaryKey == toolManagementId)
+            return Get(EntityRepository.Get(toolId), unitOfWork, onlyQuickAccess, conversionSystemFrom, conversionSystemTo);
+        }
+
+        public Result<ToolDetailItem> GetByToolManagementId(int toolManagementId
+                    , bool onlyQuickAccess = false
+                    , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+                    , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem)
+        {
+            var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
+            EntityRepository.Attach(unitOfWork);
+
+            var entityToolTypes = EntityTypeExtensions.GetToolEntityTypes();
+
+            var tool = EntityRepository.FindBy(e => e.SecondaryKey == toolManagementId
+                        && entityToolTypes.Contains(e.EntityTypeId))
                         .SingleOrDefault();
-
-            if (tool == null)
-            {
-                return Result.Fail<ToolDetailItem>(ErrorCodesEnum.ERR_GEN002.ToString());
-            }
-
-            return Get(tool.Id);
+            return Get(tool, unitOfWork, onlyQuickAccess, conversionSystemFrom, conversionSystemTo);
         }
 
         
@@ -239,14 +267,15 @@
                         {
                             var attribute = Mapper.Map<AttributeDetailItem>(a);
                             attribute.SetAttributeValue(a.AttributeDefinitionLink.AttributeDefinition.AttributeKind == AttributeKindEnum.String
-                                            ? (object)a.TextValue
+                                            ? a.TextValue
                                             : a.Value, UserSession.ConversionSystem);
                             return attribute;
                         }));
                                                 
               
 
-            var entities = EntityRepository.FindBy(e => entityTypes.Contains(e.EntityTypeId));
+            var entities = EntityRepository.FindBy(e => entityTypes.Contains(e.EntityTypeId))
+                    .OrderBy(e => e.SecondaryKey).ToList();
             return
                 entities.Select(entity => ApplyCustomMapping(entity
                                         , identifiersLookup[entity.HashCode]

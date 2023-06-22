@@ -1,15 +1,20 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Mitrol.Framework.Domain.Configuration;
+using Mitrol.Framework.Domain.Core.Interfaces;
+using Mitrol.Framework.Domain.Core.Models.Microservices;
 using Mitrol.Framework.Domain.Enums;
 using Mitrol.Framework.Domain.Interfaces;
 using Mitrol.Framework.Domain.Models;
 using Mitrol.Framework.MachineManagement.Application.Interfaces;
 using Mitrol.Framework.MachineManagement.Application.Models;
 using Mitrol.Framework.MachineManagement.Application.Resolvers;
+using Mitrol.Framework.MachineManagement.Application.RulesHandlers;
 using Mitrol.Framework.MachineManagement.Application.Services;
 using Mitrol.Framework.MachineManagement.Application.Validators;
 using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
 using Mitrol.Framework.MachineManagement.Domain.Interfaces;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -21,6 +26,13 @@ namespace Mitrol.Framework.XUnitTests
     [Trait("TestType", "Tool")]
     public class ToolUnitTest: BaseUnitTest
     {
+        private Result Boot(IServiceScope scope)
+        {
+            var machineConfigurationService = scope.ServiceProvider.GetRequiredService<IMachineConfigurationService>();
+            machineConfigurationService.SetSession(NullUserSession.InternalSessionInstance);
+            return machineConfigurationService.Boot(NullUserSession.InternalSessionInstance);
+        }
+
         public ToolUnitTest():base()
         {
             var services = new ServiceCollection();
@@ -28,6 +40,8 @@ namespace Mitrol.Framework.XUnitTests
             services.AddSingleton<TorchOxyStatus>();
             services.AddSingleton<TorchPlaStatus>();
             services.AddSingleton<SawStatus>();
+
+            services.AddScoped<IResolver<IBootableService>, ServiceForward<IBootableService, IMachineConfigurationService>>();
 
             services.AddTransient<IResolver<IToolStatus, PlantUnitEnum>, ToolStatusResolver>();
             services.AddScoped<IToolService, ToolService>();
@@ -37,8 +51,18 @@ namespace Mitrol.Framework.XUnitTests
             services.AddScoped<IExecutionService, ExecutionService>();
             services.AddScoped<IMachineConfigurationService, MachineConfigurationService>();
             services.AddScoped<IMachineParameterService, MachineParameterService>();
-
+            services.AddSingleton<IEntityHandlerFactory, EntityHandlerFactory>();
+            services.AddScoped<IResolver<IEntityRulesHandler<ToolDetailItem>>
+                            , ToolRulesHandlerResolver>();
+            services.AddTransient<ToolRulesHandler>();
             RegisterServices(services);
+
+            // Boot
+            using var scope = ServiceProvider.CreateScope();
+            Boot(scope)
+                .OnFailure(errors => Console.WriteLine(errors.ToString()));
+                        
+            
         }
 
         [Fact]
@@ -48,7 +72,7 @@ namespace Mitrol.Framework.XUnitTests
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var service = scope.ServiceProvider.GetRequiredService<IToolService>();
             service.SetSession(NullUserSession.InternalSessionInstance);
-            var entities = service.GetAll().ToList();
+            var entities = service.GetAll();
             // Checks
             entities.Should().NotBeNullOrEmpty();
             entities.Any(e => e.CodeGenerators.Any()).Should().BeTrue();
@@ -61,20 +85,18 @@ namespace Mitrol.Framework.XUnitTests
                         .Should().BeFalse();
         }
 
-        [Fact]
-        public void GetToolDetailReturnsSomething()
+        [Theory]
+        [InlineData(1)]
+        public void GetToolDetailReturnsSomething(int toolManagementId)
         {
             using var scope = ServiceProvider.CreateScope();
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var service = scope.ServiceProvider.GetRequiredService<IToolService>();
             service.SetSession(NullUserSession.InternalSessionInstance);
-            var tools = service.GetAll();
-            tools.Should().NotBeEmpty();
-            var toolId = tools.LastOrDefault().InnerId;
-            var result = service.Get(toolId);
+
+            var result = service.GetByToolManagementId(toolManagementId);
             result.Success.Should().BeTrue();
             result.Value.InnerId.Should().BeGreaterThan(0);
-            result.Value.InnerId.Should().Be(toolId);
             result.Value.CodeGenerators.Should().NotBeEmpty();
             result.Value.Identifiers.Should().NotBeEmpty();
             result.Value.Identifiers.Select(i => i.AttributeKind != Domain.Enums.AttributeKindEnum.Enum
