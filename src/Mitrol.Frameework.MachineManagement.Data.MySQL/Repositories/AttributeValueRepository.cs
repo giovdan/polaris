@@ -24,7 +24,7 @@
         {
             try
             {
-                StringBuilder insertQuery = new($"REPLACE INTO `AttributeValue` (`EntityId`, `AttributeDefinitionLinkId`, `Value`, `TextValue`) VALUES ");
+                StringBuilder insertQuery = new($"INSERT INTO `AttributeValue` (`EntityId`, `AttributeDefinitionLinkId`, `Value`, `TextValue`) VALUES ");
 
                 foreach (var item in items)
                 {

@@ -1,24 +1,52 @@
 {
-  "gitCommitHash": "9a58086bddce85c61aee082cb00e50e4c7721d50",
-  "gitCommitDate": "Tue, 20 Jun 2023 17:08:35 +0200",
+  "gitCommitHash": "d48bf5684ba78eb0f719068db8d8db59b2b69426",
+  "gitCommitDate": "Thu, 22 Jun 2023 09:53:42 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Thu, 22 Jun 2023 09:50:37 +0200",
+  "buildDate": "Fri, 23 Jun 2023 12:01:34 +0200",
   "gitUncommittedFiles": [
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Mitrol.Framework.Domain.Core.csproj"
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/UnitOfWork.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Configuration/Cnc/CncConfigurationValidator.cs"
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/UnitOfWorkFactory.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/MachineTypeEnum.cs"
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/UnitOfWork.cs"
+    },
+    {
+      "status": "D",
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/UnitOfWorkFactory.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Mitrol.Framework.Domain.csproj"
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/AttributeDetailItem.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ToolTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IApplicationService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IRemoteMachineParameterService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IUnitOfWork.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Models/BaseService.cs"
     },
     {
       "status": "M",
@@ -26,11 +54,11 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.GraphQL/Mitrol.Framework.GraphQL.csproj"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolService.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolService.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/MachineManagementExtensions.cs"
     },
     {
       "status": "M",
@@ -38,15 +66,11 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mitrol.Framework.MachineManagement.Application.csproj"
-    },
-    {
-      "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Application/Models/Tools/ToolDetailItem.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/MachineConfigurationService.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/MachineManagementBaseService.cs"
     },
     {
       "status": "M",
@@ -55,10 +79,6 @@
     {
       "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/Mitrol.Framework.XUnitTests.csproj"
     },
     {
       "status": "M",

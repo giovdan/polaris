@@ -25,6 +25,9 @@
     using Mitrol.Framework.Domain.Core.SignalR.Gateway;
     using Mitrol.Framework.Domain.Configuration;
     using FluentValidation;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Application.Resolvers;
+    using Mitrol.Framework.MachineManagement.Application.GeneralPurpose;
 
     public class BaseUnitTest
     {
@@ -51,7 +54,12 @@
 
             services.AddSingleton<IEventHubClient, EventHubClient>(); 
             services.AddSingleton<IServiceFactory, ServiceFactory>();
-            services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, Mitrol.Framework.MachineManagement.Data.MySQL.Models.UnitOfWorkFactory>();
+            services.AddSingleton<ExternalFileConfigurationManagement>();
+            services.AddSingleton<FlatEnumConfigurationManagement>();
+            services.AddSingleton<DynamicEnumConfigurationManagement>();
+            services.AddSingleton<PlasmaAMConfigurationManagement>();
+
+            services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, UnitOfWorkFactory>();
             services.AddTransient<IMachineManagentDatabaseContext, MachineManagementDatabaseContext>();
             services.AddTransient<IDatabaseContext, MachineManagementDatabaseContext>();
             services.AddTransient<IUnitOfWork<IMachineManagentDatabaseContext>, Mitrol.Framework.MachineManagement.Data.MySQL.Models.UnitOfWork>();
@@ -59,7 +67,13 @@
             services.AddScoped<IEntityRepository, EntityRepostiory>();
             services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
             services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
+            services.AddScoped<IAttributeDefinitionLinkRepository, AttributeDefinitionLinkRepository>();
             services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
+
+            // Resolvers
+            services.AddTransient<
+                        IResolver<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>
+                            , EnumResolver>();
             services.AddAutoMapper(cfg =>
             {
                 cfg.DisableConstructorMapping();

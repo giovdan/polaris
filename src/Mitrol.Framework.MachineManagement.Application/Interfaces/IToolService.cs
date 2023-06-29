@@ -3,11 +3,12 @@ namespace Mitrol.Framework.MachineManagement.Application.Interfaces
 {
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models;
     using Mitrol.Framework.MachineManagement.Application.Models;
     using System.Collections.Generic;
 
-    public interface IToolService: IApplicationService, IBootableService
+    public interface IToolService: IMachineManagementService, IBootableService
     {
         Result<ToolDetailItem> CreateTool(ToolDetailItem toolDetail);
         IEnumerable<ToolListItem> GetAll();
@@ -19,5 +20,6 @@ namespace Mitrol.Framework.MachineManagement.Application.Interfaces
                     , bool onlyQuickAccess = false
                     , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
                     , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem);
+        ToolDetailItem GetToolTemplateForCreation(AttributeDefinitionFilter filters);
     }
 }

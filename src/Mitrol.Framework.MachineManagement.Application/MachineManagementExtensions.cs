@@ -925,5 +925,52 @@
             return identifiers;
         }
 
+        public static void SetUnitsEnabledMask(this ToolDetailItem tool)
+        {
+            var unitMaskAttributesEnumIds = new[]
+            {
+                AttributeDefinitionEnum.ToolEnableA,
+                AttributeDefinitionEnum.ToolEnableB,
+                AttributeDefinitionEnum.ToolEnableC,
+                AttributeDefinitionEnum.ToolEnableD
+            };
+
+            var toolMask = ToolUnitMaskEnum.None;
+
+            var attributes = tool.Attributes.Where(a => unitMaskAttributesEnumIds.Contains(a.EnumId))
+                        .OrderBy(a => a.Order);
+
+            foreach(var attribute in attributes)
+            {
+                var intValue = System.Convert.ToInt32(attribute.Value.CurrentValue);
+
+                if (intValue == 1)
+                {
+                    switch (attribute.EnumId)
+                    {
+                        case AttributeDefinitionEnum.ToolEnableA:
+                            toolMask |= ToolUnitMaskEnum.UnitA;
+                            break;
+                        case AttributeDefinitionEnum.ToolEnableB:
+                            toolMask |= ToolUnitMaskEnum.UnitB;
+                            break;
+                        case AttributeDefinitionEnum.ToolEnableC:
+                            toolMask |= ToolUnitMaskEnum.UnitC;
+                            break;
+                        case AttributeDefinitionEnum.ToolEnableD:
+                            toolMask |= ToolUnitMaskEnum.UnitD;
+                            break;
+                    }
+
+                }
+
+
+            }
+
+            tool.UnitEnablingMask = toolMask;
+                    
+        }
+
+
     }
 }

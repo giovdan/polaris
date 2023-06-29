@@ -1,6 +1,9 @@
-﻿namespace Mitrol.Framework.Domain.Core.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
+    using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using System.Collections.Generic;
 
 
     /// <summary>

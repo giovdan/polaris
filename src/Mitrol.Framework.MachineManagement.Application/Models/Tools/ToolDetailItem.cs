@@ -80,8 +80,6 @@
             Attributes = new List<AttributeDetailItem>();
             Source = UpdateSourceEnum.Application;
         }
-
-        public string Code { get; set; }
     }
 
     public static class ToolDetailItemExtensions

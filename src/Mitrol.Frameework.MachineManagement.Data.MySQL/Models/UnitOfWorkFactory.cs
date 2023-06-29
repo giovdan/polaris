@@ -17,7 +17,7 @@
 
         public IUnitOfWork<IMachineManagentDatabaseContext> GetOrCreate(IUserSession session)
         {
-            if (_currentUnitOfWork == null)
+            if (_currentUnitOfWork?.IsDisposed ?? true)
             {
                 _currentUnitOfWork = _serviceFactory.GetService<IUnitOfWork<IMachineManagentDatabaseContext>>();
                 _currentUnitOfWork.UserSession = session;
@@ -29,6 +29,7 @@
         public void Dispose()
         {
             _currentUnitOfWork?.Dispose();
+            _currentUnitOfWork = null;
         }
     }
 }

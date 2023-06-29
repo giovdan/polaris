@@ -924,7 +924,7 @@
         /// </summary>
         /// <param name="toolType"></param>
         /// <returns></returns>
-        public static ToolRangeTypeEnum GetToolRangeType(this ToolTypeEnum toolType)
+        public static ToolRangeTypeEnum ToToolRangeType(this ToolTypeEnum toolType)
         {
             var plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
             var toolRangeType = ToolRangeTypeEnum.None;
@@ -940,6 +940,47 @@
             }
 
             return toolRangeType;
+        }
+
+        /// <summary>
+        /// Get related entity type from toolType
+        /// </summary>
+        /// <param name="toolType"></param>
+        /// <returns></returns>
+        public static EntityTypeEnum ToEntityType(this ToolTypeEnum toolType
+                            , ProcessingTechnologyEnum processingTechnology = ProcessingTechnologyEnum.Default)
+        {
+            var entityType = (EntityTypeEnum)toolType;
+            switch (processingTechnology)
+            {
+                case ProcessingTechnologyEnum.PlasmaXPR:
+                    {
+                        if (toolType == ToolTypeEnum.TS51)
+                        {
+                            entityType = EntityTypeEnum.ToolTS51XPR;
+                        }
+                        else if (toolType == ToolTypeEnum.TS53)
+                        {
+                            entityType = EntityTypeEnum.ToolTS53XPR;
+                        }
+                    }
+                    break;
+                case ProcessingTechnologyEnum.PlasmaHPR:
+                    {
+                        if (toolType == ToolTypeEnum.TS51)
+                        {
+                            entityType = EntityTypeEnum.ToolTS51HPR;
+                        }
+                        else if (toolType == ToolTypeEnum.TS53)
+                        {
+                            entityType = EntityTypeEnum.ToolTS53HPR;
+                        }
+                    }
+                    break;
+            }
+
+
+            return entityType;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace Mitrol.Framework.Domain.Models
 {
     using AutoMapper;
-    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.SignalR;
     using Mitrol.Framework.Domain.SignalR.Gateway;

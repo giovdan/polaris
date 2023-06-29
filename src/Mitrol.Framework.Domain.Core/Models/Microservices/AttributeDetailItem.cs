@@ -158,6 +158,40 @@
     public static class AttributeDetailItemExtensions
     {
 
+        /// <summary>
+        /// Add ToolManagementId as Fake Identifier
+        /// </summary>
+        /// <param name="identifiers"></param>
+        public static void AddToolManagementIdAsIdentifier(this IEnumerable<AttributeDetailItem> identifiers, int toolManagementId)
+        {
+            // Aggiungo agli identificatori la posizione nel magazzino e l'identificativo del magazzino
+            identifiers.Append(new AttributeDetailItem
+            {
+                AttributeDefinitionLinkId = 0,
+                IsFake = true,
+                AttributeKind = AttributeKindEnum.Number,
+                AttributeType = AttributeTypeEnum.Identifier,
+                ControlType = ClientControlTypeEnum.Edit,
+                DisplayName = DatabaseDisplayNameEnum.ToolManagementId.ToString(),
+                DecimalPrecision = 0,
+                EnumId = AttributeDefinitionEnum.ToolManagementId,
+                GroupId = AttributeDefinitionGroupEnum.Identifiers,
+                DbValue = toolManagementId,
+                IsCodeGenerator = false,
+                AttributeScopeId = AttributeScopeEnum.Optional,
+                ItemDataFormat = AttributeDataFormatEnum.AsIs,
+                LocalizationKey = "LBL_ATTR_WAREHOUSEPOSITION",
+                Order = 999,
+                ProtectionLevel = ProtectionLevelEnum.Normal,
+                Value = new AttributeValueItem
+                {
+                    CurrentValue = toolManagementId,
+                    ValueType = ValueTypeEnum.Flat
+                }
+            });
+
+        }
+
         public static void SetFormatForLabel(this AttributeDetailItem attribute, MeasurementSystemEnum conversionSystemTo)
         {
             if (attribute.AttributeKind == AttributeKindEnum.Number && 

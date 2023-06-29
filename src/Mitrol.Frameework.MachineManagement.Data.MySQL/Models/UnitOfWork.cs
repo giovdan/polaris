@@ -6,10 +6,10 @@
     using System.Data;
     using Microsoft.EntityFrameworkCore.Storage;
     using Mitrol.Framework.Domain.Interfaces;
-    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
 
-    public class UnitOfWork : IUnitOfWork<IMachineManagentDatabaseContext>
+    public class UnitOfWork : Disposable, IUnitOfWork<IMachineManagentDatabaseContext>
     {
         public UnitOfWork(IDatabaseContextFactory databaseContextFactory)
         {
@@ -41,7 +41,7 @@
 
         public void Begin(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            throw new System.NotImplementedException();
+            CurrentTransaction = BeginTransaction(isolationLevel);
         }
 
         public void Commit()
@@ -101,8 +101,9 @@
             }
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
+            base.Dispose();
             Context?.Dispose();
             CurrentTransaction?.Dispose();
         }

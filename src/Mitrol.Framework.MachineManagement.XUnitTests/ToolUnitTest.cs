@@ -1,28 +1,27 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Mitrol.Framework.Domain.Configuration;
-using Mitrol.Framework.Domain.Core.Interfaces;
-using Mitrol.Framework.Domain.Core.Models.Microservices;
-using Mitrol.Framework.Domain.Enums;
-using Mitrol.Framework.Domain.Interfaces;
-using Mitrol.Framework.Domain.Models;
-using Mitrol.Framework.MachineManagement.Application.Interfaces;
-using Mitrol.Framework.MachineManagement.Application.Models;
-using Mitrol.Framework.MachineManagement.Application.Resolvers;
-using Mitrol.Framework.MachineManagement.Application.RulesHandlers;
-using Mitrol.Framework.MachineManagement.Application.Services;
-using Mitrol.Framework.MachineManagement.Application.Validators;
-using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
-using Mitrol.Framework.MachineManagement.Domain.Interfaces;
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using Xunit;
-using XUnitTests;
-
-namespace Mitrol.Framework.XUnitTests
+﻿namespace Mitrol.Framework.XUnitTests
 {
+    using FluentAssertions;
+    using global::XUnitTests;
+    using Microsoft.Extensions.DependencyInjection;
+    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Core.Models.Microservices;
+    using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Application.Models;
+    using Mitrol.Framework.MachineManagement.Application.Resolvers;
+    using Mitrol.Framework.MachineManagement.Application.RulesHandlers;
+    using Mitrol.Framework.MachineManagement.Application.Services;
+    using Mitrol.Framework.MachineManagement.Application.Validators;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
+    using Mitrol.Framework.MachineManagement.Domain.Interfaces;
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading;
+    using Xunit;
+
     [Trait("TestType", "Tool")]
     public class ToolUnitTest: BaseUnitTest
     {
@@ -98,6 +97,7 @@ namespace Mitrol.Framework.XUnitTests
             result.Success.Should().BeTrue();
             result.Value.InnerId.Should().BeGreaterThan(0);
             result.Value.CodeGenerators.Should().NotBeEmpty();
+            result.Value.Code.Should().NotBeEmpty();
             result.Value.Identifiers.Should().NotBeEmpty();
             result.Value.Identifiers.Select(i => i.AttributeKind != Domain.Enums.AttributeKindEnum.Enum
                     ? i.Value.CurrentValue
@@ -113,6 +113,37 @@ namespace Mitrol.Framework.XUnitTests
                                 : i.Value.CurrentValueId)
                                 .Should().NotBeNull();
 
+        }
+
+        [Theory]
+        [InlineData(EntityTypeEnum.ToolTS33)]
+        public void GetAttributeDefinitionsReturnsSomething(EntityTypeEnum entityType)
+        {
+            using var scope = ServiceProvider.CreateScope();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var service = scope.ServiceProvider.GetRequiredService<IToolService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+            var attributeDefinitons = service.GetAttributeDefinitions(entityType);
+            attributeDefinitons.Should().NotBeEmpty();
+            attributeDefinitons.Any(a => !string.IsNullOrEmpty(a.DisplayName)).Should().BeTrue();
+        }
+
+        [Fact]
+        public void CreateToolDetailReturnsValidId()
+        {
+            using var scope = ServiceProvider.CreateScope();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var service = scope.ServiceProvider.GetRequiredService<IToolService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+            var toolDetail = service.GetToolTemplateForCreation(new AttributeDefinitionFilter
+            {
+                ToolType = ToolTypeEnum.TS33,
+                ConversionSystem = NullUserSession.InternalSessionInstance.ConversionSystem
+            });
+            
+
+            var result = service.CreateTool(toolDetail);
+            result.Success.Should().BeTrue();
         }
     }
 }

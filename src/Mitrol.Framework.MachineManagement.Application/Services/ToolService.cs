@@ -15,8 +15,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Bus.Events;
+    using Mitrol.Framework.Domain.Bus;
     using Mitrol.Framework.Domain.Configuration.Extensions;
-    using Mitrol.Framework.Domain.Core.Interfaces;
+    using System.Linq.Expressions;
+    using Mitrol.Framework.Domain.Core.Extensions;
 
     public class ToolService : MachineManagementBaseService, IToolService
     {
@@ -25,7 +28,6 @@
 
         }
 
-        private IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
         private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
         private IMachineConfigurationService MachineConfigurationService => ServiceFactory.GetService<IMachineConfigurationService>();
 
@@ -34,6 +36,37 @@
 
 
         #region < Private Methods >
+        /// <summary>
+        /// Recupero Prima posizione libera
+        /// </summary>
+        /// <returns></returns>
+        private int GetFirstAvailablePosition(IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork)
+        {
+            EntityRepository.Attach(unitOfWork);
+            var toolTypes = EntityTypeExtensions.GetToolEntityTypes();
+
+            //Recupera la lista dei toolManagementId
+            var toolManagementIds = EntityRepository.FindBy(e => toolTypes.Contains(e.EntityTypeId))
+                        .OrderBy(e => e.SecondaryKey)
+                        .Select(e => e.SecondaryKey);
+
+            //Se non c'è nessun Tool ritorna 1
+            if (!toolManagementIds.Any())
+                return 1;
+
+            //Ciclo su tutte le posizioni disponibili fra 1 e maxToolManagementId 
+            //per recuperare la prima posizione libera
+            var maxToolManagementId = toolManagementIds.Last();
+            int position = 0;
+            for (position = 1; position <= maxToolManagementId; position++)
+            {
+
+                if (!toolManagementIds.Contains(position))
+                    break;
+            }
+            return position == 0 ? (int)maxToolManagementId + 1 : position;
+        }
+
         /// <summary>
         /// Get Real Processing Technology based on toolType
         /// </summary>
@@ -79,9 +112,9 @@
                             attributes.Where(a => a.IsStatusAttribute).AsQueryable())
                     .ToHashSet();
 
-            //ToolValidator.ValidateAttributes(attributes)
-            //        .OnSuccess(() =>
-            //        {
+            ToolValidator.ValidateAttributes(attributes)
+                    .OnSuccess(() =>
+                    {
                         var toolstatusHandler = ServiceFactory.Resolve<IToolStatus, PlantUnitEnum>(toolListItem.PlantUnit);
                         if (toolstatusHandler != null)
                         {
@@ -92,13 +125,12 @@
                                                 .Where(a => a.IsStatusAttribute)
                                                 .Select(a => ApplyCustomMapping(a, MeasurementSystemEnum.MetricSystem, conversionSystem)));
                         }
-                    //})
-                    //.OnFailure(() =>
-                    //{
-                    //    toolListItem.Status = EntityStatusEnum.Alarm;
-                    //    toolListItem.StatusLocalizationKey = $"{MachineManagementExtensions.LABEL_TOOLSTATUS}_{ EntityStatusEnum.Alarm.ToString().ToUpper()}";
-                    //})
-                    ;
+                    })
+                    .OnFailure(() =>
+                    {
+                        toolListItem.Status = EntityStatusEnum.Alarm;
+                        toolListItem.StatusLocalizationKey = $"{MachineManagementExtensions.LABEL_TOOLSTATUS}_{ EntityStatusEnum.Alarm.ToString().ToUpper()}";
+                    });
 
             return toolListItem;
         }
@@ -112,6 +144,178 @@
             attributeDetail.SetAttributeValue(identifier.Value, conversionSystem);
             return attributeDetail;
         }
+
+        /// <summary>
+        /// Recupera le unità configurate in base al tipo di unità
+        /// </summary>
+        /// <param name="plantUnit"></param>
+        private IEnumerable<UnitEnum> GetConfiguredUnits(PlantUnitEnum plantUnit)
+        {
+            //Gestisce gli attributi di abilitazione unità in base alla configurazione delle stesse sulla postazione CNC
+            IEnumerable<UnitEnum> configuredUnits = null;
+            switch (plantUnit)
+            {
+                case PlantUnitEnum.DrillingMachine:
+                    {
+                        if (MachineConfigurationService.ConfigurationRoot.Setup.Drill.IsConfigured())
+                        {
+                            configuredUnits = MachineConfigurationService.ConfigurationRoot.Setup.Drill.Units
+                            .Where(unit => unit.SlotCount > 0).Select(unit => unit.Id);
+                        }
+                    }
+                    break;
+                case PlantUnitEnum.OxyCutTorch:
+                    {
+                        if (MachineConfigurationService.ConfigurationRoot.Setup.Oxy.IsConfigured())
+                        {
+                            configuredUnits = MachineConfigurationService.ConfigurationRoot.Setup.Oxy.Torches.Select(unit => unit.Id);
+                        }
+                    }
+                    break;
+                case PlantUnitEnum.PlasmaTorch:
+                    {
+                        if (MachineConfigurationService.ConfigurationRoot.Setup.Pla.IsConfigured())
+                        {
+                            configuredUnits = MachineConfigurationService.ConfigurationRoot.Setup.Pla.Torches
+                            .Where(unit => unit.IsPresent).Select(unit => unit.Id);
+                        }
+                    }
+                    break;
+            }
+
+            return configuredUnits;
+        }
+
+        /// <summary>
+        /// Filtra sulla lista di attributi definiti per un determinato plantUnit eliminando 
+        /// gli attributi di tipo ToolEnable associati ad unità non configurate
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <param name="toolType"></param>
+        /// <returns></returns>
+        private List<AttributeDetailItem> FilterOnUnitEnabledAttributes
+                                    (List<AttributeDetailItem> attributes
+                                        , PlantUnitEnum plantUnit)
+        {
+            //Recupero degli attributi che gestiscono l'abilitazione all'unità
+            var unitEnabledAttributes = new List<AttributeDetailItem>();
+            unitEnabledAttributes.AddRange(attributes.Where(x =>
+                                x.EnumId == AttributeDefinitionEnum.ToolEnableA
+                                || x.EnumId == AttributeDefinitionEnum.ToolEnableB
+                                || x.EnumId == AttributeDefinitionEnum.ToolEnableC
+                                || x.EnumId == AttributeDefinitionEnum.ToolEnableD));
+            //Gestisce gli attributi di abilitazione unità in base alla configurazione delle stesse sulla postazione CNC
+
+            IEnumerable<UnitEnum> configuredUnits = GetConfiguredUnits(plantUnit);
+            if (configuredUnits != null)
+            {
+                foreach (var unitEnabledAttribute in unitEnabledAttributes)
+                {
+                    //Recupera l'unità legata all'attributo di abilitazione
+                    var relatedUnit = unitEnabledAttribute.EnumId.GetEnumAttribute<BitEnableFor>();
+
+                    //Se l'unità non è presente nella lista delle unità configurate 
+                    //Allora viene rimosso l'attributo
+                    if (!configuredUnits.Contains(relatedUnit.Unit))
+                    {
+                        attributes.Remove(unitEnabledAttribute);
+                    }
+
+                }
+            }
+
+            return attributes;
+        }
+
+        /// <summary> 
+        /// Get Attribute DefinitionItem List for Tool based on filters
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        private IEnumerable<AttributeDetailItem> GetToolAttributeDefinitionItems(
+            AttributeDefinitionFilter filter
+            , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
+        {
+            var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+            AttributeDefinitionLinkRepository.Attach(uow);
+
+            if (!Enum.IsDefined(filter.ToolType))
+                return null;
+
+            //Recupero la tecnologia 
+            var plantUnitAttribute = filter.ToolType.GetEnumAttribute<PlantUnitAttribute>();
+
+            //Definisco la processingTechnology
+            var processingTechnology = plantUnitAttribute.PlantUnit == PlantUnitEnum.PlasmaTorch ?
+                                                    MachineConfigurationService.ConfigurationRoot.Setup.Pla
+                                                        .GetProcessingTechnology() :
+                                                    ProcessingTechnologyEnum.Default;
+            Expression<Func<AttributeDefinitionLink, bool>> predicate = adl => adl.EntityTypeId == filter.ToolType.ToEntityType(processingTechnology);
+
+            if (filter.AttributeType != AttributeTypeEnum.All)
+            {
+                predicate.AndAlso(adl => adl.AttributeDefinition.AttributeType == filter.AttributeType);
+            }
+
+            //Recupero le definizioni degli attributi
+            var attributeDefinitions = AttributeDefinitionLinkRepository
+                    .FindBy(predicate);
+
+            var protectionLevels = UserSession.GetProtectionLevels();
+
+            var list = Mapper.Map<IEnumerable<AttributeDetailItem>>(attributeDefinitions)
+                    .Select(a => ApplyCustomMapping(a, MeasurementSystemEnum.MetricSystem
+                                        , filter.ConversionSystem, null, filter.Values));
+
+            if (!filter.Values?.Any() ?? false)
+            {
+                list = list.Select(a =>
+                {
+                    switch (a.AttributeKind)
+                    {
+                        case AttributeKindEnum.Enum:
+                            if (a.Value.CurrentValueId == default)
+                            {
+                                a.Value.CurrentValueId = 0;
+                            }
+                            break;
+                        case AttributeKindEnum.Number:
+                        case AttributeKindEnum.Bool:
+                            if (a.Value.CurrentValue == null)
+                            {
+                                a.Value.CurrentValue = 0;
+                            }
+                            break;
+                        case AttributeKindEnum.String:
+                            if (a.Value.CurrentValue == null)
+                            {
+                                a.Value.CurrentValue = string.Empty;
+                            }
+                            break;
+                    }
+
+                    return a;
+                });
+            }
+
+            list = FilterOnUnitEnabledAttributes(list.ToList(), plantUnitAttribute.PlantUnit)
+                        .OrderBy(a => a.Order);
+
+            // Add ToolRulesHandler call => Gitea #425
+            var rulesHandler = ServiceFactory.Resolve<IEntityRulesHandler<ToolDetailItem>>();
+
+            var toolDetail = rulesHandler.Handle(new ToolDetailItem
+            {
+                ToolType = filter.ToolType,
+                PlantUnit = filter.ToolType.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None,
+                Attributes = list.ToList()
+            });
+
+
+            return toolDetail.Attributes;
+        }
+
+        
         #endregion < Private Methods >
 
         public Result Boot(IUserSession userSession)
@@ -124,8 +328,71 @@
             return Result.Ok();
         }
 
+        #region < Tool Management >
+        public ToolDetailItem GetToolTemplateForCreation(AttributeDefinitionFilter filters)
+        {
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            var toolToManage = new ToolDetailItem();
+
+            // Recupero la definizione degli attributi in base ai filtri in input
+            var attributes = GetToolAttributeDefinitionItems(filters, uow);
+
+            if (attributes == null || (attributes != null && !attributes.Any()))
+                return null;
+
+            // Assegno gli identificatori
+            toolToManage.Identifiers = Mapper.Map<IEnumerable<AttributeDetailItem>>(attributes.Where(a => a.AttributeType == AttributeTypeEnum.Identifier
+                    || a.GroupId == AttributeDefinitionGroupEnum.Identifiers)).ToList();
+
+            toolToManage.Identifiers.AddToolManagementIdAsIdentifier(GetFirstAvailablePosition(uow));
+
+            var identifiersEnumIds = toolToManage.Identifiers.Select(i => i.EnumId);
+            // Assegno gli altri attributi
+            toolToManage.Attributes = attributes.Where(a => !identifiersEnumIds.Contains(a.EnumId)).ToList();
+            toolToManage.ToolType = filters.ToolType;
+
+            return toolToManage;
+        }
+
         public Result<ToolDetailItem> CreateTool(ToolDetailItem toolDetail)
         {
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            EntityRepository.Attach(uow);
+
+            toolDetail.Id = toolDetail.GetAttributeValue<int>(AttributeDefinitionEnum.ToolManagementId);
+            toolDetail.WarehouseId = toolDetail.GetAttributeValue<int>(AttributeDefinitionEnum.WarehouseId);
+
+
+            EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "0"
+                            , status: GenericEventStatusEnum.Started
+                            , localizationKey: "LBL_CLONE_TOOL_VALIDATE"));
+            // Gitea #278 - Validazione tool
+            ToolValidator.Init(new Dictionary<DatabaseDisplayNameEnum, object>
+            { { DatabaseDisplayNameEnum.TS, toolDetail.ToolType } });
+            var validationResult = ToolValidator.Validate(toolDetail);
+
+            if (validationResult.Failure)
+            {
+                EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "10"
+                       , status: GenericEventStatusEnum.Failed
+                       , localizationKey: ErrorCodesEnum.ERR_GEN007.ToString()));
+                return Result.Fail<ToolDetailItem>(validationResult.Errors);
+            }
+
+            var entityType = toolDetail.ToolType.ToEntityType();
+            var entities = EntityRepository.FindBy(e => e.EntityTypeId == entityType && e.SecondaryKey == toolDetail.Id);
+            if (entities.Any())
+            {
+                EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "10"
+                , status: GenericEventStatusEnum.Failed
+                , localizationKey: ErrorCodesEnum.ERR_GEN002.ToString()));
+                        return Result.Fail<ToolDetailItem>(
+                            new ErrorDetail(DatabaseDisplayNameEnum.ToolManagementId.ToString(), ErrorCodesEnum.ERR_GEN003.ToString())
+                        );
+            }
+
+            //var itemToCreate = Mapper.Map<ToolImportItem<AttributeValueItem>>(tool);
+
             return Result.Ok(new ToolDetailItem());
         }
 
@@ -172,6 +439,7 @@
                 attributeDetail.Hidden = onlyQuickAccess && attributeDetail.AttributeScopeId != AttributeScopeEnum.Fundamental;
                 return attributeDetail;
             });
+
             // Gitea #521 => Effettuo la validazione del tool in base al suo tooltype
             // In caso di fallimento assegno lo stato di Allarme
             ToolValidator.Init(ServiceFactory, new Dictionary<DatabaseDisplayNameEnum, object>()
@@ -191,6 +459,9 @@
             //var processingTechnology = GetRealProcessTechnology(
             //                MachineConfigurationService.ConfigurationRoot.Setup.Pla.GetProcessingTechnology()
             //                , entity.EntityTypeId.ToToolType());
+            toolDetail.SetUnitsEnabledMask();
+            //var plantUnit = entity.EntityTypeId.ToToolType().GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
+            //toolDetail.SetSetupInfo(Execution, MachineConfigurationService.ConfigurationRoot, plantUnit);
 
             var rulesHandler = ServiceFactory.Resolve<IEntityRulesHandler<ToolDetailItem>>();
 
@@ -283,5 +554,8 @@
                                         , attributes[entity.Id]
                                         , UserSession.ConversionSystem));
         }
+
+        
+        #endregion < Tool Management >
     }
 }

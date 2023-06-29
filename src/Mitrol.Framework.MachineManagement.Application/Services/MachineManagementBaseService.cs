@@ -20,14 +20,29 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
 
     public class MachineManagementBaseService: BaseService
     {
+        protected IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
         protected IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
-
+        protected IAttributeDefinitionLinkRepository AttributeDefinitionLinkRepository 
+                        => ServiceFactory.GetService<IAttributeDefinitionLinkRepository>();
         protected IUnitOfWorkFactory<IMachineManagentDatabaseContext> UnitOfWorkFactory => ServiceFactory
                     .GetService<IUnitOfWorkFactory<IMachineManagentDatabaseContext>>();
 
         public MachineManagementBaseService(IServiceFactory serviceFactory) : base(serviceFactory)
         {
 
+        }
+
+        /// <summary>
+        /// Get attribute definitions for specified entityType
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public IEnumerable<AttributeDetailItem> GetAttributeDefinitions(EntityTypeEnum entityType)
+        {
+            using var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
+            AttributeDefinitionLinkRepository.Attach(unitOfWork);
+            return Mapper.Map<IEnumerable<AttributeDetailItem>>(AttributeDefinitionLinkRepository
+                        .FindBy(adl => adl.EntityTypeId == entityType));
         }
 
         protected virtual void SetAttributeDetailValue(AttributeDetailItem attribute

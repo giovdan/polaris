@@ -11,6 +11,7 @@
         /// Indicates that work is completed (Commit for Dispose)
         /// </summary>
         bool IsFinished { get; }
+        bool IsDisposed { get; }
         string Id { get; }
         IUserSession UserSession { get; set; }
         IDbTransaction CurrentTransaction { get; set; }

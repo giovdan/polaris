@@ -55,6 +55,7 @@
                 .ForMember(dest => dest.InnerId, opt => opt.MapFrom(s => s.SecondaryKey));
 
             CreateMap<Entity,ToolDetailItem>()
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(s => s.DisplayName))
                 .ForMember(dest => dest.InnerId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(s => s.SecondaryKey))
                 .ForMember(dest => dest.ToolType, opt => opt.MapFrom(s => s.EntityTypeId.ToToolType()))
@@ -118,6 +119,20 @@
                 .ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.AttributeDefinitionLink.Priority))
                 .ForMember(dest => dest.UMLocalizationKey, opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.AttributeDefinitionLink.AttributeDefinition.DataFormat.ToString().ToUpper()}"))
                 .ForMember(dest => dest.ProtectionLevel, opt => opt.MapFrom(s => s.AttributeDefinitionLink.ProtectionLevel));
+
+            CreateMap<AttributeDefinitionLink, AttributeDetailItem>()
+                .ForMember(dest => dest.AttributeDefinitionLinkId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(dest => dest.AttributeKind, opt => opt.MapFrom(s => s.AttributeDefinition.AttributeKind))
+                .ForMember(dest => dest.AttributeStatus, opt => opt.Ignore())
+                .ForMember(dest => dest.AttributeType, opt => opt.MapFrom(s => s.AttributeDefinition.AttributeType))
+                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(s => s.AttributeDefinition.DisplayName))
+                .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.AttributeDefinition.EnumId))
+                .ForMember(dest => dest.ItemDataFormat, opt => opt.MapFrom(s => s.AttributeDefinition.DataFormat))
+                .ForMember(dest => dest.LocalizationKey,
+                            opt => opt.MapFrom(s => $"{MachineManagementExtensions.LABEL_ATTRIBUTE}_{s.AttributeDefinition.DisplayName.ToString().ToUpper()}"))
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.Priority))
+                .ForMember(dest => dest.UMLocalizationKey, 
+                            opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.AttributeDefinition.DataFormat.ToString().ToUpper()}"));
 
             #region < Configuration >
 
