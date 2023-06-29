@@ -2,6 +2,105 @@ USE machine;
 
 DELIMITER //
 
+USE Machine;
+
+UPDATE mysql.proc
+SET NAME = 'GetCodeFromToolMasterId_old', Specific_name = 'GetCodeFromToolMasterId_old'
+WHERE
+	NAME = 'GetCodeFromToolMasterId';
+
+UPDATE mysql.proc
+SET NAME = 'GetDisplayValueFromToolMasterId_old', Specific_name = 'GetDisplayValueFromToolMasterId_old'
+WHERE
+	NAME = 'GetDisplayValueFromToolMasterId';	
+
+	
+DELIMITER //
+
+CREATE OR REPLACE FUNCTION GetCodeFromHashCode(iHashCode CHAR(64))
+RETURNS VARCHAR(50)
+BEGIN
+	DECLARE entityCode VARCHAR(50) DEFAULT('');
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE detailValue VARCHAR(50);
+    
+	DECLARE curDetails CURSOR FOR 
+		SELECT `Value` FROM detailidentifier WHERE HashCode = iHashCode;
+    
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	SELECT et.DisplayName INTO entityCode 
+		FROM entity e
+		INNER JOIN entitytype et ON et.Id = e.EntityTypeId
+		WHERE e.HashCode = iHashCode;
+        
+	OPEN curDetails;
+	loop_values: LOOP
+		FETCH curDetails INTO detailValue;
+		IF done THEN
+			LEAVE loop_values;
+		END IF;	
+		
+		IF detailValue <> '' THEN
+			IF REGEXP_INSTR(detailValue, '^[0-9]+\\.?[0-9]*$') THEN
+				SET entityCode = CONCAT(entityCode, '-', FORMAT(detailValue,2));
+			ELSE
+				SET entityCode = CONCAT(entityCode, '-', detailValue);			
+			END IF;	
+		END IF;		
+	END LOOP;
+	CLOSE curDetails;
+	
+	RETURN entityCode;
+END //
+
+USE Machine;
+
+DELIMITER //
+
+CREATE OR REPLACE FUNCTION `GetDisplayValueFromHashCode`(
+	`iHashCode` CHAR(64)
+)
+RETURNS varchar(50)
+BEGIN
+	DECLARE displayValue VARCHAR(50) DEFAULT('');
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE detailValue VARCHAR(50);
+    
+	DECLARE curDetails CURSOR FOR 
+		SELECT `Value` FROM detailidentifier WHERE HashCode = iHashCode;
+    
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	SELECT et.InternalCode INTO displayValue 
+		FROM entity e
+		INNER JOIN entitytype et ON et.Id = e.EntityTypeId
+		WHERE e.HashCode = iHashCode;
+        
+	OPEN curDetails;
+	loop_values: LOOP
+		FETCH curDetails INTO detailValue;
+		IF done THEN
+			LEAVE loop_values;
+		END IF;	
+		
+		IF detailValue <> '' AND UPPER(detailValue) <> 'BEVEL' THEN
+			IF REGEXP_INSTR(detailValue, '^[0-9]+\\.?[0-9]*$') THEN
+				IF CEIL(detailValue) = detailValue THEN
+					SET displayValue = CONCAT(displayValue, ' - ', CEIL(detailValue));			
+				ELSE
+					SET displayValue = CONCAT(displayValue, ' - ', FORMAT(detailValue,2));
+				END IF;	
+			ELSE
+				SET displayValue = CONCAT(displayValue, ' - ', detailValue);			
+			END IF;	
+		END IF;	
+	END LOOP;
+	CLOSE curDetails;
+	
+	RETURN UPPER(displayValue);
+END //
+
 CREATE OR REPLACE FUNCTION `GetEntityType`(
 	`pParentTypeId` INT,
 	`pSubParentTypeId` INT,
@@ -326,13 +425,13 @@ BEGIN
 	RETURN pDisplayValue;											
 END //
 
-CREATE OR REPLACE FUNCTION GetSubRangeDisplayValueFromMasterId(iMasterId INT, iSubRangeTypeId INT)
+CREATE OR REPLACE FUNCTION GetSubRangeDisplayValueFromMasterId(iMasterId INT, iSubRangeTypeId INT, pToolRangeId INT)
 RETURNS VARCHAR(2000)
 BEGIN
 	DECLARE displayValue VARCHAR(2000) DEFAULT('');
 	DECLARE done INT DEFAULT FALSE;
 	DECLARE detailValue VARCHAR(50);
-   DECLARE pDisplayName VARCHAR(32);
+    DECLARE pDisplayName VARCHAR(32);
 	
 	DECLARE curDetails CURSOR FOR 
 		SELECT ad.DisplayName, di.`Value` FROM detailidentifier di 
@@ -342,7 +441,7 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 	OPEN curDetails;
-	SET displayValue = UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId));		
+	SET displayValue = CONCAT(pToolRangeId,'_',UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId)));		
 	
 	loop_values: LOOP
 		FETCH curDetails INTO pDisplayName, detailValue;
@@ -370,8 +469,6 @@ BEGIN
 	
 	RETURN UPPER(displayValue);
 END //
-
-USE machine;
 
 DELIMITER //
 
@@ -619,13 +716,13 @@ BEGIN
 	RETURN UPPER(displayValue);
 END //
 
-CREATE OR REPLACE FUNCTION GetDisplayValueFromToolMasterId(toolMasterId BIGINT, toolTypeId BIGINT)
+CREATE OR REPLACE FUNCTION GetDisplayValueFromToolMasterId(toolMasterId BIGINT, toolTypeId BIGINT, parentId BIGINT)
 RETURNS VARCHAR(100)
 BEGIN
 	DECLARE displayValue VARCHAR(100) DEFAULT('');
 	DECLARE done INT DEFAULT FALSE;
 	DECLARE detailValue VARCHAR(50);
-    
+    DECLARE displayValuePrefix VARCHAR(10) DEFAULT '';
 	DECLARE curDetails CURSOR FOR 
 		SELECT `Value` FROM detailidentifier_old WHERE MasterId = toolMasterId;
     
@@ -633,7 +730,11 @@ BEGIN
 
 	SELECT DISTINCT InternalCode INTO displayValue FROM tooltype 
 		WHERE Id = toolTypeId;
-        
+    
+	IF COALESCE(parentId,0) <> 0 THEN
+		SET displayValuePrefix = CONCAT(parentId, '_');
+	END IF;     
+	
 	OPEN curDetails;
 	loop_values: LOOP
 		FETCH curDetails INTO detailValue;
@@ -655,7 +756,7 @@ BEGIN
 	END LOOP;
 	CLOSE curDetails;
 	
-	RETURN UPPER(displayValue);
+	RETURN UPPER(CONCAT(displayValuePrefix, displayValue));
 END //
 
 DELIMITER ;

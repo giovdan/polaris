@@ -73,7 +73,7 @@ loop_entities: LOOP
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pRelatedHashCode = CreateHashCodeByIdentifiers(pRelatedEntityTypeId , pToolMasterId, 0);
 		SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pRangeMasterId, pToolMasterId);
-		SET pDisplayName = GetDisplayValueFromToolMasterId(pRangeMasterId, pToolTypeId);
+		SET pDisplayName = GetDisplayValueFromToolMasterId(pRangeMasterId, pToolTypeId, pToolMasterId);
 
 		SET newId = 0;
 		# Inserimento record tabella

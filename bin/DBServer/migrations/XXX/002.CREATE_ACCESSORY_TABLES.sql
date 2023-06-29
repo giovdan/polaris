@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS `attributedefinition` (
 	`TypeName` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
 	`OverrideType` ENUM ('None','DeltaValue','DeltaPercentage') NOT NULL DEFAULT 'None',
 	PRIMARY KEY (`Id`) USING BTREE,
-	INDEX `IDX_AttributeDefinition_DisplayName` (`DisplayName`) USING BTREE,
-	INDEX `IDX_AttributeDefinition_EnumId_DisplayName` (`EnumId`, `DisplayName`) USING BTREE
+	INDEX `IDXattributedefinition_DisplayName` (`DisplayName`) USING BTREE,
+	INDEX `IDXattributedefinition_EnumId_DisplayName` (`EnumId`, `DisplayName`) USING BTREE
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
 CREATE TABLE IF NOT EXISTS `attributedefinitionlink` (
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `attributedefinitionlink` (
 	`HelpImage` VARCHAR(200) NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
 	`IsCodeGenerator` TINYINT(1) NOT NULL DEFAULT '0',
 	`IsSubFilter` TINYINT(1) NOT NULL DEFAULT '0',
-	`IsStatusAttribute` TINTINY(1) NOT NULL DEFAULT 0,
+	`IsStatusAttribute` TINYINT(1) NOT NULL DEFAULT 0,
 	`AttributeScopeId` ENUM('Optional','Fundamental','Preview') NOT NULL DEFAULT 'Optional' COLLATE 'utf8mb4_bin',
 	`DefaultBehavior` ENUM('DataDefault','LastInserted') NULL DEFAULT 'DataDefault' COLLATE 'utf8mb4_bin',
 	`LastInsertedValue` DECIMAL(12,6) NULL DEFAULT NULL,
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS `attributedefinitionlink` (
 	`Priority` INT(11) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`Id`) USING BTREE,
 	INDEX `AttributeDefinitionId` (`AttributeDefinitionId`) USING BTREE,
-	INDEX `IDX_AttributeDefinitionLink_EntityType` (`EntityTypeId`, `AttributeDefinitionId`) USING BTREE,
-	CONSTRAINT `attributedefinitionlink_ibfk_1` FOREIGN KEY (`AttributeDefinitionId`) REFERENCES `machine`.`_attributedefinition` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT
+	INDEX `IDXattributedefinitionLink_EntityType` (`EntityTypeId`, `AttributeDefinitionId`) USING BTREE,
+	CONSTRAINT `attributedefinitionlink_ibfk_1` FOREIGN KEY (`AttributeDefinitionId`) REFERENCES `machine`.`attributedefinition` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
 CREATE TABLE IF NOT EXISTS `attributedefinitiongrouppriority` (
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `attributedefinitiongrouppriority` (
 	`TimeZoneId` MEDIUMTEXT NULL DEFAULT 'W. Europe Standard Time' COLLATE 'utf8mb4_unicode_ci',
 	PRIMARY KEY (`Id`) USING BTREE,
 	INDEX `FK_ADGP_EntityTypeId` (`EntityTypeId`) USING BTREE,
-	CONSTRAINT `_attributedefinitiongrouppriority_ibkf_1` FOREIGN KEY (`EntityTypeId`) REFERENCES `machine`.`entitytype` (`Id`) ON UPDATE RESTRICT ON DELETE CASCADE 	
+	CONSTRAINT `attributedefinitiongrouppriority_ibkf_1` FOREIGN KEY (`EntityTypeId`) REFERENCES `machine`.`entitytype` (`Id`) ON UPDATE RESTRICT ON DELETE CASCADE 	
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
 
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS `attributeoverridevalue` (
 	`UpdatedOn` DATETIME NULL DEFAULT NULL,
 	`TimeZoneId` MEDIUMTEXT NULL DEFAULT 'W. Europe Standard Time' COLLATE 'utf8mb4_unicode_ci',
 	PRIMARY KEY (`Id`) USING BTREE,
-	INDEX `IDX_AOV_AttributeValueId_1` (`AttributeValueId`) USING BTREE,
-	CONSTRAINT `FK_AOV_AttributeValue_1` FOREIGN KEY (`AttributeValueId`) REFERENCES `_attributevalue` (`Id`) 
+	INDEX `IDX_AOVattributevalueId_1` (`AttributeValueId`) USING BTREE,
+	CONSTRAINT `FK_AOVattributevalue_1` FOREIGN KEY (`AttributeValueId`) REFERENCES `attributevalue` (`Id`) 
 			ON UPDATE NO ACTION ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 

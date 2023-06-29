@@ -1,3 +1,4 @@
+
 USE machine;
 
 DELIMITER //
@@ -14,8 +15,8 @@ BEGIN
 	
 	DECLARE curAttributeValues CURSOR FOR 	
 		SELECT av.Value, av.TextValue, ad.AttributeKindId
-		FROM attributevalue av 
-			INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
+		FROM attributevalue_old av 
+			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
 		WHERE av.ParentId = iParentId AND av.ParentTypeId = iParentTypeId;
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -58,22 +59,25 @@ BEGIN
 	DECLARE pStringToHash TEXT DEFAULT ('');
 	DECLARE pValue VARCHAR(4000);
 	DECLARE done BOOLEAN DEFAULT(FALSE);
-    
+	DECLARE pContext TEXT DEFAULT CONCAT('Errore dichiarazione cursore ', iMasterId,',', iEntityTypeId,',', IParentMasterId);
+	
 	DECLARE curIdentifiers CURSOR FOR 	
-	SELECT di.Value FROM detailidentifier di WHERE di.MasterId = iMasterId;
+	SELECT di.Value FROM detailidentifier_old di WHERE di.MasterId = iMasterId;
 	
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'CreateHashCodeByIdentifiers ERROR';
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = pContext;
 	END;
 	
 	OPEN curIdentifiers;
 	
+	SET pContext =  CONCAT('Errore inizializzazione stringa da cui ricavare hash, Parameters => ', iEntityTypeId);
 	SET pStringToHash = iEntityTypeId;
 
 	IF iParentMasterId > 0 THEN	
+		SET pContext =  CONCAT('Errore aggiunta Parent MasterId, Parameters => ', iParentMasterId);	
 		SET pStringToHash = CONCAT(pStringToHash, iParentMasterId);
 	END IF;
 	
@@ -84,11 +88,13 @@ loop_identifiers: LOOP
 			LEAVE loop_identifiers;		
 		END IF;
 		
+		SET pContext = CONCAT('Errore concatenazione valore identificatore, Parameters => ', pValue);	
 		SET pStringToHash = CONCAT(pStringToHash,pValue);
 	END LOOP;
 	
 	CLOSE curIdentifiers;
 	
+	SET pContext = 'Errore applicazione SHA2';	
 	RETURN SHA2(pStringToHash,256);
 
 END //

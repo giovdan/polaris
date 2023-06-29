@@ -3,15 +3,12 @@ USE machine;
 
 DELIMITER //
 
-IF NOT EXISTS(SELECT Id FROM migratedentity WHERE ParentTypeId = 2) THEN
+IF NOT EXISTS(SELECT Id FROM migratedattribute WHERE ParentTypeId = 2 AND MigrationStatus = 'DefinitionMigrated') THEN
 	CALL MigrateAttributeDefinitions(2) //
 END IF //
 
-CREATE OR REPLACE PROCEDURE `ConvertTools`()
+CREATE OR REPLACE PROCEDURE ConvertTool(IN oldId INT)
 BEGIN
-	DECLARE done BOOLEAN DEFAULT(false);
-	DECLARE recordsNumber INT DEFAULT(0);
-	DECLARE oldId INT;
 	DECLARE pHashCode CHAR(64);
 	DECLARE pToolTypeId INT;
 	DECLARE pToolManagementId INT;
@@ -27,49 +24,44 @@ BEGIN
 	DECLARE pUpdatedBy VARCHAR(32);
 	DECLARE pCreatedOn DATETIME;
 	DECLARE pUpdatedOn DATETIME;
+	DECLARE pContext TEXT DEFAULT ('Errore => Prima di ogni operazione');
 	
-	DECLARE curEntities CURSOR FOR 	
-	SELECT Id, ToolTypeId, ToolManagementId, ToolMasterId, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn 
-				FROM `tool` ORDER BY ToolManagementId;
-
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	 BEGIN
- 	     ROLLBACK;
-	     SHOW ERRORS;  
-	 END; 
-	 
-	OPEN curEntities;
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = pContext;
+		END;
 	
-	SELECT FOUND_ROWS() INTO recordsNumber;
-	
-	SET pParentTypeId = 2;
-
-	START TRANSACTION;		
-loop_entities: LOOP
-		FETCH curEntities INTO oldId, pToolTypeId, pToolManagementId, pToolMasterId
-								, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn;	
-
-		IF done THEN
-			LEAVE loop_entities;		
-		END IF;
-
+		SET pParentTypeId = 2;
+		SET pContext = CONCAT('Errore => Recupero informazioni, Parameters: => ', oldId);
+		
+		SELECT ToolTypeId, ToolManagementId, ToolMasterId, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn
+		INTO pToolTypeId, pToolManagementId, pToolMasterId, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn
+		FROM 
+			tool 
+		WHERE Id = oldId;
+		
+		SET pContext = CONCAT('Errore => Controllo esistenza attributi, Parameters: => ', oldId);
 		# controllo se esistono gli attributi
 		SELECT COUNT(*) INTO attributesCount FROM attributevalue_old WHERE ParentId = oldId AND ParentTypeId = 2;
 		
 		IF attributesCount > 0 THEN
+			SET pContext = CONCAT('Errore => Recupero Processing Technology, Parameters: => ', oldId);
          SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
+  			SET pContext = CONCAT('Errore => Recupero EntitType, Parameters: => ', oldId);
 			SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId, COALESCE(pProcessingTechnology,1));
 			# Recupero gli identificatori tramite il masterId e creo HashCode
+			SET pContext = CONCAT('Errore => Creazione HashCode, Parameters: => ', pEntityTypeId, ',', pToolMasterId);
 			SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pToolMasterId,0);
-			SET pDisplayName = GetDisplayValueFromToolMasterId(pToolMasterId, pToolTypeId);
-			
+			SET pContext = CONCAT('Errore => Recupero DisplayName, Parameters: => ', pToolTypeId, ',', pToolMasterId);			
+			SET pDisplayName = GetDisplayValueFromToolMasterId(pToolMasterId, pToolTypeId, 0);
+
+			SET pContext = CONCAT('Errore => Controllo esistenza entity, Parameters: => ', pEntityTypeId, ',', pToolMasterId);						
 			IF NOT EXISTS (SELECT Id FROM entity WHERE 
 					HashCode = pHashCode
 					AND EntityTypeId = pEntityTypeId 
 					AND SecondaryKey = pToolManagementId) THEN
-					
+
+				SET pContext = CONCAT('Errore => Inserimento in tabella entity, Parameters: => ', pEntityTypeId, ',', oldId, ',', pDisplayName, ',', pHashCode);											
 				INSERT INTO entity
 				(`DisplayName`,`HashCode`, `EntityTypeId`, `SecondaryKey`, `RowVersion`
 					, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
@@ -79,6 +71,7 @@ loop_entities: LOOP
 				SELECT LAST_INSERT_ID() INTO newId;
 
 				# Inserisco in _detailidentfier utilizzando hashCode creato
+				SET pContext = CONCAT('Errore => Inserimento in tabella detailidentifier, Parameters: => ', pHashCode);															
 				INSERT INTO detailidentifier
 					(HashCode, AttributeDefinitionLinkId, `Value`, Priority
 					, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
@@ -90,7 +83,8 @@ loop_entities: LOOP
 					INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
 								AND adl.EntityTypeId = pEntityTypeId
 					WHERE di.MasterId = pToolMasterId;
-	
+
+				SET pContext = CONCAT('Errore => Inserimento in tabella attributevalue, Parameters: => ', newId);																
 				INSERT INTO attributevalue
 				(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue
 					, Priority, RowVersion
@@ -106,6 +100,7 @@ loop_entities: LOOP
 					WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId
 				 AND adl.Id IS NOT NULL;				
 				
+				SET pContext = CONCAT('Errore => Inserimento in tabella migratedentity, Parameters: => ', newId);		
 				INSERT INTO migratedentity
 				(EntityTypeId, ParentTypeId, ParentId, EntityId)
 				VALUES
@@ -113,19 +108,54 @@ loop_entities: LOOP
 		
 			END IF;
 		ELSE
+			SET pContext = CONCAT('Errore => Cancellazione entity, Parameters: => ', oldId);								
 			DELETE FROM tool WHERE Id = oldId;
 		END IF;	
+END //
+
+CREATE OR REPLACE PROCEDURE `ConvertTools`()
+BEGIN
+	DECLARE done BOOLEAN DEFAULT(false);
+	DECLARE recordsNumber INT DEFAULT(0);
+	DECLARE oldId INT;
+	
+	DECLARE curEntities CURSOR FOR 	
+	SELECT Id FROM `tool` ORDER BY ToolManagementId;
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	 BEGIN
+ 	     ROLLBACK;
+	     SHOW ERRORS;  
+	 END; 
+	 
+	OPEN curEntities;
+	
+	SELECT FOUND_ROWS() INTO recordsNumber;
+	
+	START TRANSACTION;		
+loop_entities: LOOP
+		FETCH curEntities INTO oldId;	
+
+		IF done THEN
+			LEAVE loop_entities;		
+		END IF;
+
+		CALL ConvertTool(oldId);
 	END LOOP;
 
 	CLOSE curEntities;
 	
-	UPDATE migratedattribute SET MigrationStatus = 'Migrated' WHERE ParentTypeId = pParentTypeId;
+	UPDATE migratedattribute SET MigrationStatus = 'Migrated' WHERE ParentTypeId = 2;
 	COMMIT;	
 END //
 
 CALL ConvertTools() //
 
 DROP PROCEDURE IF EXISTS ConvertTools //
+
+DROP PROCEDURE IF EXISTS ConvertTool //
 
 DELIMITER ; 
 
