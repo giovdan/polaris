@@ -947,40 +947,9 @@
         /// </summary>
         /// <param name="toolType"></param>
         /// <returns></returns>
-        public static EntityTypeEnum ToEntityType(this ToolTypeEnum toolType
-                            , ProcessingTechnologyEnum processingTechnology = ProcessingTechnologyEnum.Default)
+        public static EntityTypeEnum ToEntityType(this ToolTypeEnum toolType)
         {
-            var entityType = (EntityTypeEnum)toolType;
-            switch (processingTechnology)
-            {
-                case ProcessingTechnologyEnum.PlasmaXPR:
-                    {
-                        if (toolType == ToolTypeEnum.TS51)
-                        {
-                            entityType = EntityTypeEnum.ToolTS51XPR;
-                        }
-                        else if (toolType == ToolTypeEnum.TS53)
-                        {
-                            entityType = EntityTypeEnum.ToolTS53XPR;
-                        }
-                    }
-                    break;
-                case ProcessingTechnologyEnum.PlasmaHPR:
-                    {
-                        if (toolType == ToolTypeEnum.TS51)
-                        {
-                            entityType = EntityTypeEnum.ToolTS51HPR;
-                        }
-                        else if (toolType == ToolTypeEnum.TS53)
-                        {
-                            entityType = EntityTypeEnum.ToolTS53HPR;
-                        }
-                    }
-                    break;
-            }
-
-
-            return entityType;
+            return (EntityTypeEnum)toolType;
         }
     }
 }

@@ -4098,9 +4098,10 @@
             attributeType: AttributeTypeEnum.Identifier
             , attributeKind: AttributeKindEnum.Enum
             , attributeDataFormat: AttributeDataFormatEnum.AsIs
-            , clientControlType: ClientControlTypeEnum.Combo
-           , level: ProtectionLevelEnum.Normal
-           , valueType: ValueTypeEnum.DynamicEnum)]
+            , clientControlType: ClientControlTypeEnum.ListBox
+            , level: ProtectionLevelEnum.Normal
+            , valueType: ValueTypeEnum.DynamicEnum
+            , url: "api/v1/OData/warehouses/listbox")]
         WarehouseId = 923,
 
         [Description("Distanza trasversale tra il primo ed il quinto PATH parallelo")]

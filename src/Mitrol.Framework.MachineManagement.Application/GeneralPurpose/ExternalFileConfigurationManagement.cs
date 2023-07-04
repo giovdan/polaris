@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Application.GeneralPurpose
 {
     using Mitrol.Framework.Domain;
+    using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models;

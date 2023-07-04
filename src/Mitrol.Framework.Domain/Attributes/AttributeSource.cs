@@ -1,4 +1,4 @@
-﻿namespace Mitrol.Framework.MachineManagement.Application.Attributes
+﻿namespace Mitrol.Framework.Domain.Attributes
 {
     using Mitrol.Framework.Domain.Enums;
     public class AttributeSource

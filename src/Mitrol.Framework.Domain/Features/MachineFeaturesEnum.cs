@@ -41,13 +41,13 @@
         /// <summary>
         /// Visualizzazione sezione pezzi
         /// </summary>
-        [ContentType(typeof(bool), defaultValue: true)]
+        [ContentType(typeof(bool), defaultValue:true)]
         ShowPiecesList = 6,
 
         /// <summary>
         /// Possibilità di aggiungere/modificare programmi
         /// </summary>
-        [ContentType(typeof(bool), defaultValue: true)]
+        [ContentType(typeof(bool), defaultValue:true)]
         CanAddEditPrograms = 7
 
     }

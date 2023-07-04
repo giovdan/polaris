@@ -2,6 +2,7 @@
 {
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Models.Views;
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
@@ -11,7 +12,7 @@
         Entity RawUpdate(Entity entity);
         Entity Get(string displayName);
 
-        #region < Tools/ToolRanges specs >
+        #region < Tools Management >
         IEnumerable<PlasmaToolMaster> FindPlasmaToolMasters(Expression<Func<PlasmaToolMaster, bool>> predicate);
         #endregion
     }

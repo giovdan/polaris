@@ -57,6 +57,14 @@ namespace Mitrol.Framework.MachineManagement.Application.Attributes
             ControlType = clientControlType;
             ProtectionLevel = level;
             AttributeScope = attributeScope;
+            //Se il valueType è al valore di default ma l'attributo è un enumerativo allora posso assegnare il valore corretto
+            if (ValueType == ValueTypeEnum.Flat && AttributeKind == AttributeKindEnum.Enum)
+            {
+                if (!string.IsNullOrEmpty(Url))
+                    ValueType = ValueTypeEnum.DynamicEnum;
+                else if (typeName != null)
+                    ValueType = ValueTypeEnum.StaticEnum;
+            }
         }
 
         // Special constructors

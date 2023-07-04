@@ -32,7 +32,6 @@ BEGIN
 	DECLARE pRowNumber INT;
 	DECLARE newId INT;
 	DECLARE pParentTypeId INT;
-	DECLARE pProcessingTechnology INT;
 	DECLARE pDisplayName VARCHAR(200);
 	DECLARE pCreatedBy VARCHAR(32);
 	DECLARE pCreatedOn DATETIME;
@@ -70,13 +69,11 @@ START TRANSACTION;
 		SET pContext = CONCAT('Errore => Recupero informazioni, Parameters =>',iToolRangeId);						 
 		SET newId = 0;
 		SET pParentTypeId = GetParentTypeFromSubRangeType(pSubRangeTypeId);
-		SET pContext = CONCAT('Errore => Recupero informazioni 2, Parameters =>',iToolRangeId);						 
+		SET pContext = CONCAT('Errore => Recupero informazioni 2, Parameters =>',iToolRangeId, ',',pSubRangeMasterId, ',', pSubRangeTypeId, ',', pParentId);						 
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pDisplayName = GetSubRangeDisplayValueFromMasterId(pSubRangeMasterId, pSubRangeTypeId, pParentId);
-		SET pContext = CONCAT('Errore => Recupero informazioni 3, Parameters =>',iToolRangeId);						 		
-		SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
 		SET pContext = CONCAT('Errore => Recupero informazioni 4, Parameters =>',iToolRangeId);						 		
-		SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId, COALESCE(pProcessingTechnology,1));
+		SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId);
 		SET pContext = CONCAT('Errore => Recupero informazioni 5, Parameters =>',iToolRangeId);						 		
 		SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pSubRangeMasterId, pRangeMasterId);
 

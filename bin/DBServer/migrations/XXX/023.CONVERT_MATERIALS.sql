@@ -46,7 +46,7 @@ loop_entities: LOOP
 			LEAVE loop_entities;		
 		END IF;
 
-		SET pEntityTypeId = GetEntityType(pParentTypeId, 0, 1);
+		SET pEntityTypeId = GetEntityType(pParentTypeId, 0);
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pHashCode = SHA2(CONCAT(pEntityTypeId,pDisplayName),256);
 

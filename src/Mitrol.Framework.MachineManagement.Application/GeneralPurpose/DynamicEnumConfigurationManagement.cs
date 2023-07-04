@@ -19,7 +19,6 @@ namespace Mitrol.Framework.MachineManagement.Application.GeneralPurpose
                     , IAttributeDefinitionEnumManagement
     {
         private AttributeInfoAttribute _attributesInfo;
-        private IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
         protected Dictionary<AttributeDefinitionEnum, object> AdditionalInfo { get; set; }
         public AttributeDefinitionEnum AttributeDefinition { get; set; }
        

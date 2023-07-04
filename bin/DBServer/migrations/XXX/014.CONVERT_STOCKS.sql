@@ -30,7 +30,7 @@ BEGIN
 				
 	SET pContext = CONCAT('Errore recupero EntityTypeId e HashCode, StockId: ',iStockId);				
 	SET pParentTypeId = 2048;
-	SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId, 1);
+	SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId);
 	SET pDisplayName = GetDisplayNameByAttributeValues(iStockId, pParentTypeId);
 	# Recupero gli identificatori tramite il masterId e creo HashCode
 	SET pHashCode = CreateHashCodeByAttributeValues(pEntityTypeId, iStockId, pParentTypeId);

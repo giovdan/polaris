@@ -8,6 +8,7 @@
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Models.Views;
     using Mitrol.Framework.MachineManagement.Domain.Views;
     using System.Linq;
 
@@ -30,6 +31,7 @@
         public DbSet<AttributeOverrideValue> AttributeOverrideValues { get; set; }
         public DbSet<MachineParameter> MachineParameters { get; set; }
         public DbSet<MachineParameterLink> MachineParameterLinks { get; set; }
+        public DbSet<PlasmaToolMaster> PlasmaToolMasters { get; set; }
 
         public void SetEntity<TEntity>(TEntity entity, EntityState entityState)
             where TEntity: BaseEntity
@@ -89,6 +91,7 @@
             #region Views
             modelBuilder.Entity<DetailIdentifierMaster>().ToView("DetailIdentifiersView").HasNoKey();
             modelBuilder.Entity<ToolStatusAttribute>().ToView("ToolStatusAttributesView").HasNoKey();
+            modelBuilder.Entity<PlasmaToolMaster>().ToView("PlasmaToolMasters").HasNoKey();
             #endregion
         }
 

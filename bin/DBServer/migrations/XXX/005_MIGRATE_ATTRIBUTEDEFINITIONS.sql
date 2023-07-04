@@ -12,11 +12,11 @@ BEGIN
 	INSERT INTO attributedefinitionlink
 	 (EntityTypeId, AttributeDefinitionId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 		  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
-		  , HelpImage, ProtectionLevel, GroupId, Priority)	
+		  , HelpImage, ProtectionLevel, ProcessingTechnology, GroupId, Priority)	
 	SELECT ptad.EntityTypeId, ad.Id, ptad.IsCodeGenerator, ptad.IsSubFilter, ptad.AttributeScopeId
 		  , ptad.LastInsertedValue, ptad.LastInsertedTextValue, ptad.DefaultBehavior
 		  , ptad.AttributeType, ptad.ControlType, ptad.HelpImage
-		  , ptad.ProtectionLevel, ptad.GroupId, ptad.Priority 
+		  , ptad.ProtectionLevel, ptad.ProcessingTechnology, ptad.GroupId, ptad.Priority 
 	FROM migratedattribute ptad
 	INNER JOIN attributedefinition ad ON ad.EnumId = ptad.EnumId
 	WHERE ptad.EntityTypeId > 0 AND NOT EXISTS 
@@ -46,7 +46,7 @@ BEGIN
 	 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 		  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 		  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
-	SELECT GetEntityType(pParentTypeId, pta.ProfileTypeId, 1) AS EntitytypeId
+	SELECT GetEntityType(pParentTypeId, pta.ProfileTypeId) AS EntitytypeId
 		, ad.ParentTypeId
 		, pta.ProfileTypeId as SubParentTypeId
 		, ad.EnumId
@@ -78,7 +78,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId, 1) AS EntitytypeId
+		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId) AS EntitytypeId
 				, pParentTypeId
 				, pta.ProfileTypeId
 				, pContractEnumId
@@ -103,7 +103,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId, 1) AS EntitytypeId
+		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId) AS EntitytypeId
 				, pParentTypeId
 				, pta.ProfileTypeId
 				, pProjectEnumId
@@ -128,7 +128,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId, 1) AS EntitytypeId
+		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId) AS EntitytypeId
 				, pParentTypeId
 				, pta.ProfileTypeId
 				, pDrawingEnumId
@@ -154,7 +154,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId, 1) AS EntitytypeId
+		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId) AS EntitytypeId
 				, pParentTypeId
 				, pta.ProfileTypeId
 				, pAssemblyEnumId
@@ -180,7 +180,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId, 1) AS EntitytypeId
+		SELECT DISTINCT GetEntityType(pParentTypeId, pta.ProfileTypeId) AS EntitytypeId
 				, pParentTypeId
 				, pta.ProfileTypeId
 				, pPartEnumId
@@ -209,7 +209,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT GetEntityType(pParentTypeId, p.Id, 1) AS EntityTypeId, pParentTypeId, p.Id
+		SELECT GetEntityType(pParentTypeId, p.Id) AS EntityTypeId, pParentTypeId, p.Id
 			, pOriginsCalculatedEnumId, false AS IsCodeGenerator, false AS IsSubFilter
 			, 'Optional' AS AttributeScopeId, 0 AS LastInsertedValue
 			, '' AS LastInsertedTextValue, 'DataDefault' AS DefaultBehavior
@@ -226,7 +226,7 @@ BEGIN
 		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)	
-		SELECT GetEntityType(pParentTypeId, p.Id, 1) AS EntityTypeId, pParentTypeId, p.Id
+		SELECT GetEntityType(pParentTypeId, p.Id) AS EntityTypeId, pParentTypeId, p.Id
 			, pExecutionDateEnumId, false AS IsCodeGenerator, false AS IsSubFilter
 			, 'Optional' AS AttributeScopeId, 0 AS LastInsertedValue
 			, '' AS LastInsertedTextValue, 'DataDefault' AS DefaultBehavior
@@ -254,7 +254,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 		  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 		  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
-		SELECT GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) AS EntitytypeId
+		SELECT GetEntityType(pParentTypeId, tta.ToolTypeId) AS EntitytypeId
 			, ad.ParentTypeId
 			, tta.ToolTypeId AS SubParentTypeId
 			, ad.EnumId AS EnumId
@@ -276,106 +276,35 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		FROM tooltypeattribute tta 
 		INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
 		WHERE tta.ParentTypeId = pParentTypeId	
-		AND GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) > 0
+		AND GetEntityType(pParentTypeId, tta.ToolTypeId) > 0
 		AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId AND SubParentTypeId = tta.ToolTypeId
-					AND EnumId = ad.EnumId)
-		AND tta.ToolTypeId NOT IN (51,53);
-	
-		SET pContext = 'AddAttributeDefinitionLinkFromToolType Error => Inserimento migratedAttribute WHERE tta.ToolTypeId IN (51,53) AND tta.ProcessingTechnology = 1';	
-		# Gestione particolare per i tool di tipo PLASMA o MARCATURA PLASMA (TS51 e TS53)
-		# Inserisco gli attributi con Processing Technology = 'Default'
-		INSERT INTO migratedAttribute
-		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
-			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
-			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
-			SELECT GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) AS EntitytypeId
-				, ad.ParentTypeId
-				, tta.ToolTypeId AS SubParentTypeId
-				, ad.EnumId AS EnumId
-				, tta.IsCodeGenerator, 0 AS IsSubFilter
-				, GetAttributeScope(tta.AttributeScopeId) AS AttributeScopeId
-				, tta.LastInsertedValue, tta.LastInsertedTextValue
-				, CASE 
-					WHEN tta.UseLastInsertedAsDefault = 1 THEN 'LastInserted'
-					ELSE 'DataDefault' 
-				END AS DefaultBehavior	
-				, GetAttributeType(ad.AttributeTypeId)
-				, GetControlType(ad.ControlTypeId) AS ControlType, ad.HelpImage AS HelpImage, ad.ProtectionLevel AS ProtecetionLevel
-				, ad.GroupId AS AttributeDefinitionGroupId, tta.Priority
-				, 'Default' AS ProcessingTechnology
-			FROM tooltypeattribute tta 
-			INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
-			WHERE tta.ParentTypeId = pParentTypeId	AND tta.ToolTypeId IN (51,53) 
-			AND tta.ProcessingTechnology = 1
-			AND GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) > 0			
-			AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId AND SubParentTypeId = tta.ToolTypeId
-						AND EnumId = ad.EnumId);		
-		
-		# Inserisco gli attributi con Processing Technology = 'HPR'
-		SET pContext = 'AddAttributeDefinitionLinkFromToolType Error => Inserimento migratedAttribute WHERE tta.ToolTypeId IN (51,53) AND tta.ProcessingTechnology IN (1,2)';	
-		INSERT INTO migratedAttribute
-		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
-			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
-			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
-			SELECT GetEntityType(pParentTypeId, tta.ToolTypeId, 2) AS EntitytypeId
-				, ad.ParentTypeId
-				, tta.ToolTypeId AS SubParentTypeId
-				, ad.EnumId AS EnumId
-				, tta.IsCodeGenerator, 0 AS IsSubFilter
-				, GetAttributeScope(tta.AttributeScopeId) AS AttributeScopeId
-				, tta.LastInsertedValue, tta.LastInsertedTextValue
-				, CASE 
-					WHEN tta.UseLastInsertedAsDefault = 1 THEN 'LastInserted'
-					ELSE 'DataDefault' 
-				END AS DefaultBehavior	
-				, GetAttributeType(ad.AttributeTypeId)
-				, GetControlType(ad.ControlTypeId) AS ControlType, ad.HelpImage AS HelpImage, ad.ProtectionLevel AS ProtecetionLevel
-				, ad.GroupId AS AttributeDefinitionGroupId, tta.Priority
-				, CASE
-					WHEN tta.ProcessingTechnology = 1 THEN 'Default'
-					WHEN tta.ProcessingTechnology = 2 THEN 'PlasmaHPR'
-					WHEN tta.ProcessingTechnology = 4 THEN 'PlasmaXPR'								
-				END AS ProcessingTechnology	
-			FROM tooltypeattribute tta 
-			INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
-			WHERE tta.ParentTypeId = pParentTypeId	AND tta.ToolTypeId IN (51,53) 
-			AND tta.ProcessingTechnology IN (1,2)
-			AND GetEntityType(pParentTypeId, tta.ToolTypeId, 2) > 0
-			AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId AND SubParentTypeId = tta.ToolTypeId
-						AND EnumId = ad.EnumId AND EntityTypeId = GetEntityType(pParentTypeId, tta.ToolTypeId, 2));		
-						
-		# Inserisco gli attributi con Processing Technology = 'XPR'
-		SET pContext= 'AddAttributeDefinitionLinkFromToolType Error => Inserimento migratedAttribute WHERE tta.ToolTypeId IN (51,53) AND tta.ProcessingTechnology IN (1,4)';			
-		INSERT INTO migratedAttribute
-		 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
-			  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
-			  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
-			SELECT GetEntityType(pParentTypeId, tta.ToolTypeId, 4) AS EntitytypeId
-				, ad.ParentTypeId
-				, tta.ToolTypeId AS SubParentTypeId
-				, ad.EnumId AS EnumId
-				, tta.IsCodeGenerator, 0 AS IsSubFilter
-				, GetAttributeScope(tta.AttributeScopeId) AS AttributeScopeId
-				, tta.LastInsertedValue, tta.LastInsertedTextValue
-				, CASE 
-					WHEN tta.UseLastInsertedAsDefault = 1 THEN 'LastInserted'
-					ELSE 'DataDefault' 
-				END AS DefaultBehavior	
-				, GetAttributeType(ad.AttributeTypeId)
-				, GetControlType(ad.ControlTypeId) AS ControlType, ad.HelpImage AS HelpImage, ad.ProtectionLevel AS ProtecetionLevel
-				, ad.GroupId AS AttributeDefinitionGroupId, tta.Priority
-				, CASE
-					WHEN tta.ProcessingTechnology = 1 THEN 'Default'
-					WHEN tta.ProcessingTechnology = 2 THEN 'PlasmaHPR'
-					WHEN tta.ProcessingTechnology = 4 THEN 'PlasmaXPR'								
-				END AS ProcessingTechnology	
-			FROM tooltypeattribute tta 
-			INNER JOIN attributedefinition_old ad ON ad.Id = tta.AttributeDefinitionId AND ad.ParentTypeId = tta.ParentTypeId
-			WHERE tta.ParentTypeId = pParentTypeId	AND tta.ToolTypeId IN (51,53) 
-			AND tta.ProcessingTechnology IN (1,4)
-			AND GetEntityType(pParentTypeId, tta.ToolTypeId, tta.ProcessingTechnology) > 0			
-			AND NOT EXISTS (SELECT Id FROM migratedattribute WHERE ParentTypeId = ad.ParentTypeId AND SubParentTypeId = tta.ToolTypeId
-						AND EnumId = ad.EnumId AND EntityTypeId = GetEntityType(pParentTypeId, tta.ToolTypeId, 4));									
+					AND EnumId = ad.EnumId);
+					
+	# Aggiunge WarehouseId				
+	IF pParentTypeId = 2 THEN
+		INSERT INTO migratedattribute
+		(EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
+		  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
+		  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
+		SELECT GetEntityType(pParentTypeId, tta.ToolTypeId) AS EntitytypeId
+			, pParentTypeId
+			, t.Id AS SubParentTypeId
+			, 923 AS EnumId
+			, 0 as IsCodeGenerator
+			, 0 AS IsSubFilter
+			, 'Fundamental' AS AttributeScopeId
+			, 0 as LastInsertedValue, '' as LastInsertedTextValue
+			,  'DataDefault' AS DefaultBehavior	
+			, 'Identifier' as AttributeType 
+			, 'ListBox' AS ControlType
+			, NULL AS HelpImage
+			, 'Normal' AS ProtectionLevel
+			, 3 AS AttributeDefinitionGroupId, 999 as Priority
+			, 'Default' AS ProcessingTechnology	
+		FROM tooltype t
+		WHERE NOT EXISTS (SELECT Id FROM migratedattribute WHERE EnumId = 923 AND ParentTypeId = pParentTypeId 
+						AND SubParentTypeId = t.Id);
+	END IF;
 END //
 
 CREATE OR REPLACE PROCEDURE AddAttributeDefinitionLinkFromOperationType(pParentTypeId INT)
@@ -389,7 +318,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 		  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 		  , HelpImage, ProtectionLevel,  GroupId, Priority, ProcessingTechnology)
-	SELECT GetEntityType(pParentTypeId, ota.OperationTypeId, 0) AS EntitytypeId
+	SELECT GetEntityType(pParentTypeId, ota.OperationTypeId) AS EntitytypeId
 			, ad.ParentTypeId
 			, ota.OperationTypeId AS SubParentTypeId
 			, ad.EnumId
@@ -426,7 +355,7 @@ BEGIN
 	 (EntityTypeId, ParentTypeId, SubParentTypeId, EnumId, IsCodeGenerator, IsSubFilter, AttributeScopeId,
 		  LastInsertedValue, LastInsertedTextValue, DefaultBehavior, AttributeType, ControlType
 		  , HelpImage, ProtectionLevel, GroupId, Priority, ProcessingTechnology)
-	SELECT GetEntityType(pParentTypeId, ota.ParentOperationTypeId, 0) AS EntitytypeId
+	SELECT GetEntityType(pParentTypeId, ota.ParentOperationTypeId) AS EntitytypeId
 			, ad.ParentTypeId
 			, CONCAT(ota.ParentOperationTypeId, ota.OperationTypeId) AS SubParentTypeId
 			, ad.EnumId
@@ -463,7 +392,7 @@ BEGIN
 	END;
 
 	SET pContext = 'Errore => Recupero EntityType';
-	SET pEntityTypeId = GetEntityType(pParentTypeId,0,0);
+	SET pEntityTypeId = GetEntityType(pParentTypeId,0);
 
 	SET pContext = 'Errore => Inserimento migratedAttribute';	
 	INSERT INTO migratedAttribute
@@ -553,6 +482,18 @@ START TRANSACTION;
 		SELECT 396, 'ExecutionDate', 17, pAttributeType, pAttributeKind, NULL, pOverrideType
 			FROM DUAL
 		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 395 AND DisplayName = 'ExecutionDate');				
+	END IF;
+	
+	IF pParentTypeId = 2 THEN
+		SET pAttributeType = GetAttributeType(8);
+		SET pAttributeKind = GetAttributeKind(4);
+		SET pOverrideType =  GetOverrideType(1);
+
+		INSERT INTO attributedefinition
+		(`EnumId`,`DisplayName`,`DataFormat`,`AttributeType`,`AttributeKind`,`TypeName`,`OverrideType`)
+		SELECT 923, 'WarehouseId', 17, pAttributeType, pAttributeKind, NULL, pOverrideType
+			FROM DUAL
+		WHERE NOT EXISTS (SELECT Id FROM attributedefinition WHERE EnumId = 923 AND DisplayName = 'WarehouseId');				
 	END IF;
 	
 	#INSERIMENTO LINKS

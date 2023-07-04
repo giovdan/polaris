@@ -24,9 +24,9 @@ BEGIN
 		SELECT ad.EnumId, av.ParentId, av.ParentTypeId, av.SubParentTypeId, aov.AttributeValueId
 		, aov.OverrideType, aov.Value
 		, aov.CreatedBy, aov.CreatedOn, aov.UpdatedBy, aov.UpdatedOn 
-		FROM attributeoverridevalue aov
-		INNER JOIN attributevalue av ON av.Id = aov.AttributeValueId
-		INNER JOIN attributedefinition ad ON ad.Id = av.AttributeDefinitionId 
+		FROM attributeoverridevalue_old aov
+		INNER JOIN attributevalue_old av ON av.Id = aov.AttributeValueId
+		INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId 
 		AND ad.ParentTypeId = av.ParentTypeId;
 		
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -56,19 +56,19 @@ loop_entities: LOOP
 					FROM migratedentity WHERE ParentId = pParentId AND ParentTypeId = pParentTypeId;
 					
 			SELECT _av.Id INTO pAttributeValueId 
-			FROM _attributevalue _av
+			FROM attributevalue _av
 			INNER JOIN attributedefinitionlink adl ON adl.Id = _av.AttributeDefinitionLinkId
-			INNER JOIN _attributedefinition _ad ON _ad.Id = adl.AttributeDefinitionId
+			INNER JOIN attributedefinition _ad ON _ad.Id = adl.AttributeDefinitionId
 			WHERE 
 				_ad.EnumId = pEnumId AND adl.EntityTypeId = pEntityType
 				AND _av.EntityId = pEntityId;
 				
 			IF pAttributeValueId IS NOT NULL THEN
-				INSERT INTO _attributeoverridevalue
+				INSERT INTO attributeoverridevalue
 				(AttributeValueId, OverrideType, `Value`, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 				SELECT pAttributeValueId, pOverrideType, pAttributeOverrideValue, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn
 				FROM DUAL
-					WHERE NOT EXISTS (SELECT Id FROM _attributeoverridevalue WHERE AttributeValueId = pAttributeValueId AND OverrideType = pOverrideType);
+					WHERE NOT EXISTS (SELECT Id FROM attributeoverridevalue WHERE AttributeValueId = pAttributeValueId AND OverrideType = pOverrideType);
 			END IF;	
 				
 		END LOOP;

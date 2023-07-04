@@ -14,6 +14,7 @@
     using Newtonsoft.Json;
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Services;
+    using Mitrol.Framework.Domain.Attributes;
 
     public class PlasmaAMConfigurationManagement : MachineManagementBaseService, IAttributeDefinitionEnumManagement
     {

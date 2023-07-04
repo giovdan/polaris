@@ -1,10 +1,8 @@
-﻿namespace Mitrol.Framework.MachineManagement.Application.Interfaces
+﻿namespace Mitrol.Framework.Domain.Interfaces
 {
-    using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Models;
-    using Mitrol.Framework.MachineManagement.Application.Attributes;
-    using Mitrol.Framework.MachineManagement.Domain.Enums;
     using System.Collections.Generic;
 
     public interface IAttributeDefinitionEnumManagement
@@ -20,7 +18,6 @@
         // Recupera il corrispondente valore dell'enumerato dalla sua string
         object GetEnumFromStringValue(string enumInString);
         object GetEnumValueFromAttributeValue(BaseInfoItem<long, string> value);
-
     }
 
 

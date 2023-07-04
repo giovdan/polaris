@@ -30,6 +30,8 @@
         public AttributeDefinitionGroupEnum GroupId { get; set; }
         [DefaultValue(0)]
         public int Priority { get; set; }
+        [Column(TypeName = "ENUM('Default','PlasmaHPR','PlasmaXPR')")]
+        public ProcessingTechnologyEnum ProcessingTechnology { get; set; }
 
         public virtual AttributeDefinition AttributeDefinition { get; set; }
     }

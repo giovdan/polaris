@@ -43,7 +43,7 @@ BEGIN
 		WHERE ae.Id = iAdditionalItemId;
 
 	SET pContext = 'Errore => Recupero Tipo Entità ed HashCode';	
-	SET pEntityTypeId = GetEntityType(pParentTypeId, pOperationTypeId, 0);
+	SET pEntityTypeId = GetEntityType(pParentTypeId, pOperationTypeId);
 	# Recupero gli identificatori tramite il masterId e creo HashCode
 	SET pHashCode = CreateHashCodeByAttributeValues(pEntityTypeId, iAdditionalItemId, pParentTypeId);
 

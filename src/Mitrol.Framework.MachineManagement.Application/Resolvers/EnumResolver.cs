@@ -5,6 +5,7 @@
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Attributes;
+    using Mitrol.Framework.MachineManagement.Application.GeneralPurpose;
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Services;
     using Mitrol.Framework.MachineManagement.Domain.Enums;

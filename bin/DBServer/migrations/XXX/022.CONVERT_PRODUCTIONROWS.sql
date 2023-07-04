@@ -70,7 +70,7 @@ BEGIN
 				
 		SET pParentTypeId = 8192; 			# ProductionRow ParentType
 		SET pRelatedParentTypeId = 256;		# Program ParentType
-		SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId, 1);
+		SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId);
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pHashCode = SHA2(CONCAT(pEntityTypeId,pDisplayName),256);
 		# Recupero HashCode dello stock associato

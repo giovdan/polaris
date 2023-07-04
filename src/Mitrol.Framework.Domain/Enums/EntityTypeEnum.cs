@@ -102,12 +102,6 @@
         [PlantUnit(PlantUnitEnum.InkJetMarker)]
         ToolTS89 = 89,
         [PlantUnit(PlantUnitEnum.PlasmaTorch)]
-        ToolTS51XPR = 90,
-        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
-        ToolTS51HPR = 91,
-        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
-        ToolTS53XPR = 92,
-        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
         ToolTS53HPR = 93,
         StockProfileL = 94,
         StockProfileV = 95,
@@ -167,24 +161,14 @@
         ToolRangeTS77 = 177,
         ToolRangeTS78 = 178,
         ToolRangeTS79 = 179,
-        ToolRangeTS51HPR = 180,
-        ToolRangeTS51XPR = 181,
-        ToolRangeTS53HPR = 182,
-        ToolRangeTS53XPR = 183,
         ToolSubRangeBevelTS51 = 184,
         ToolSubRangeBevelTS52 = 185,
         ToolSubRangeBevelTS53 = 186,
         ToolSubRangeBevelTS54 = 187,
         ToolSubRangeTrueHoleTS51 = 188,
-        ToolSubRangeTrueHoleTS51HPR = 189,
-        ToolSubRangeTrueHoleTS51XPR = 190,
         ToolSubRangeTrueHoleTS53 = 191,
-        ToolSubRangeTrueHoleTS53HPR = 192,
-        ToolSubRangeTrueHoleTS53XPR = 193,
         ToolRangeMarkingTS51 = 194,
-        ToolRangeMarkingTS51XPR = 195,
         ToolRangeMarkingTS53 = 196,
-        ToolRangeMarkingTS53XPR = 197,
         ProgramProfileL = 198,
         ProgramProfileV = 199,
         ProgramProfileB = 200,
@@ -298,11 +282,7 @@
                 EntityTypeEnum.ToolTS80 ,
                 EntityTypeEnum.ToolTS87 ,
                 EntityTypeEnum.ToolTS88 ,
-                EntityTypeEnum.ToolTS89 ,
-                EntityTypeEnum.ToolTS51XPR,
-                EntityTypeEnum.ToolTS51HPR,
-                EntityTypeEnum.ToolTS53XPR,
-                EntityTypeEnum.ToolTS53HPR
+                EntityTypeEnum.ToolTS89 
             };
         }
 
@@ -351,22 +331,8 @@
             ToolTypeEnum toolType = ToolTypeEnum.NotDefined;
             if (definedToolTypes.Contains(entityType))
             {
-                switch (entityType)
-                {
-                    case EntityTypeEnum.ToolTS51HPR:
-                    case EntityTypeEnum.ToolTS51XPR:
-                        toolType = ToolTypeEnum.TS51;
-                        break;
-                    case EntityTypeEnum.ToolTS53HPR:
-                    case EntityTypeEnum.ToolTS53XPR:
-                        toolType = ToolTypeEnum.TS53;
-                        break;
-                    default:
-                        toolType = (ToolTypeEnum)entityType;
-                        break;
-                }
+                toolType = (ToolTypeEnum)entityType;
             }
-
 
             return toolType;
         }

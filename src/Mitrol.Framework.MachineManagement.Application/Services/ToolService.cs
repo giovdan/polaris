@@ -36,6 +36,33 @@
 
 
         #region < Private Methods >
+        private IEnumerable<AttributeDefinitionEnum> GetEnabledUnits(ToolTypeEnum toolType)
+        {
+            var plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
+            IEnumerable<AttributeDefinitionEnum> enabledUnits = new List<AttributeDefinitionEnum>();
+
+            switch (plantUnit)
+            {
+                case PlantUnitEnum.DrillingMachine:
+                    {
+                        enabledUnits = new List<AttributeDefinitionEnum>
+                           { AttributeDefinitionEnum.ToolEnableA, AttributeDefinitionEnum.ToolEnableB,
+                            AttributeDefinitionEnum.ToolEnableC, AttributeDefinitionEnum.ToolEnableD };
+                    }
+                    break;
+                case PlantUnitEnum.PlasmaTorch:
+                case PlantUnitEnum.OxyCutTorch:
+                    {
+                        enabledUnits = new List<AttributeDefinitionEnum>
+                        { AttributeDefinitionEnum.ToolEnableC, AttributeDefinitionEnum.ToolEnableD };
+                    }
+
+                    break;
+            }
+
+            return enabledUnits;
+        }
+
         /// <summary>
         /// Recupero Prima posizione libera
         /// </summary>
@@ -95,8 +122,11 @@
                                 , IEnumerable<IdentifierDetailItem> identifiers
                                 , IEnumerable<CodeGeneratorItem> codeGenerators
                                 , IEnumerable<AttributeDetailItem> attributes
-                                , MeasurementSystemEnum conversionSystem)
+                                , MeasurementSystemEnum conversionSystem
+                                , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
         {
+            var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+
             var toolListItem = Mapper.Map<ToolListItem>(entity);
             toolListItem.Identifiers = identifiers;
             toolListItem.CodeGenerators = codeGenerators;
@@ -233,11 +263,8 @@
         /// <param name="filter"></param>
         /// <returns></returns>
         private IEnumerable<AttributeDetailItem> GetToolAttributeDefinitionItems(
-            AttributeDefinitionFilter filter
-            , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
+            AttributeDefinitionFilter filter)
         {
-            var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
-            AttributeDefinitionLinkRepository.Attach(uow);
 
             if (!Enum.IsDefined(filter.ToolType))
                 return null;
@@ -250,13 +277,15 @@
                                                     MachineConfigurationService.ConfigurationRoot.Setup.Pla
                                                         .GetProcessingTechnology() :
                                                     ProcessingTechnologyEnum.Default;
-            Expression<Func<AttributeDefinitionLink, bool>> predicate = adl => adl.EntityTypeId == filter.ToolType.ToEntityType(processingTechnology);
+            Expression<Func<AttributeDefinitionLink, bool>> predicate = adl => adl.EntityTypeId == filter.ToolType.ToEntityType();
 
             if (filter.AttributeType != AttributeTypeEnum.All)
             {
                 predicate.AndAlso(adl => adl.AttributeDefinition.AttributeType == filter.AttributeType);
             }
 
+            var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            AttributeDefinitionLinkRepository.Attach(uow);
             //Recupero le definizioni degli attributi
             var attributeDefinitions = AttributeDefinitionLinkRepository
                     .FindBy(predicate);
@@ -334,17 +363,20 @@
             using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
             var toolToManage = new ToolDetailItem();
 
+            toolToManage.ConversionSystem = UserSession.ConversionSystem;
             // Recupero la definizione degli attributi in base ai filtri in input
-            var attributes = GetToolAttributeDefinitionItems(filters, uow);
+            var attributes = GetToolAttributeDefinitionItems(filters);
 
             if (attributes == null || (attributes != null && !attributes.Any()))
                 return null;
 
-            // Assegno gli identificatori
+            // Assegno gli identificatori ed aggiungo l'identificatore "Fake" ToolManagementId
             toolToManage.Identifiers = Mapper.Map<IEnumerable<AttributeDetailItem>>(attributes.Where(a => a.AttributeType == AttributeTypeEnum.Identifier
-                    || a.GroupId == AttributeDefinitionGroupEnum.Identifiers)).ToList();
-
-            toolToManage.Identifiers.AddToolManagementIdAsIdentifier(GetFirstAvailablePosition(uow));
+                    || a.GroupId == AttributeDefinitionGroupEnum.Identifiers)).ToList()
+                    .AddToolManagementIdAsIdentifier(GetFirstAvailablePosition(uow));
+            
+            toolToManage.NumberOfCopies = 1;
+            
 
             var identifiersEnumIds = toolToManage.Identifiers.Select(i => i.EnumId);
             // Assegno gli altri attributi
@@ -391,7 +423,39 @@
                         );
             }
 
-            //var itemToCreate = Mapper.Map<ToolImportItem<AttributeValueItem>>(tool);
+            var itemToCreate = Mapper.Map<ToolImportItem<AttributeValueItem>>(toolDetail);
+
+            var enabledUnits = GetEnabledUnits(toolDetail.ToolType);
+
+            itemToCreate.Identifiers = toolDetail.Identifiers
+                                      .ToDictionary(id => id.DisplayName
+                                          , id => id.GetAttributeValue(
+                                                  conversionSystemFrom: toolDetail.ConversionSystem).ToString());
+
+            // Recupero le definizioni degli attributi e gli assegno i valori di default
+            if (!toolDetail.Attributes.Any())
+            {
+                toolDetail.Attributes = 
+                        AttributeDefinitionLinkRepository.FindBy(adl => adl.EntityTypeId == toolDetail.ToolType.ToEntityType())
+                        .Select(a =>
+                        {
+                            // Trasformo in attributeValueItem e gli assegno il valore di default
+                            var attributeDetail = Mapper.Map<AttributeDetailItem>(a);
+                            attributeDetail.SetDefaultAttributeValue(ServiceFactory);
+                            return attributeDetail;
+                        });
+            }
+
+            itemToCreate.Attributes = toolDetail.Attributes
+                            .ToDictionary(a => a.DisplayName, a =>
+                            {
+                                if (a.AttributeKind == AttributeKindEnum.Number)
+                                {
+                                    var convertedValue = a.GetAttributeValue(conversionSystemFrom: toolDetail.ConversionSystem);
+                                    a.Value.CurrentValue = convertedValue;
+                                }
+                                return a.Value;
+                            });
 
             return Result.Ok(new ToolDetailItem());
         }

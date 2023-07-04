@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `attributedefinitionlink` (
 	`LastInsertedValue` DECIMAL(12,6) NULL DEFAULT NULL,
 	`LastInsertedTextValue` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
 	`ProtectionLevel` ENUM('Critical','High','Medium','Normal','ReadOnly') NOT NULL DEFAULT 'Normal',
+	`ProcessingTechnology` ENUM ('Default','PlasmaHPR', 'PlasmaXPR') NOT NULL DEFAULT 'Default',
 	`GroupId` INT(11) NOT NULL DEFAULT '0',
 	`Priority` INT(11) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`Id`) USING BTREE,

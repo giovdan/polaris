@@ -26,7 +26,7 @@ END //
 
 CREATE OR REPLACE PROCEDURE ConvertToolTable(in oldId INT)
 BEGIN
-DECLARE pHashCode CHAR(64);
+	DECLARE pHashCode CHAR(64);
 	DECLARE pRelatedHashCode CHAR(64);	
 	DECLARE pToolTypeId INT;
 	DECLARE pRangeMasterIdentifierId INT;
@@ -40,7 +40,6 @@ DECLARE pHashCode CHAR(64);
 	DECLARE pRowNumber INT;
 	DECLARE newId INT;
 	DECLARE pParentTypeId INT;
-	DECLARE pProcessingTechnology INT;
 	DECLARE pDisplayName VARCHAR(200);
 	DECLARE pCreatedBy VARCHAR(32); 
 	DECLARE pUpdatedBy VARCHAR(32);
@@ -67,93 +66,91 @@ DECLARE pHashCode CHAR(64);
 	SET pContext = CONCAT('Errore => Recupero informazioni tabella toorange, Parameters => ', pRangeMasterIdentifierId);	
 	# Recupero gli identificatori tramite il pRangeMasterIdentifierId e creo HashCode
 	SET pDisplayName = GetDisplayValueFromToolMasterId(pRangeMasterIdentifierId, pToolTypeId, oldId);
-	SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
-	SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId, COALESCE(pProcessingTechnology,1));
-	SET pRelatedEntityTypeId = GetEntityType(2, pToolTypeId, COALESCE(pProcessingTechnology,1));
+	SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId);
+	SET pRelatedEntityTypeId = GetEntityType(2, pToolTypeId);
 	
 	SET pContext = CONCAT('Errore => Creazione HashCode Tool collegato, Parameters => ', pToolMasterIdentifierId);	
 	SET pRelatedHashCode = CreateHashCodeByIdentifiers(pRelatedEntityTypeId , pToolMasterIdentifierId, 0);
  	SET pContext = CONCAT('Errore => Creazione HashCode ToolRange, Parameters => ', pRangeMasterIdentifierId, ',', pToolMasterIdentifierId);	
 	SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pRangeMasterIdentifierId, pToolMasterIdentifierId);
 	
-	IF NOT EXISTS 
-		(SELECT Id FROM entitylink el 
-			WHERE el.RelatedEntityHashCode = pRelatedHashCode AND el.EntityHashCode = pHashCode
-					AND RelationType = 'Child') THEN
-
-		IF NOT EXISTS (SELECT Id FROM entity WHERE HashCode = pRelatedHashCode) THEN
-			# Creo un master nella detailidentifier per il tool "parent" che non è in anagrafica
-		 	SET pContext = CONCAT('Errore => Creazione record detailidentifier per Tool non presente in anagrafica, Parameters => ', pRelatedEntityTypeId, ',', pRangeMasterIdentifierId, ',', pToolMasterIdentifierId, ',',pRelatedHashCode);	
-			INSERT INTO detailidentifier
-				(HashCode, AttributeDefinitionLinkId, `Value`, Priority
-				, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-			SELECT pRelatedHashCode, adl.Id,  di.Value, adl.Priority
-				, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
-				FROM detailidentifier_old di
-				INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
-				INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
-				INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
-							AND adl.EntityTypeId = pRelatedEntityTypeId
-				WHERE di.MasterId = pToolMasterId;				
-		END IF;
-
-	 	SET pContext = CONCAT('Errore => Creazione record in tabella entity');	
-		# Inserimento record tabella
-		INSERT INTO entity
-		(`DisplayName`,`HashCode`, `EntityTypeId`, `SecondaryKey`, `RowVersion`
-			, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-		SELECT pDisplayName, pHashCode, pEntityTypeId, pPlantUnitId, UUID()
-			, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn FROM DUAL
-			WHERE NOT EXISTS (SELECT Id FROM entity WHERE EntityTypeId = pEntityTypeId AND DisplayName = pDisplayName
-									AND SecondaryKey = pPlantUnitId); 
-
-		SELECT Id INTO newId FROM entity WHERE EntityTypeId = pEntityTypeId AND DisplayName = pDisplayName
-									AND SecondaryKey = pPlantUnitId;
-		
-	 	SET pContext = CONCAT('Errore => Creazione record in tabella entitylink');	
-		INSERT INTO entitylink
-		(RelatedEntityHashCode, EntityHashCode, RelationType, RowNumber, `Level`)
-		SELECT pRelatedHashCode, pHashCode, 'Child', pRowNumber, 1 FROM DUAL
-			WHERE NOT EXISTS (SELECT Id FROM entitylink WHERE RelatedEntityHashCode = pRelatedHashCode
-														AND EntityHashCode = pHashCode AND RelationType = 'Child');		
-
-	 	SET pContext = CONCAT('Errore => Creazione record in tabella detailidentifier');	
-		# Inserisco in _detailidentfier utilizzando hashCode creato
-		INSERT INTO detailidentifier
-			(HashCode, AttributeDefinitionLinkId, `Value`, Priority
-			, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-			SELECT pHashCode, adl.Id,  di.Value, adl.Priority
-				, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
-				FROM detailidentifier_old di
-			INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
-			INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
-			INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
-						AND adl.EntityTypeId = pEntityTypeId
-			WHERE di.MasterId = pRangeMasterIdentifierId
-			AND NOT EXISTS (SELECT Id FROM detailidentifier WHERE HashCode = pHashCode);
-
-	 	SET pContext = CONCAT('Errore => Creazione record in tabella attributevalue, Parameters =>', oldId, ',',pParentTypeId, ',', newId, ',', pEntityTypeId);				
-		INSERT INTO attributevalue
-		(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion
+	# Creo un master nella detailidentifier per il tool "parent" se non è già presente
+	SET pContext = CONCAT('Errore => Creazione record detailidentifier per Tool non presente in anagrafica, Parameters => ', pRelatedEntityTypeId, ',', pRangeMasterIdentifierId, ',', pToolMasterIdentifierId, ',',pRelatedHashCode);	
+	
+	INSERT INTO detailidentifier
+		(HashCode, AttributeDefinitionLinkId, `Value`, Priority
 		, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-		SELECT newId, adl.Id as AttributeDefinitionLinkId
-			, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
-			, UUID() AS RowVersion
-			, av.CreatedBy, av.CreatedOn, av.UpdatedBy, av.UpdatedOn
-			FROM attributevalue_old av 
-			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
-			INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
-			LEFT JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
-			WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId
-		 AND adl.Id IS NOT NULL
-			AND NOT EXISTS(SELECT Id FROM attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
+	SELECT pRelatedHashCode, adl.Id,  di.Value, adl.Priority
+		, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
+		FROM detailidentifier_old di
+		INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
+		INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
+		INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
+					AND adl.EntityTypeId = pRelatedEntityTypeId
+		WHERE di.MasterId = pToolMasterIdentifierId
+		AND NOT EXISTS (SELECT Id FROM detailidentifier 
+						WHERE HashCode = pRelatedHashCode 
+						AND AttributeDefinitionLinkId = adl.Id);				
+	
 
-	 	SET pContext = CONCAT('Errore => Creazione record in tabella migratedentity, Parameters =>', oldId, ',',pParentTypeId, ',', newId, ',', pEntityTypeId);				
-		INSERT INTO migratedentity
-		(EntityTypeId, ParentTypeId, ParentId, EntityId)
-		VALUES
-		(pEntityTypeId, pParentTypeId, oldId, newId);
-	END IF;		
+ 	SET pContext = CONCAT('Errore => Creazione record in tabella entity');	
+	# Inserimento record tabella
+	INSERT INTO entity
+	(`DisplayName`,`HashCode`, `EntityTypeId`, `SecondaryKey`, `RowVersion`
+		, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+	SELECT pDisplayName, pHashCode, pEntityTypeId, pPlantUnitId, UUID()
+		, pCreatedBy, pCreatedOn, pUpdatedBy, pUpdatedOn FROM DUAL
+		WHERE NOT EXISTS (SELECT Id FROM entity WHERE EntityTypeId = pEntityTypeId AND DisplayName = pDisplayName
+								AND SecondaryKey = pPlantUnitId); 
+
+	SELECT Id INTO newId FROM entity WHERE EntityTypeId = pEntityTypeId AND DisplayName = pDisplayName
+								AND SecondaryKey = pPlantUnitId;
+	
+ 	SET pContext = CONCAT('Errore => Creazione record in tabella entitylink');	
+	INSERT INTO entitylink
+	(RelatedEntityHashCode, EntityHashCode, RelationType, RowNumber, `Level`)
+	SELECT pRelatedHashCode, pHashCode, 'Child', pRowNumber, 1 FROM DUAL
+		WHERE NOT EXISTS (SELECT Id FROM entitylink WHERE RelatedEntityHashCode = pRelatedHashCode
+													AND EntityHashCode = pHashCode AND RelationType = 'Child');		
+
+ 	SET pContext = CONCAT('Errore => Creazione record in tabella detailidentifier');	
+	# Inserisco in _detailidentfier utilizzando hashCode creato
+	INSERT INTO detailidentifier
+		(HashCode, AttributeDefinitionLinkId, `Value`, Priority
+		, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+		SELECT pHashCode, adl.Id,  di.Value, adl.Priority
+			, di.CreatedBy, di.CreatedOn, di.UpdatedBy, di.UpdatedOn
+			FROM detailidentifier_old di
+		INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId AND ad.ParentTypeId = di.ParentTypeId
+		INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
+		INNER JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id 
+					AND adl.EntityTypeId = pEntityTypeId
+		WHERE di.MasterId = pRangeMasterIdentifierId
+		AND NOT EXISTS (SELECT Id FROM detailidentifier WHERE HashCode = pHashCode);
+
+ 	SET pContext = CONCAT('Errore => Creazione record in tabella attributevalue, Parameters =>', oldId, ',',pParentTypeId, ',', newId, ',', pEntityTypeId);				
+	INSERT INTO attributevalue
+	(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion
+	, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+	SELECT newId, adl.Id as AttributeDefinitionLinkId
+		, av.DataFormatId, av.`Value`, av.TextValue, av.Priority
+		, UUID() AS RowVersion
+		, av.CreatedBy, av.CreatedOn, av.UpdatedBy, av.UpdatedOn
+		FROM attributevalue_old av 
+		INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND av.ParentTypeId = ad.ParentTypeId
+		INNER JOIN attributedefinition _ad ON _ad.EnumId = ad.EnumId
+		LEFT JOIN attributedefinitionlink adl ON adl.AttributeDefinitionId = _ad.Id AND EntityTypeId = pEntityTypeId
+		WHERE av.ParentId = oldId AND av.ParentTypeId = pParentTypeId
+	 AND adl.Id IS NOT NULL
+		AND NOT EXISTS(SELECT Id FROM attributevalue WHERE EntityId = newId AND AttributeDefinitionLinkId = adl.Id);				
+
+ 	SET pContext = CONCAT('Errore => Creazione record in tabella migratedentity, Parameters =>', oldId, ',',pParentTypeId, ',', newId, ',', pEntityTypeId);				
+	INSERT INTO migratedentity
+	(EntityTypeId, ParentTypeId, ParentId, EntityId)
+	SELECT pEntityTypeId, pParentTypeId, oldId, newId FROM DUAL
+	WHERE NOT EXISTS (SELECT Id FROM migratedentity WHERE EntityTypeId = pEntityTypeId 
+						AND ParentTypeId = pParentTypeId AND ParentId = oldId AND EntityId = newId);
+
 END //
 
 CREATE OR REPLACE PROCEDURE `ConvertToolTables`()

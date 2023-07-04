@@ -140,6 +140,61 @@
                 ToolType = ToolTypeEnum.TS33,
                 ConversionSystem = NullUserSession.InternalSessionInstance.ConversionSystem
             });
+
+            toolDetail.Identifiers = toolDetail.Identifiers.Select(i =>
+            {
+                if (i.EnumId == AttributeDefinitionEnum.NominalDiameter
+                    && int.TryParse(i.Value.CurrentValue.ToString(), out var intValue)
+                    && intValue == 0)
+                {
+                    i.Value.CurrentValue = 20;
+                }
+
+                return i;
+            }).ToList();
+
+            toolDetail.Attributes = toolDetail.Attributes.Select(a =>
+            {
+                switch(a.EnumId)
+                {
+                    case AttributeDefinitionEnum.StartPosition:
+                        a.Value.CurrentValue = 0.1;
+                        break;
+                    case AttributeDefinitionEnum.EndPosition:
+                        a.Value.CurrentValue = 0.4;
+                        break;
+                    case AttributeDefinitionEnum.FastApproachPosition:
+                        a.Value.CurrentValue = 0.5;
+                        break;
+                    case AttributeDefinitionEnum.ToolLength:
+                        a.Value.CurrentValue = 150;
+                        break;
+                    case AttributeDefinitionEnum.RealDiameter:
+                        a.Value.CurrentValue = 19.40;
+                        break;
+                    case AttributeDefinitionEnum.GrindingAngle:
+                        a.Value.CurrentValue = 1;
+                        break;
+                    case AttributeDefinitionEnum.ForwardSpeed:
+                        a.Value.CurrentValue = 1;
+                        break;
+                    case AttributeDefinitionEnum.CuttingSpeed:
+                        a.Value.CurrentValue = 1;
+                        break;
+                    case AttributeDefinitionEnum.WarehouseId:
+                        a.Value.CurrentValueId = 1;
+                        break;
+                }
+                if (a.EnumId == AttributeDefinitionEnum.WarehouseId)
+                {
+                    if (a.Value.CurrentValueId == 0)
+                    {
+                        a.Value.CurrentValueId = 1;
+                        a.Value.CurrentValue = 1;
+                    }
+                }
+                return a;
+            }).ToList();
             
 
             var result = service.CreateTool(toolDetail);

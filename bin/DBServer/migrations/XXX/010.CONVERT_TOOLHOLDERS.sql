@@ -50,7 +50,7 @@ BEGIN
 	OPEN curToolHolders;
 
 	SET pParentTypeId = 8;	
-	SET pEntityTypeId = GetEntityType(pParentTypeId, 0,0);
+	SET pEntityTypeId = GetEntityType(pParentTypeId, 0);
 	SELECT FOUND_ROWS() INTO toolHoldersCount;
 
 	START TRANSACTION;	

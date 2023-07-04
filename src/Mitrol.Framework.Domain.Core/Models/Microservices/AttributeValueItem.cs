@@ -1,6 +1,9 @@
 ﻿namespace Mitrol.Framework.Domain.Models
 {
+    using Amazon.DynamoDBv2.Model;
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models.Core;
     using Newtonsoft.Json;
 
     public class BaseAttributeValueItem
@@ -61,4 +64,5 @@
             OverrideType = overrideType;
         }
     }
+
 }

@@ -5,6 +5,7 @@
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Models.Views;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -87,5 +88,12 @@
         public IEnumerable<Entity> FindBy<TKey>(Expression<Func<Entity, bool>> predicate, Expression<Func<Entity, TKey>> orderBy)
                 => UnitOfWork.Context.Entities.Where(predicate)
                         .OrderBy(orderBy);
+
+        #region < Tools Management >
+        public IEnumerable<PlasmaToolMaster> FindPlasmaToolMasters(Expression<Func<PlasmaToolMaster, bool>> predicate)
+        {
+            return UnitOfWork.Context.PlasmaToolMasters.Where(predicate);
+        }
+        #endregion
     }
 }

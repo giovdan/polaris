@@ -62,7 +62,7 @@
             services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, UnitOfWorkFactory>();
             services.AddTransient<IMachineManagentDatabaseContext, MachineManagementDatabaseContext>();
             services.AddTransient<IDatabaseContext, MachineManagementDatabaseContext>();
-            services.AddTransient<IUnitOfWork<IMachineManagentDatabaseContext>, Mitrol.Framework.MachineManagement.Data.MySQL.Models.UnitOfWork>();
+            services.AddTransient<IUnitOfWork<IMachineManagentDatabaseContext>, UnitOfWork>();
             services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
             services.AddScoped<IEntityRepository, EntityRepostiory>();
             services.AddScoped<IEntityLinkRepository, EntityLinkRepository>();
@@ -72,8 +72,9 @@
 
             // Resolvers
             services.AddTransient<
-                        IResolver<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>
-                            , EnumResolver>();
+                IResolver<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>
+                    , EnumResolver>();
+
             services.AddAutoMapper(cfg =>
             {
                 cfg.DisableConstructorMapping();

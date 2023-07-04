@@ -24,7 +24,6 @@ BEGIN
 	DECLARE pRowNumber INT;
 	DECLARE newId INT;
 	DECLARE pParentTypeId INT;
-	DECLARE pProcessingTechnology INT;
 	DECLARE pDisplayName VARCHAR(200);
 	DECLARE pCreatedBy VARCHAR(32); 
 	DECLARE pUpdatedBy VARCHAR(32);
@@ -66,10 +65,8 @@ loop_entities: LOOP
 			LEAVE loop_entities;		
 		END IF;
 		
-
-		SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
-		SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId, COALESCE(pProcessingTechnology,1));
-		SET pRelatedEntityTypeId = GetEntityType(2, pToolTypeId, COALESCE(pProcessingTechnology,1));
+		SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId);
+		SET pRelatedEntityTypeId = GetEntityType(2, pToolTypeId);
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pRelatedHashCode = CreateHashCodeByIdentifiers(pRelatedEntityTypeId , pToolMasterId, 0);
 		SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pRangeMasterId, pToolMasterId);

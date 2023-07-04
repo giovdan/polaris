@@ -17,7 +17,6 @@ BEGIN
 	DECLARE pEntityTypeId INT;
 	DECLARE newId INT;
 	DECLARE pParentTypeId INT;
-	DECLARE pProcessingTechnology INT;
 	DECLARE pDisplayName VARCHAR(200);
 	DECLARE attributesCount INT;
 	DECLARE pCreatedBy VARCHAR(32); 
@@ -45,10 +44,8 @@ BEGIN
 		SELECT COUNT(*) INTO attributesCount FROM attributevalue_old WHERE ParentId = oldId AND ParentTypeId = 2;
 		
 		IF attributesCount > 0 THEN
-			SET pContext = CONCAT('Errore => Recupero Processing Technology, Parameters: => ', oldId);
-         SET pProcessingTechnology = GetProcessingTechnology(oldId, pParentTypeId);
   			SET pContext = CONCAT('Errore => Recupero EntitType, Parameters: => ', oldId);
-			SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId, COALESCE(pProcessingTechnology,1));
+			SET pEntityTypeId = GetEntityType(pParentTypeId, pToolTypeId);
 			# Recupero gli identificatori tramite il masterId e creo HashCode
 			SET pContext = CONCAT('Errore => Creazione HashCode, Parameters: => ', pEntityTypeId, ',', pToolMasterId);
 			SET pHashCode = CreateHashCodeByIdentifiers(pEntityTypeId,pToolMasterId,0);

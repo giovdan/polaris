@@ -17,7 +17,7 @@ WHERE
 	
 DELIMITER //
 
-CREATE OR REPLACE FUNCTION GetCodeFromHashCode(iHashCode CHAR(64))
+CREATE OR REPLACE FUNCTION GetCodeFromHashCode(iHashCode CHAR(64), iEntityTypeId INT)
 RETURNS VARCHAR(50)
 BEGIN
 	DECLARE entityCode VARCHAR(50) DEFAULT('');
@@ -30,9 +30,8 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 	SELECT et.DisplayName INTO entityCode 
-		FROM entity e
-		INNER JOIN entitytype et ON et.Id = e.EntityTypeId
-		WHERE e.HashCode = iHashCode;
+		FROM entitytype et 
+	WHERE et.Id = iEntityTypeId;
         
 	OPEN curDetails;
 	loop_values: LOOP
@@ -60,6 +59,7 @@ DELIMITER //
 
 CREATE OR REPLACE FUNCTION `GetDisplayValueFromHashCode`(
 	`iHashCode` CHAR(64)
+	, iEntityTypeId INT
 )
 RETURNS varchar(50)
 BEGIN
@@ -73,9 +73,8 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 	SELECT et.InternalCode INTO displayValue 
-		FROM entity e
-		INNER JOIN entitytype et ON et.Id = e.EntityTypeId
-		WHERE e.HashCode = iHashCode;
+		FROM entitytype et 
+	WHERE et.Id = iEntityTypeId;
         
 	OPEN curDetails;
 	loop_values: LOOP
@@ -103,8 +102,7 @@ END //
 
 CREATE OR REPLACE FUNCTION `GetEntityType`(
 	`pParentTypeId` INT,
-	`pSubParentTypeId` INT,
-	`pProcessingTechnology` INT
+	`pSubParentTypeId` INT
 )
 RETURNS INT(11)
 BEGIN
@@ -113,11 +111,7 @@ BEGIN
 	SET pEntityTypeId = 
 	CASE 
 		WHEN pParentTypeId = 1 THEN pSubParentTypeId
-		WHEN pParentTypeId = 2 AND pProcessingTechnology = 1 THEN pSubParentTypeId
-		WHEN pParentTypeId = 2 AND pProcessingTechnology = 2 AND pSubParentTypeId = 51 THEN 91 # ToolTS51HPR = 91
-		WHEN pParentTypeId = 2 AND pProcessingTechnology = 4 AND pSubParentTypeId = 51 THEN 90 # ToolTS51XPR = 90
-		WHEN pParentTypeId = 2 AND pProcessingTechnology = 2 AND pSubParentTypeId = 53 THEN 93 # ToolTS53HPR = 93
-		WHEN pParentTypeId = 2 AND pProcessingTechnology = 4 AND pSubParentTypeId = 53 THEN 92 # ToolTS53XPR = 92	
+		WHEN pParentTypeId = 2 THEN pSubParentTypeId
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 32 THEN 132
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 33 THEN 133
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 34 THEN 134
@@ -127,14 +121,10 @@ BEGIN
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 39 THEN 139
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 40 THEN 140
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 41 THEN 141
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 51 AND pProcessingTechnology = 1 THEN 151
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 52 AND pProcessingTechnology = 1 THEN 152
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 53 AND pProcessingTechnology = 1 THEN 153
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 54 AND pProcessingTechnology = 1 THEN 154
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 51 AND pProcessingTechnology = 2 THEN 180
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 53 AND pProcessingTechnology = 2 THEN 182
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 51 AND pProcessingTechnology = 4 THEN 181
-		WHEN pParentTypeId = 4 AND pSubParentTypeId = 53 AND pProcessingTechnology = 4 THEN 183
+		WHEN pParentTypeId = 4 AND pSubParentTypeId = 51 THEN 151
+		WHEN pParentTypeId = 4 AND pSubParentTypeId = 52 THEN 152
+		WHEN pParentTypeId = 4 AND pSubParentTypeId = 53 THEN 153
+		WHEN pParentTypeId = 4 AND pSubParentTypeId = 54 THEN 154
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 55 THEN 155
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 56 THEN 156
 		WHEN pParentTypeId = 4 AND pSubParentTypeId = 57 THEN 157
@@ -156,16 +146,10 @@ BEGIN
 		WHEN pParentTypeId = 16 AND pSubParentTypeId = 52 THEN 185
 		WHEN pParentTypeId = 16 AND pSubParentTypeId = 53 THEN 186
 		WHEN pParentTypeId = 16 AND pSubParentTypeId = 54 THEN 187		
-		WHEN pParentTypeId = 32 AND pSubParentTypeId = 51 AND pProcessingTechnology = 1 THEN 188
-		WHEN pParentTypeId = 32 AND pSubParentTypeId = 51 AND pProcessingTechnology = 2 THEN 189
-		WHEN pParentTypeId = 32 AND pSubParentTypeId = 51 AND pProcessingTechnology = 4 THEN 190
-		WHEN pParentTypeId = 32 AND pSubParentTypeId = 53 AND pProcessingTechnology = 1 THEN 191
-		WHEN pParentTypeId = 32 AND pSubParentTypeId = 53 AND pProcessingTechnology = 2 THEN 192
-		WHEN pParentTypeId = 32 AND pSubParentTypeId = 53 AND pProcessingTechnology = 4 THEN 193
-		WHEN pParentTypeId = 64 AND pSubParentTypeId = 51 AND pProcessingTechnology = 1 THEN 194
-		WHEN pParentTypeId = 64 AND pSubParentTypeId = 51 AND pProcessingTechnology = 4 THEN 195
-		WHEN pParentTypeId = 64 AND pSubParentTypeId = 53 AND pProcessingTechnology = 1 THEN 196
-		WHEN pParentTypeId = 64 AND pSubParentTypeId = 53 AND pProcessingTechnology = 4 THEN 197		
+		WHEN pParentTypeId = 32 AND pSubParentTypeId = 51 THEN 188
+		WHEN pParentTypeId = 32 AND pSubParentTypeId = 53 THEN 191
+		WHEN pParentTypeId = 64 AND pSubParentTypeId = 51 THEN 194
+		WHEN pParentTypeId = 64 AND pSubParentTypeId = 53 THEN 196
 		WHEN pParentTypeId = 128 THEN pParentTypeId	
 		WHEN pParentTypeId = 256 AND pSubParentTypeId = 1  THEN 198
 		WHEN pParentTypeId = 256 AND pSubParentTypeId = 2  THEN 199
@@ -425,7 +409,7 @@ BEGIN
 	RETURN pDisplayValue;											
 END //
 
-CREATE OR REPLACE FUNCTION GetSubRangeDisplayValueFromMasterId(iMasterId INT, iSubRangeTypeId INT, pToolRangeId INT)
+CREATE OR REPLACE FUNCTION GetSubRangeDisplayValueFromMasterId(iMasterId INT, iSubRangeTypeId INT, iToolRangeId INT)
 RETURNS VARCHAR(2000)
 BEGIN
 	DECLARE displayValue VARCHAR(2000) DEFAULT('');
@@ -434,14 +418,14 @@ BEGIN
     DECLARE pDisplayName VARCHAR(32);
 	
 	DECLARE curDetails CURSOR FOR 
-		SELECT ad.DisplayName, di.`Value` FROM detailidentifier di 
+		SELECT ad.DisplayName, di.`Value` FROM detailidentifier_old di 
 		INNER JOIN attributedefinition_old ad ON ad.Id = di.AttributeDefinitionId  
 		WHERE di.MasterId = iMasterId;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 	OPEN curDetails;
-	SET displayValue = CONCAT(pToolRangeId,'_',UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId)));		
+	SET displayValue = CONCAT(iToolRangeId,'_',UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId)));		
 	
 	loop_values: LOOP
 		FETCH curDetails INTO pDisplayName, detailValue;

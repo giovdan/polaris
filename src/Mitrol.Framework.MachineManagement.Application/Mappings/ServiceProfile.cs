@@ -11,6 +11,9 @@
     using Mitrol.Framework.Domain.Core.Extensions;
     using Mitrol.Framework.Domain.Configuration.License;
     using Mitrol.Framework.Domain.Configuration.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Models.Views;
+    using Mitrol.Framework.MachineManagement.Application.Attributes;
+    using Mitrol.Framework.Domain.Attributes;
 
     public class ServiceProfile: AutoMapper.Profile
     {
@@ -133,6 +136,10 @@
                 .ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.Priority))
                 .ForMember(dest => dest.UMLocalizationKey, 
                             opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.AttributeDefinition.DataFormat.ToString().ToUpper()}"));
+
+            CreateMap<AttributeSource, AttributeSourceValueItem>()
+            .ForMember(dest => dest.LocalizationKey, opt => opt.MapFrom(s => s.MustBeTranslated ? s.LocalizationKey : string.Empty))
+            .ForMember(dest => dest.LocalizedText, opt => opt.MapFrom(s => !s.MustBeTranslated ? s.LocalizationKey : string.Empty));
 
             #region < Configuration >
 
@@ -269,6 +276,20 @@
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(s => s.Id));
 
             #endregion < Configuration >
+
+            #region < Tools >
+            CreateMap<ToolDetailItem, ToolImportItem<AttributeValueItem>>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(s => s.ToolType))
+                .ForMember(dest => dest.ToolManagementId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(dest => dest.Identifiers, opt => opt.Ignore())
+                .ForMember(dest => dest.Attributes, opt => opt.Ignore());
+
+            CreateMap<PlasmaToolMaster, AttributeSource>()
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(s => s.DisplayValue))
+                .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => AttributeDefinitionEnum.PlasmaCurrent))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(s => s.PlasmaCurrent))
+                .ForMember(dest => dest.LocalizationKey, opt => opt.MapFrom(s => s.PlasmaCurrent));
+            #endregion < Tools >
         }
     }
 }

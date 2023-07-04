@@ -86,7 +86,8 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                                                         , attribute.ItemDataFormat
                                                         , decimalValue
                                                         , applyRound: true);
-
+            var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            AttributeValueRepository.Attach(uow);
             switch (attribute.ControlType)
             {
                 case ClientControlTypeEnum.Check:
@@ -96,8 +97,11 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                 case ClientControlTypeEnum.Combo:
                     {
                         //Recupero la lista di tutti i possibili valori
-                        IAttributeDefinitionEnumManagement SourcesService = ServiceFactory.Resolve<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>(attribute.EnumId);
-                        var attributeSourceList = SourcesService.FindAttributeSourceValues();
+                        IAttributeDefinitionEnumManagement sourcesService
+                            = ServiceFactory.Resolve<IAttributeDefinitionEnumManagement
+                                    , AttributeDefinitionEnum>(attribute.EnumId);
+                        
+                        var attributeSourceList = sourcesService.FindAttributeSourceValues();
 
                         //Se il controllo è una ComboBox applico i filtri sui valori in base al parentType
                         if (attribute.ControlType == ClientControlTypeEnum.Combo)
@@ -113,7 +117,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                         if (filteredValues.Any())
                         {
                             var firstValue = filteredValues.FirstOrDefault();
-                            attributeValue.ValueType = SourcesService.GetValueType();
+                            attributeValue.ValueType = sourcesService.GetValueType();
                             //Se è un solo valore ed è un uri allora il source è l'uri
                             if (attributeValue.ValueType == ValueTypeEnum.DynamicEnum)
                             {
@@ -128,7 +132,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                                 //Recupero il valore di Default del tipo di enumerativo rappresentato dall'attributo "attribute"
                                 if (attribute.DbValue == null)
                                 {
-                                    var defaultSource = SourcesService.GetDefaultValue();
+                                    var defaultSource = sourcesService.GetDefaultValue();
                                     if (defaultSource != null && int.TryParse(defaultSource.Value.ToString(), out defaultEnumValue))
                                     { }
                                     attributeValue.CurrentValueId = defaultEnumValue;
@@ -196,6 +200,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                     {
                         attributeValue.CurrentValue = attribute.DbValue;
                         attributeValue.ValueType = ValueTypeEnum.Override;
+
                         var attributeOverride = AttributeValueRepository.GetOverrideValue(attribute.Id);
                         //Recupera l'override se esiste
                         if (attributeOverride != null)

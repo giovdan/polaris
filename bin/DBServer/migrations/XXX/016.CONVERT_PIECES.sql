@@ -48,7 +48,7 @@ BEGIN
 	FROM piece p WHERE Id = iPieceId;
 	
 	SET pContext = CONCAT('Errore nel recupero informazioni per la tabella entity');
-	SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId, 1);
+	SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId);
 	# Recupero gli identificatori tramite il masterId e creo HashCode
 	SET pHashCode = SHA2(CONCAT(pEntityTypeId,pDisplayName),256);
 

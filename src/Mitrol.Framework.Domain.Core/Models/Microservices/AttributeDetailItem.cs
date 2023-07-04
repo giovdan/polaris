@@ -115,7 +115,8 @@
         [JsonProperty("UseLastInsertedAsDefault")]
         public bool UseLastInsertedAsDefault { get; set; }
 
-
+        [JsonIgnore()]
+        public ProcessingTechnologyEnum ProcessingTechnology { get; set; }
 
         public AttributeDetailItem()
         {
@@ -162,34 +163,37 @@
         /// Add ToolManagementId as Fake Identifier
         /// </summary>
         /// <param name="identifiers"></param>
-        public static void AddToolManagementIdAsIdentifier(this IEnumerable<AttributeDetailItem> identifiers, int toolManagementId)
+        public static IEnumerable<AttributeDetailItem> AddToolManagementIdAsIdentifier(this List<AttributeDetailItem> attributes
+                    , int toolManagementId)
         {
-            // Aggiungo agli identificatori la posizione nel magazzino e l'identificativo del magazzino
-            identifiers.Append(new AttributeDetailItem
-            {
-                AttributeDefinitionLinkId = 0,
-                IsFake = true,
-                AttributeKind = AttributeKindEnum.Number,
-                AttributeType = AttributeTypeEnum.Identifier,
-                ControlType = ClientControlTypeEnum.Edit,
-                DisplayName = DatabaseDisplayNameEnum.ToolManagementId.ToString(),
-                DecimalPrecision = 0,
-                EnumId = AttributeDefinitionEnum.ToolManagementId,
-                GroupId = AttributeDefinitionGroupEnum.Identifiers,
-                DbValue = toolManagementId,
-                IsCodeGenerator = false,
-                AttributeScopeId = AttributeScopeEnum.Optional,
-                ItemDataFormat = AttributeDataFormatEnum.AsIs,
-                LocalizationKey = "LBL_ATTR_WAREHOUSEPOSITION",
-                Order = 999,
-                ProtectionLevel = ProtectionLevelEnum.Normal,
-                Value = new AttributeValueItem
+            // Aggiungo agli attributi la posizione nel magazzino e l'identificativo del magazzino
+            attributes.Add(
+                new AttributeDetailItem
                 {
-                    CurrentValue = toolManagementId,
-                    ValueType = ValueTypeEnum.Flat
-                }
-            });
+                    AttributeDefinitionLinkId = 0,
+                    IsFake = true,
+                    AttributeKind = AttributeKindEnum.Number,
+                    AttributeType = AttributeTypeEnum.Identifier,
+                    ControlType = ClientControlTypeEnum.Edit,
+                    DisplayName = DatabaseDisplayNameEnum.ToolManagementId.ToString(),
+                    DecimalPrecision = 0,
+                    EnumId = AttributeDefinitionEnum.ToolManagementId,
+                    GroupId = AttributeDefinitionGroupEnum.Identifiers,
+                    DbValue = toolManagementId,
+                    IsCodeGenerator = false,
+                    AttributeScopeId = AttributeScopeEnum.Optional,
+                    ItemDataFormat = AttributeDataFormatEnum.AsIs,
+                    LocalizationKey = "LBL_ATTR_WAREHOUSEPOSITION",
+                    Order = 999,
+                    ProtectionLevel = ProtectionLevelEnum.Normal,
+                    Value = new AttributeValueItem
+                    {
+                        CurrentValue = toolManagementId,
+                        ValueType = ValueTypeEnum.Flat
+                    }
+                });
 
+            return attributes.AsEnumerable();
         }
 
         public static void SetFormatForLabel(this AttributeDetailItem attribute, MeasurementSystemEnum conversionSystemTo)
@@ -282,6 +286,37 @@
             return value;
         }
 
+        /// <summary>
+        /// Set Attribute Detail Item Default Value
+        /// </summary>
+        /// <param name="attributeDetail"></param>
+        /// <param name="serviceFactory"></param>
+        public static void SetDefaultAttributeValue(this AttributeDetailItem attributeDetail, IServiceFactory serviceFactory)
+        {
+            switch (attributeDetail.AttributeKind)
+            {
+                case AttributeKindEnum.String:
+                    attributeDetail.Value.CurrentValue = "";
+                    attributeDetail.DbValue = "";
+                    break;
+                case AttributeKindEnum.Enum:
+                    //Recupero il valore di Default del tipo di enumerativo rappresentato dall'attributo "attributeDefinition" 
+                    var sourcesService = serviceFactory
+                                    .Resolve<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>
+                                                (attributeDetail.EnumId);
+                    var attributeDefault = sourcesService.GetDefaultValue();
+                    if ((attributeDefault != null) && (int.TryParse(attributeDefault.Value.ToString(), out var enumValue)))
+                    {
+                        attributeDetail.Value.CurrentValueId = enumValue;
+                        attributeDetail.Value.CurrentValue = string.Empty;
+                    }
+                    break;
+                case AttributeKindEnum.Number:
+                case AttributeKindEnum.Bool:
+                    attributeDetail.Value.CurrentValue = 0;
+                    break;
+            }
+        }
         /// <summary>
         /// Set Attribute Detail Item value
         /// </summary>
