@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `attributevalue` (
 	`EntityId` INT(11) NOT NULL,
 	`AttributeDefinitionLinkId` INT(11) NOT NULL,
 	`DataFormatId` INT(11) NOT NULL,
-	`Value` DECIMAL(12,7) NULL DEFAULT NULL,
+	`Value` DECIMAL(14,7) NULL DEFAULT NULL,
 	`TextValue` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
 	`Priority` INT(11) NOT NULL DEFAULT 999,
 	`CreatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL' COLLATE 'utf8mb4_bin',
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `attributevalue` (
 	`UpdatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL' COLLATE 'utf8mb4_bin',
 	`UpdatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
 	`TimeZoneId` MEDIUMTEXT NULL DEFAULT 'W. Europe Standard Time' COLLATE 'utf8mb4_unicode_ci',	
-	`RowVersion` TEXT NOT NULL COLLATE 'utf8mb4_bin',
+	`RowVersion` TEXT NOT NULL DEFAULT UUID() COLLATE 'utf8mb4_bin',
 	PRIMARY KEY (`Id`) USING BTREE,
 	INDEX `EntityId` (`EntityId`) USING BTREE,
 	INDEX `AttributeDefinitionLinkId` (`AttributeDefinitionLinkId`) USING BTREE,
@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS migratedAttribute
 	EnumId INT NOT NULL, 
 	IsCodeGenerator BOOLEAN, 
 	IsSubFilter BOOLEAN, 
+	IsStatusAttribute BOOLEAN NOT NULL DEFAULT false,
 	AttributeScopeId ENUM ('Optional','Fundamental','Preview'), 
 	LastInsertedValue DECIMAL(12,6) NULL, 
 	LastInsertedTextValue TEXT NULL, 
@@ -140,7 +141,6 @@ CREATE TABLE IF NOT EXISTS migratedEntity
 	ParentTypeId INT NOT NULL,
 	ParentId INT NOT NULL,
 	EntityId INT NOT NULL,
-	PRIMARY KEY (`Id`),
-	FOREIGN KEY (EntityId) REFERENCES entity(id)
+	PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 

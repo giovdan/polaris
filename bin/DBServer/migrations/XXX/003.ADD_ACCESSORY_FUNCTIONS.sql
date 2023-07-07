@@ -482,7 +482,7 @@ BEGIN
 	OPEN curAttributeValues;
 	
 	SET pContext = 'Initiliaze hashcode';
-	SET pStringToHash = CONCAT(iParentId,iParentTypeId, iEntityTypeId);	
+	SET pStringToHash = iEntityTypeId;	
 	
 loop_values: LOOP
 		FETCH curAttributeValues INTO pValue, pTextValue, pAttributeKind;	
@@ -508,7 +508,7 @@ loop_values: LOOP
 END //
 
 
-CREATE OR REPLACE FUNCTION CreateHashCodeByIdentifiers(iEntityTypeId INT, iMasterId INT, iParentMasterId INT)
+CREATE OR REPLACE FUNCTION CreateHashCodeByIdentifiers(iEntityTypeId INT, iMasterId INT, iParentId INT)
 RETURNS CHAR(64)
 BEGIN
 	DECLARE pStringToHash TEXT DEFAULT ('');
@@ -527,10 +527,10 @@ BEGIN
 	
 	OPEN curIdentifiers;
 	
-	SET pStringToHash = CONCAT(iMasterId,iEntityTypeId);
+	SET pStringToHash = iEntityTypeId;
 
-	IF iParentMasterId > 0 THEN	
-		SET pStringToHash = CONCAT(pStringToHash, iParentMasterId);
+	IF iParentId > 0 THEN	
+		SET pStringToHash = CONCAT(pStringToHash, iParentId);
 	END IF;
 	
 loop_identifiers: LOOP
@@ -649,7 +649,8 @@ END //
 
 CREATE OR REPLACE FUNCTION `GetSubRangeDisplayValueFromMasterId`(
 	`iMasterId` INT,
-	`iSubRangeTypeId` INT
+	`iSubRangeTypeId` INT,
+	iParentId INT
 )
 RETURNS varchar(2000)
 LANGUAGE SQL
@@ -661,7 +662,7 @@ BEGIN
 	DECLARE displayValue VARCHAR(2000) DEFAULT('');
 	DECLARE done INT DEFAULT FALSE;
 	DECLARE detailValue VARCHAR(50);
-   DECLARE pDisplayName VARCHAR(32);
+    DECLARE pDisplayName VARCHAR(32);
 	
 	DECLARE curDetails CURSOR FOR 
 		SELECT ad.DisplayName, di.`Value` FROM detailidentifier_old di 
@@ -671,7 +672,7 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 	OPEN curDetails;
-	SET displayValue = UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId));		
+	SET displayValue = CONCAT(iParentId, '_', UCASE(GetSubRangeTypeDisplayName(iSubRangeTypeId)));		
 	
 	loop_values: LOOP
 		FETCH curDetails INTO pDisplayName, detailValue;
