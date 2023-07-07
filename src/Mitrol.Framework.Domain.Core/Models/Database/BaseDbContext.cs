@@ -84,6 +84,12 @@
                 {
                     entityHasSessionId.SessionId = UserSession.SessionId;
                 }
+
+                var entityHasRowVersion = entry.Entity as IHasRowVersion;
+                if (entityHasRowVersion != null)
+                {
+                    entityHasRowVersion.RowVersion = Guid.NewGuid().ToString();
+                }
             }
         }
 
@@ -94,8 +100,6 @@
         {
             try
             {
-
-               
                 ApplyAuditableLogic();
             }
             catch
@@ -118,10 +122,9 @@
                 ChangeTracker.Clear();
                 return res;
             }
-
-            catch
+            catch(Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 

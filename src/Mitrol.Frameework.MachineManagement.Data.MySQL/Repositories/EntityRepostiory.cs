@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Mitrol.Framework.Domain.Core.Interfaces;
+    using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
@@ -67,6 +68,9 @@
         public Entity Get(long id) => UnitOfWork.Context.Entities.SingleOrDefault(e => e.Id == id);
 
         public Entity Get(string displayName) => UnitOfWork.Context.Entities.SingleOrDefault(e => e.DisplayName == displayName);
+
+        public Entity GetBySecondaryKey(long secondaryKey, EntityTypeEnum entitType) 
+                    => UnitOfWork.Context.Entities.SingleOrDefault(e => e.SecondaryKey == secondaryKey && e.EntityTypeId == entitType);
 
         public IEnumerable<Entity> GetAll() => UnitOfWork.Context.Entities;
 

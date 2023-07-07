@@ -21,5 +21,4 @@
         public EntityStatusEnum Status { get; set; }
         public int Priority { get; set; }
     }
-
 }

@@ -42,6 +42,11 @@
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.EnumId));
 
+            CreateMap<AttributeDefinitionLink, AttributeValue>()
+                .ForMember(dest => dest.AttributeDefinitionLinkId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.DataFormatId, opt => opt.MapFrom(s => s.AttributeDefinition.DataFormat));
+
             CreateMap<IGrouping<Entity, AttributeValue>, EntityItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(s => s.Key.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(s => s.Key.DisplayName))
@@ -140,6 +145,13 @@
             CreateMap<AttributeSource, AttributeSourceValueItem>()
             .ForMember(dest => dest.LocalizationKey, opt => opt.MapFrom(s => s.MustBeTranslated ? s.LocalizationKey : string.Empty))
             .ForMember(dest => dest.LocalizedText, opt => opt.MapFrom(s => !s.MustBeTranslated ? s.LocalizationKey : string.Empty));
+
+
+            CreateMap<MachineParameter, MachineParameterItem>()
+                .ForMember(dest => dest.DescriptionCode, opt => opt.MapFrom(s => s.DescriptionLocalizationKey))
+                .ForMember(dest => dest.HelpDescriptionCode, opt => opt.MapFrom(s => s.HelpLocalizationKey))
+                .ForMember(dest => dest.ProtectionLevel, opt => opt.MapFrom(s => s.ProtectionLevel.ToString()))
+                .ForMember(dest => dest.ItemDataFormat, opt => opt.MapFrom(s => (AttributeDataFormatEnum)s.DataFormatId));
 
             #region < Configuration >
 
@@ -283,6 +295,13 @@
                 .ForMember(dest => dest.ToolManagementId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(dest => dest.Identifiers, opt => opt.Ignore())
                 .ForMember(dest => dest.Attributes, opt => opt.Ignore());
+
+            CreateMap<ToolImportItem<AttributeValueItem>, Entity>()
+                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(s => s.Code))
+                .ForMember(dest => dest.HashCode, opt => opt.Ignore())
+                .ForMember(dest => dest.SecondaryKey, opt => opt.MapFrom(s => s.ToolManagementId))
+                .ForMember(dest => dest.EntityTypeId, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.Ignore());
 
             CreateMap<PlasmaToolMaster, AttributeSource>()
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(s => s.DisplayValue))

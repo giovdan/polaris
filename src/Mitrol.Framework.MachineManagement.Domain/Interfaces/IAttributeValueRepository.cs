@@ -8,9 +8,16 @@
 
     public interface IAttributeValueRepository: IRepository<AttributeValue, IMachineManagentDatabaseContext>
     {
-        int BulkUpdate(IEnumerable<AttributeValue> attributeValues);
-        void BatchUpdate(IEnumerable<AttributeValue> attributeValues);
         IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(Expression<Func<ToolStatusAttribute, bool>> predicate);
         AttributeOverrideValue GetOverrideValue(long attributeValueId);
+        IEnumerable<AttributeOverrideValue> FindAttributeOverridesBy(Expression<Func<AttributeOverrideValue, bool>> predicate);
+        void BatchUpdate(IEnumerable<AttributeValue> attributeValues);
+        void BatchUpdateOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues);
+        int BatchInsertOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues);
+        int Remove(Expression<Func<AttributeValue, bool>> predicate);
+        #region < Bulk operations >
+        int BulkUpdate(IEnumerable<AttributeValue> attributeValues);
+        int BulkInsertOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues);
+        #endregion
     }
 }

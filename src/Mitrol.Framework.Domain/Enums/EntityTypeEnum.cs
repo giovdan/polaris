@@ -7,6 +7,7 @@
 
     public enum EntityTypeEnum
     {
+        [EnumSerializationName("NotDefined")]
         NotDefined = 0,
         ProfileL = 1,
         ProfileV = 2,
@@ -22,87 +23,125 @@
         ProfileP = 13,
         ProfileR = 14,
         [PlantUnit(PlantUnitEnum.PunchingMachine)]
+        [EnumSerializationName("PUNCH_15")]
         ToolTS15 = 15,
         [PlantUnit(PlantUnitEnum.PunchingMachine)]
+        [EnumSerializationName("PUNCH_MK")]
         ToolTS16 = 16,
         [PlantUnit(PlantUnitEnum.PunchingMachine)]
+        [EnumSerializationName("PUNCH_NOTCH")]
         ToolTS17 = 17,
         [PlantUnit(PlantUnitEnum.PunchingMachine)]
+        [EnumSerializationName("PUNCH_18")]
         ToolTS18 = 18,
         [PlantUnit(PlantUnitEnum.PunchingMachine)]
+        [EnumSerializationName("PUNCH_19")]
         ToolTS19 = 19,
         [PlantUnit(PlantUnitEnum.PunchingMachine)]
+        [EnumSerializationName("PUNCH_POINT")]
         ToolTS20 = 20,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DRILL_32")]
         ToolTS32 = 32,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DRILL_33")]
         ToolTS33 = 33,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DEBURR")]
         ToolTS34 = 34,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("FLARE")]
         ToolTS35 = 35,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DEBURR_36")]
         ToolTS36 = 36,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("BORE")]
         ToolTS38 = 38,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POINT")]
         ToolTS39 = 39,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DRILL_40")]
         ToolTS40 = 40,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("TAP")]
         ToolTS41 = 41,
         [PlantUnit(PlantUnitEnum.Shear)]
+        [EnumSerializationName("SHEAR")]
         ToolTS50 = 50,
         [PlantUnit(PlantUnitEnum.PlasmaTorch)]
+        [EnumSerializationName("PLA")]
         ToolTS51 = 51,
         [PlantUnit(PlantUnitEnum.OxyCutTorch)]
+        [EnumSerializationName("OXY")]
         ToolTS52 = 52,
         [PlantUnit(PlantUnitEnum.PlasmaTorch)]
+        [EnumSerializationName("PLA_MK")]
         ToolTS53 = 53,
         [PlantUnit(PlantUnitEnum.OxyCutTorch)]
+        [EnumSerializationName("OXY_BEV")]
         ToolTS54 = 54,
         [PlantUnit(PlantUnitEnum.SawingMachine)]
+        [EnumSerializationName("DISC_BLADE")]
         ToolTS55 = 55,
         [PlantUnit(PlantUnitEnum.SawingMachine)]
+        [EnumSerializationName("BAND_BLADE")]
         ToolTS56 = 56,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("ROTATING_BLADE")]
         ToolTS57 = 57,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("MILL")]
         ToolTS61 = 61,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POCKET")]
         ToolTS62 = 62,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POCKET_68")]
         ToolTS68 = 68,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POCKET_69")]
         ToolTS69 = 69,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("SENSE_70")]
         ToolTS70 = 70,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("TAP_71")]
         ToolTS71 = 71,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DFLARE")]
         ToolTS73 = 73,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("DDEBURR")]
         ToolTS74 = 74,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POCKET_75")]
         ToolTS75 = 75,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POCKET_76")]
         ToolTS76 = 76,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("PENCIL_77")]
         ToolTS77 = 77,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("PENCIL_78")]
         ToolTS78 = 78,
         [PlantUnit(PlantUnitEnum.DrillingMachine)]
+        [EnumSerializationName("POCKET_79")]
         ToolTS79 = 79,
         [PlantUnit(PlantUnitEnum.PalpingMachine)]
+        [EnumSerializationName("SENSE_80")]
         ToolTS80 = 80,
         [PlantUnit(PlantUnitEnum.CharMarker)]
+        [EnumSerializationName("MARK_87")]
         ToolTS87 = 87,
         [PlantUnit(PlantUnitEnum.CharMarker)]
+        [EnumSerializationName("MARK_88")]
         ToolTS88 = 88,
         [PlantUnit(PlantUnitEnum.InkJetMarker)]
+        [EnumSerializationName("MARK_JET")]
         ToolTS89 = 89,
-        [PlantUnit(PlantUnitEnum.PlasmaTorch)]
-        ToolTS53HPR = 93,
         StockProfileL = 94,
         StockProfileV = 95,
         StockProfileB = 96,

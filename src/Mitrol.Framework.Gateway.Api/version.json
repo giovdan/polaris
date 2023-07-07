@@ -1,13 +1,9 @@
 {
-  "gitCommitHash": "ff7b219274569687e8f9e8839740233b354f0998",
-  "gitCommitDate": "Thu, 29 Jun 2023 17:36:15 +0200",
+  "gitCommitHash": "087bf28f49e111f16a6e0eadafb7260d1b1f3581",
+  "gitCommitDate": "Tue, 4 Jul 2023 12:18:45 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Tue, 04 Jul 2023 12:17:58 +0200",
+  "buildDate": "Fri, 07 Jul 2023 15:39:43 +0200",
   "gitUncommittedFiles": [
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/001.CREATE_ENTITY_TABLE.sql"
-    },
     {
       "status": "M",
       "filename": "bin/DBServer/migrations/XXX/002.CREATE_ACCESSORY_TABLES.sql"
@@ -18,75 +14,11 @@
     },
     {
       "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/005_MIGRATE_ATTRIBUTEDEFINITIONS.sql"
+      "filename": "src/AssemblyInfo_Global.cs"
     },
     {
       "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/008.CONVERT_TOOLS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/009.CONVERT_TOOLTABLES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/010.CONVERT_TOOLHOLDERS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/012.CONVERT_TOOLSUBRANGES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/013.CONVERT_MARKINGTABLES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/014.CONVERT_STOCKS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/015.CONVERT_PROGRAMS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/016.CONVERT_PIECES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/017.CONVERT_PROGRAMPIECE_LINKS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/018.CONVERT_PIECEOPEARTIONS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/019.CONVERT_ADDITIONALITEMS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/022.CONVERT_PRODUCTIONROWS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/023.CONVERT_MATERIALS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/025.CHANGE_ATTRIBUTEVALUEOVERRIDE_REFERENCES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/027.DROP_USELESS_TABLES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/996_FIX_VIEWS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Models/MachineManagementDatabaseContext.cs"
+      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
     },
     {
       "status": "M",
@@ -94,23 +26,11 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Mitrol.Framework.Domain.Core.csproj"
+      "filename": "src/Mitrol.Framework.Domain.Core/Extensions/CoreExtensions.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/AttributeDetailItem.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Microservices/AttributeValueItem.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Attributes/AttributeInfoAttribute.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/AttributeDefinitionEnum.cs"
+      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/BaseDbContext.cs"
     },
     {
       "status": "M",
@@ -118,63 +38,15 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/ProgramTypeEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/ToolTypeEnum.cs"
-    },
-    {
-      "status": "M",
       "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
     },
     {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Attributes/AttributeSource.cs"
-    },
-    {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Enums/Features/MachineFeaturesEnum.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/GeneralPurpose/DynamicEnumConfigurationManagement.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/GeneralPurpose/ExternalFileConfigurationManagement.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/GeneralPurpose/PlasmaAMConfigurationManagement.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/ISourcesService.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolService.cs"
     },
     {
       "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Application/Mappings/ServiceProfile.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/DynamicEnumConfigurationManagement.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/EnumResolver.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/ExternalFileConfigurationManagement.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/FlatEnumConfigurationManagement.cs"
-    },
-    {
-      "status": "D",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/PlasmaAMConfigurationManagement.cs"
     },
     {
       "status": "M",
@@ -186,19 +58,15 @@
     },
     {
       "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IAttributeValueRepository.cs"
+    },
+    {
+      "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IEntityRepository.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IMachineManagentDatabaseContext.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinitionLink.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Entity.cs"
     },
     {
       "status": "M",

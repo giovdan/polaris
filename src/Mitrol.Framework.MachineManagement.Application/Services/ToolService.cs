@@ -36,6 +36,101 @@
 
 
         #region < Private Methods >
+        private Result UpdateAttributes(IEnumerable<AttributeDetailItem> attributeDetailItems, 
+                            IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
+        {
+
+            var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+            try
+            {
+                AttributeValueRepository.Attach(uow);
+
+                // Non considero gli attributi Fake
+                attributeDetailItems = attributeDetailItems.Where(a => !a.IsFake);
+
+                // Creo il dizionario per accedere più rapidamente ai singoli AttributeDetailItem
+                var attributeDetailItemsDictionary = attributeDetailItems
+                            .ToDictionary(attributeDetailItem => attributeDetailItem.Id);
+
+                // Preparo la lista degli AttributeValueId
+                var attributeValueIds = attributeDetailItems.Select(attributeDetailItem => attributeDetailItem.Id).ToHashSet();
+
+                // Filtro gli AttributeDetailItem con override
+                var attributeDatailItemsWithOverride = attributeDetailItems
+                    .Where(adi => adi.Value.CurrentOverrideValue.OverrideType != OverrideTypeEnum.None);
+
+                // Recupero gli ID degli attributi con override
+                var attributeDatailItemsWithOverrideIds = attributeDatailItemsWithOverride
+                    .Select(a => a.Id).ToHashSet();
+
+                // Recupero gli attributi già presenti nel database
+                var existingAttributeValues = AttributeValueRepository
+                    .FindBy(attributeValue => attributeValueIds.Contains(attributeValue.Id))
+                    .Select(attributeValue => UpdateAttributeValueFromAttributeDetailItem(attributeDetailItemsDictionary[attributeValue.Id],
+                                                                                            UserSession.ConversionSystem,
+                                                                                            attributeValue));
+
+                // Recupero gli override, associati agli attributi, già presenti nel database
+                var existingAttributeOverrideValues = AttributeValueRepository
+                    .FindAttributeOverridesBy(aov => attributeDatailItemsWithOverrideIds.Contains(aov.AttributeValueId))
+                    .Select(attributeOverrideValue => UpdateAttributeOverrideValueFromAttributeDetailItem(attributeDetailItemsDictionary[attributeOverrideValue.AttributeValueId],
+                                                                                                            UserSession.ConversionSystem,
+                                                                                                            attributeOverrideValue));
+                // Preparo la lista degli AttributeValueId per gli overrideValues esistenti
+                var existingAttributeOverrideValueAttributeIds = existingAttributeOverrideValues.Select(attributeOverrideValue => attributeOverrideValue.AttributeValueId);
+
+                // Creo gli override non ancora presenti nel database
+                var attributeOverrideValuesToCreate = attributeDatailItemsWithOverride
+                    .Where(attr => !existingAttributeOverrideValueAttributeIds.Contains(attr.Id))
+                    .Select(attributeDetailItem => 
+                                    UpdateAttributeOverrideValueFromAttributeDetailItem(attributeDetailItem,
+                                                                            UserSession.ConversionSystem,
+                                                                            new AttributeOverrideValue
+                                                                            {
+                                                                                AttributeValueId = attributeDetailItem.Id,
+                                                                            }));
+
+                // Aggiornamento degli attributi esistenti
+                AttributeValueRepository.BatchUpdate(existingAttributeValues);
+                // Aggiornamento degli override esistenti
+                AttributeValueRepository.BatchUpdateOverrides(existingAttributeOverrideValues);
+                // Creazione degli override non ancora creati
+                AttributeValueRepository.BatchInsertOverrides(attributeOverrideValuesToCreate);
+                uow.Commit();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return Result.Ok();
+        }
+
+        private Result InnerToolUpdate(Entity dbEntity, ToolDetailItem tool)
+        {
+            try
+            {
+                using (var uow = UnitOfWorkFactory.GetOrCreate(UserSession))
+                {
+                    EntityRepository.Attach(uow);
+
+                    uow.BeginTransaction();
+                    UpdateAttributes(tool.Attributes, uow);
+                    dbEntity.SecondaryKey = tool.Id;
+                    EntityRepository.Update(dbEntity);
+                    uow.Commit();
+                    uow.CommitTransaction();
+                }
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+            }
+            
+        }
+
         private IEnumerable<AttributeDefinitionEnum> GetEnabledUnits(ToolTypeEnum toolType)
         {
             var plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
@@ -344,7 +439,286 @@
             return toolDetail.Attributes;
         }
 
-        
+        /// <summary>
+        /// Inner Add Master Tool Table entity
+        /// </summary>
+        /// <param name="newTool"></param>
+        /// <param name="toolType"></param>
+        /// <returns></returns>
+        private Entity AddToolMasterRecord<T>(ToolImportItem<T> newTool
+                        , ToolTypeEnum toolType
+                        , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+                        , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
+        {
+            var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+
+            try
+            {
+                //Recupera la processing Technology
+                var processingTechnology = GetRealProcessTechnology(
+                            MachineConfigurationService.ConfigurationRoot.Setup.Pla.GetProcessingTechnology()
+                            , toolType);
+
+                #region < Creazione Tool >
+                var entity = Mapper.Map<Entity>(newTool);
+                entity.EntityTypeId = toolType.ToEntityType();
+                entity.HashCode = CalculateHashCode(entity.EntityTypeId, newTool.Identifiers
+                                                    , conversionSystemFrom
+                                                    , unitOfWork: uow);
+                entity.DisplayName = CalculateDisplayName(entity.EntityTypeId, newTool.Identifiers
+                                                    , conversionSystemFrom);
+                #endregion < Creazione Tool >
+                EntityRepository.Attach(uow);
+                entity = EntityRepository.Add(entity);
+                uow.Commit();
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+  
+        private IEnumerable<AttributeValue>
+            GetAttributeValues<TAttribute>(ToolImportItem<TAttribute> newTool
+            , long entityId, EntityTypeEnum entityType)
+        {
+            var attributeValuesToAdd = Enumerable.Empty<AttributeValue>();
+
+            //Recupera tutti gli attributi non identificativi
+            var attributesDefinitionLinkList = AttributeDefinitionLinkRepository
+                .FindBy(a => a.EntityTypeId == entityType);
+
+            //ToolImportItem specifica in maniera obbligatoria solo gli identificatori
+            foreach (var attributeDefinitionLink in attributesDefinitionLinkList)
+            {
+                //Recuperate le definizioni degli attributi controllo se è stato specificato un attributo
+                //collegato alla definizione nella collezione Attributes del tool da importare
+                //altrimenti lo importo con valore 0
+                AttributeValue attributeValue = Mapper.Map<AttributeValue>(attributeDefinitionLink);
+                attributeValue.EntityId = entityId;
+                attributeValue.Value = 0;
+
+                if (newTool.Attributes.TryGetValue(attributeDefinitionLink.AttributeDefinition.DisplayName
+                            , out var attribute))
+                {
+                    if (attribute is AttributeValueItem attributeValueToAdd)
+                    {
+
+                        switch (attributeDefinitionLink.AttributeDefinition.AttributeKind)
+                        {
+                            case AttributeKindEnum.String:
+                                attributeValue.TextValue = attributeValueToAdd.CurrentValue.ToString();
+                                break;
+                            case AttributeKindEnum.Number:
+                            case AttributeKindEnum.Bool:
+                                if (decimal.TryParse(attributeValueToAdd.CurrentValue.ToString(), out var decimalValue))
+                                {
+                                    attributeValue.Value = decimalValue;
+                                }
+                                break;
+                            case AttributeKindEnum.Enum:
+                                attributeValue.Value = attributeValueToAdd.CurrentValueId;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (attributeDefinitionLink.AttributeDefinition.AttributeKind)
+                        {
+                            case AttributeKindEnum.String:
+                                attributeValue.TextValue = attribute.ToString();
+                                break;
+                            case AttributeKindEnum.Number:
+                            case AttributeKindEnum.Bool:
+                            case AttributeKindEnum.Enum:
+                                if (decimal.TryParse(attribute.ToString(), out var decimalValue))
+                                {
+                                    attributeValue.Value = decimalValue;
+                                }
+                                break;
+                        }
+                    }
+                }
+
+                #region < Set Value for Unit Enabling >
+                if (attributeDefinitionLink.AttributeDefinition.EnumId == AttributeDefinitionEnum.ToolEnableA &&
+                            newTool.ToolUnitMask.HasFlag(ToolUnitMaskEnum.UnitA))
+                    attributeValue.Value = 1;
+
+                if (attributeDefinitionLink.AttributeDefinition.EnumId == AttributeDefinitionEnum.ToolEnableB &&
+                        newTool.ToolUnitMask.HasFlag(ToolUnitMaskEnum.UnitB))
+                    attributeValue.Value = 1;
+
+                if (attributeDefinitionLink.AttributeDefinition.EnumId == AttributeDefinitionEnum.ToolEnableC &&
+                    newTool.ToolUnitMask.HasFlag(ToolUnitMaskEnum.UnitC))
+                    attributeValue.Value = 1;
+
+                if (attributeDefinitionLink.AttributeDefinition.EnumId == AttributeDefinitionEnum.ToolEnableD &&
+                                newTool.ToolUnitMask.HasFlag(ToolUnitMaskEnum.UnitD))
+                    attributeValue.Value = 1;
+                #endregion < Set Value for Unit Enabling >
+
+                attributeValuesToAdd = attributeValuesToAdd.Append(attributeValue);
+            }
+
+            return attributeValuesToAdd;
+        }
+
+        private IEnumerable<AttributeOverrideValue> GetAttributeOverrideValues<TAttribute>(
+                    IEnumerable<AttributeValue> attributeValuesToAdd
+                    , Dictionary<string, TAttribute> newToolAttributes)
+        {
+            // Recupero gli Id e displayName degli attributeDefinition che sono Override
+            var overridesDefinitionIds = AttributeDefinitionLinkRepository
+                    .FindBy(adl => adl.ControlType == ClientControlTypeEnum.Override)
+                    .ToDictionary(adl => adl.Id, adl => adl.AttributeDefinition.DisplayName);
+
+            var attributeOverrideValuesToAdd = Enumerable.Empty<AttributeOverrideValue>();
+            // Recupero solo gli AttributeValue che ho appena inserito nel DB, che sono override (mi serve l'ID per inserirlo nella tabella collegata) 
+            foreach (var attributeValue in
+                    attributeValuesToAdd
+                        .Where(av => overridesDefinitionIds.Keys.Contains(av.AttributeDefinitionLinkId)))
+            {
+                if (overridesDefinitionIds.TryGetValue(attributeValue.AttributeDefinitionLinkId, out var displayName)
+                    && newToolAttributes.TryGetValue(displayName, out var attribute))
+                {
+                    if (attribute is AttributeValueItem attributeValueToAdd)
+                    {
+                        attributeOverrideValuesToAdd =
+                                attributeOverrideValuesToAdd.Append(new AttributeOverrideValue
+                                {
+                                    AttributeValueId = attributeValue.Id,
+                                    Value = attributeValueToAdd.CurrentOverrideValue.Value,
+                                    OverrideType = attributeValueToAdd.CurrentOverrideValue.OverrideType
+                                });
+                    }
+                }
+            }
+
+            return attributeOverrideValuesToAdd;
+        }
+
+        /// <summary>
+        /// Inner New Tool Creation
+        /// </summary>
+        /// <param name="newTool"></param>
+        /// <returns></returns>
+        private Result InnerAddToolAttributes<TAttribute>(ToolImportItem<TAttribute> newTool
+                                                , long toolId
+                                                , EntityTypeEnum entityType
+                                                , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
+        {
+
+            var uowAttributes = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+
+            try
+            {
+                EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "50"
+                     , status: GenericEventStatusEnum.InProgress
+                     , localizationKey: "LBL_CLONE_TOOL_ATTRIBUTES"));
+                AttributeValueRepository.Attach(uowAttributes);
+                AttributeDefinitionLinkRepository.Attach(uowAttributes);
+
+                var attributesToAdd= GetAttributeValues(newTool, toolId , entityType);
+                 AttributeValueRepository.BatchInsert(attributesToAdd);
+                uowAttributes.Commit();
+
+                // Aggiunta degli Overrides
+                EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "65"
+                     , status: GenericEventStatusEnum.InProgress
+                     , localizationKey: "LBL_CLONE_TOOL_ATTRIBUTES_OVERRIDES"));
+
+                var attributeOverrideValuesToAdd = GetAttributeOverrideValues(attributesToAdd, newTool.Attributes);
+                if (attributeOverrideValuesToAdd.Any())
+                {
+                    AttributeValueRepository.BatchInsertOverrides(attributeOverrideValuesToAdd);
+                    uowAttributes.Commit();
+                }
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+            }
+            finally
+            {
+                if (unitOfWork == null)
+                    uowAttributes.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Crea un nuovo tool
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="newTool"></param>
+        /// <param name="processingTechnology"></param>
+        /// <returns></returns>
+        private Result<Entity> InnerCreateTool<T>(ToolImportItem<T> newTool
+                        , ProcessingTechnologyEnum processingTechnology = ProcessingTechnologyEnum.Default)
+        {
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+
+            EntityRepository.Attach(uow);
+            uow.BeginTransaction();
+            Entity created = null;
+            try
+            {
+                // Controllo se il tooltype specificato esiste
+                if (Enum.TryParse<ToolTypeEnum>(newTool.Type, out var toolType))
+                {
+                    var plantUnit = toolType.GetEnumAttribute<PlantUnitAttribute>()
+                                ?.PlantUnit ?? PlantUnitEnum.None;
+
+                    // Abilito l'utensile per ogni unità
+                    if (newTool.ToolUnitMask is ToolUnitMaskEnum.None)
+                    {
+                        newTool.ToolUnitMask = plantUnit == PlantUnitEnum.None ? ToolUnitMaskEnum.None
+                                        : plantUnit is PlantUnitEnum.DrillingMachine or PlantUnitEnum.SawingMachine ? ToolUnitMaskEnum.All
+                                            : ToolUnitMaskEnum.UnitC | ToolUnitMaskEnum.UnitD;
+                    }
+
+                    EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "20"
+                                    , status: GenericEventStatusEnum.InProgress
+                                    , localizationKey: "LBL_CLONE_TOOL_MASTER"));
+
+                    // Aggiungo il master
+                    created = AddToolMasterRecord(newTool, toolType,conversionSystemFrom: UserSession.ConversionSystem,
+                                    unitOfWork: uow);
+                    if (created.Id > 0)
+                    {
+                        // Aggiungi gli attributi perchè nella tabella AttributeValue non c'è una FK diretta sulla tabella dei tool
+                        InnerAddToolAttributes(newTool, created.Id,
+                                entityType: created.EntityTypeId
+                                , unitOfWork: uow)
+                            .OnSuccess(() =>
+                            {
+                                uow.CommitTransaction();
+                                EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "100"
+                                        , status: GenericEventStatusEnum.Completed
+                                        , localizationKey: "LBL_CLONE_TOOL_COMPLETED"));
+                            })
+                            .OnFailure(errors =>
+                            {
+                                throw new Exception(errors.ToString());
+                            });
+                    }
+                }
+                return Result.Ok(created);
+            }
+            catch (Exception e)
+            {
+                EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "100"
+                        , status: GenericEventStatusEnum.Failed
+                        , localizationKey: "LBL_CLONE_TOOL_FAILED"));
+                uow.RollBackTransaction();
+                return Result.Fail<Entity>(e.InnerException?.Message ?? e.Message);
+            }
+        }
+
         #endregion < Private Methods >
 
         public Result Boot(IUserSession userSession)
@@ -386,6 +760,11 @@
             return toolToManage;
         }
 
+        /// <summary>
+        /// Create a new Tool based on toolDetail input
+        /// </summary>
+        /// <param name="toolDetail"></param>
+        /// <returns></returns>
         public Result<ToolDetailItem> CreateTool(ToolDetailItem toolDetail)
         {
             using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
@@ -425,16 +804,19 @@
 
             var itemToCreate = Mapper.Map<ToolImportItem<AttributeValueItem>>(toolDetail);
 
-            var enabledUnits = GetEnabledUnits(toolDetail.ToolType);
-
             itemToCreate.Identifiers = toolDetail.Identifiers
+                                      .Where(i => !i.IsFake)
                                       .ToDictionary(id => id.DisplayName
                                           , id => id.GetAttributeValue(
                                                   conversionSystemFrom: toolDetail.ConversionSystem).ToString());
 
+            EventHubClient.StatusEvent(new StatusEvent(percentualProgress: "17"
+                       , status: GenericEventStatusEnum.Failed
+                       , localizationKey: "LBL_CLONE_TOOL_GETATTRIBUTES"));
             // Recupero le definizioni degli attributi e gli assegno i valori di default
             if (!toolDetail.Attributes.Any())
             {
+                var enabledUnits = GetEnabledUnits(toolDetail.ToolType);
                 toolDetail.Attributes = 
                         AttributeDefinitionLinkRepository.FindBy(adl => adl.EntityTypeId == toolDetail.ToolType.ToEntityType())
                         .Select(a =>
@@ -442,6 +824,24 @@
                             // Trasformo in attributeValueItem e gli assegno il valore di default
                             var attributeDetail = Mapper.Map<AttributeDetailItem>(a);
                             attributeDetail.SetDefaultAttributeValue(ServiceFactory);
+
+                            // Valori di default per attributi speciali del tool
+                            // Attributi di abilitazione unità e Diametro reale
+                            if (enabledUnits.Contains(a.AttributeDefinition.EnumId))
+                            {
+                                attributeDetail.Value.CurrentValue = 1;
+                            }
+                            else if (a.AttributeDefinition.EnumId == AttributeDefinitionEnum.RealDiameter)
+                            {
+                                var nominalDiameterAttribute = toolDetail.Identifiers
+                                        .SingleOrDefault(a => a.EnumId == AttributeDefinitionEnum.NominalDiameter);
+                                if (nominalDiameterAttribute != null &&
+                                    decimal.TryParse(nominalDiameterAttribute.Value
+                                        .CurrentValue.ToString(), out var nominalDiameter))
+                                {
+                                    attributeDetail.Value.CurrentValue = nominalDiameter;
+                                }
+                            }
                             return attributeDetail;
                         });
             }
@@ -457,7 +857,12 @@
                                 return a.Value;
                             });
 
-            return Result.Ok(new ToolDetailItem());
+            return InnerCreateTool(itemToCreate)
+                    .OnSuccess(created =>
+                    {
+                        toolDetail.InnerId = created.Id;
+                        return Result.Ok(toolDetail);
+                    });
         }
 
 
@@ -619,7 +1024,83 @@
                                         , UserSession.ConversionSystem));
         }
 
-        
+
+        public Result Remove(long toolId)
+        {
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            uow.BeginTransaction();
+            try
+            {
+                EntityRepository.Attach(uow);
+                AttributeValueRepository.Attach(uow);
+
+                var entity = EntityRepository.Get(toolId);
+                if (entity == null)
+                {
+                    return Result.Fail(ErrorCodesEnum.ERR_GEN002.ToString());
+                }
+
+                AttributeValueRepository.Remove(a => a.EntityId == toolId);
+                EntityRepository.Remove(entity);
+                uow.Commit();
+                uow.CommitTransaction();
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                uow.RollBackTransaction();
+                return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update Tool and related Attributes
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <returns></returns>
+        public Result<ToolDetailItem> UpdateTool(ToolDetailItem tool)
+        {
+            try
+            {
+                var dbEntity = EntityRepository.GetBySecondaryKey(tool.Id, tool.ToolType.ToEntityType());
+
+                if (dbEntity == null)
+                    return Result.Fail<ToolDetailItem>(ErrorCodesEnum.ERR_GEN002.ToString());
+
+                ToolValidator.Init(new Dictionary<DatabaseDisplayNameEnum, object>
+                {
+                    { DatabaseDisplayNameEnum.TS, tool.ToolType }
+                });
+
+                return ToolValidator.Validate(tool)
+                            .OnSuccess(() =>
+                            {
+                                var plantUnit = dbEntity.EntityTypeId.GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit ?? PlantUnitEnum.None;
+                                var toolStatusHandler = ServiceFactory.Resolve<IToolStatus, PlantUnitEnum>(plantUnit);
+                                tool.SetToolStatus(toolStatusHandler);
+                                return InnerToolUpdate(dbEntity, tool);
+                            })
+                            .OnSuccess(() =>
+                            {
+                                var result = Result.Ok();
+
+                                tool.CodeGenerators = tool.Identifiers
+                                        .Select(item => Mapper.Map<CodeGeneratorItem>(item).ApplyCustomMapping(UserSession.ConversionSystem))
+                                        .ToList();
+                                // TO DO:
+                                //if (tool.Source == Enums.UpdateSourceEnum.Application
+                                //        && IsInSetup(tool.Id, dbEntity.ToolType.PlantUnitEnumId))
+                                //{
+                                //    result = PLCApiHandler.UpdateToolOnCnc(tool);
+                                //}
+                                return result.Success ? Result.Ok(tool) : Result.Fail<ToolDetailItem>(result.Errors);
+                            });
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<ToolDetailItem>(ex.InnerException?.Message ?? ex.Message);
+            }
+        }
         #endregion < Tool Management >
     }
 }

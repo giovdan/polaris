@@ -21,5 +21,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Interfaces
                     , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
                     , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem);
         ToolDetailItem GetToolTemplateForCreation(AttributeDefinitionFilter filters);
+        Result Remove(long toolId);
+        Result<ToolDetailItem> UpdateTool(ToolDetailItem tool);
     }
 }

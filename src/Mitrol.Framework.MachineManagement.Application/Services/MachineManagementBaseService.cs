@@ -17,6 +17,9 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
     using System.Linq;
     using System.Globalization;
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
+    using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.Domain.Core.Extensions;
+    using System.Text.RegularExpressions;
 
     public class MachineManagementBaseService: BaseService
     {
@@ -236,6 +239,206 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
             }
 
             return (attributeValue, convertedItem);
+        }
+
+        protected string CalculateDisplayName(EntityTypeEnum entityType
+                                            , Dictionary<string, string> identifiers
+                                            , MeasurementSystemEnum conversionSystemFrom
+                                            , long? parentId = null)
+        {
+            string displayName = string.Empty;
+
+            var serializationNameAttribute = entityType.GetEnumAttribute<EnumSerializationNameAttribute>();
+
+            if (parentId.HasValue)
+            {
+                displayName = $"{parentId}";
+            }
+
+            if (serializationNameAttribute != null)
+            {
+                if (!string.IsNullOrEmpty(displayName))
+                {
+                    displayName += "_";
+                }
+
+                displayName += serializationNameAttribute.Description.ToUpper();
+            }
+
+            foreach(var identifier in identifiers)
+            {
+                if (identifier.Value.IsNotNullOrEmpty() && identifier.Value.ToUpper() != "BEVEL")
+                {
+                    // Se il valore è un numero decimale allora formatto la stringa a 2
+                    if (decimal.TryParse(identifier.Value, out var decimalValue))
+                    {
+                        displayName = $"{displayName}-{decimalValue.ToString("F2")}";
+                    }
+                    else
+                    {
+                        displayName = $"{displayName}-{identifier.Value}";
+                    }
+                }
+            }
+
+            return displayName;
+        }
+
+        /// <summary>
+        /// Calculate entity HashCode based on identifiers
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="identifiers"></param>
+        /// <param name="conversionSystemFrom"></param>
+        /// <param name="parentId"> Specified only for tool subranges</param>
+        /// <returns></returns>
+        protected string CalculateHashCode(EntityTypeEnum entityType
+                                            , Dictionary<string,string> identifiers
+                                            , MeasurementSystemEnum conversionSystemFrom
+                                            , long parentId = 0
+                                            , IAttributeDefinitionLinkRepository attributeLinkDefinitionRepository = null
+                                            , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork = null)
+        {
+            // Dizionario di identificatori normalizzati 
+            // con l'aggiunta dell'informazione sulla priorità di visualizzazione
+            var normalizedIdentifiers = new Dictionary<string, (string Value, int Priority)>();
+
+            var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+
+            attributeLinkDefinitionRepository = attributeLinkDefinitionRepository 
+                                                ?? AttributeDefinitionLinkRepository;
+            attributeLinkDefinitionRepository.Attach(uow);
+
+            var attributeDefinitionLinks = 
+                            attributeLinkDefinitionRepository.FindBy(al => al.EntityTypeId == entityType
+                                && al.AttributeDefinition.AttributeType == AttributeTypeEnum.Identifier)
+                            .ToDictionary(a => a.AttributeDefinition.DisplayName);
+
+            // Normalizzazione degli identifiers
+            foreach(var identifier in identifiers)
+            {
+                string value = identifier.Value;
+
+                if (attributeDefinitionLinks.TryGetValue(identifier.Key, out var attributeDefinitionLink))
+                {
+                    //Se l'attributo è NozzleShape legato al Tool allora: 
+                    if (attributeDefinitionLink.AttributeDefinition.EnumId == AttributeDefinitionEnum.NozzleShape
+                        && entityType.ToParentType() == ParentTypeEnum.Tool)
+                    {
+                        if (Enum.TryParse<NozzleShapeEnum>(value, out var enumValue))
+                        {
+                            value = enumValue.ToString();
+                        }
+                    }
+                    else
+                    {
+                        if (decimal.TryParse(identifier.Value, out var decimalValue))
+                        {
+                            // Fix Conversion System
+                            // Se il conversionSystem della sessione corrente non è metrico decimale
+                            // allora occorre convertire gli identificatori numerici
+                            decimalValue = ConvertToHelper.Convert(
+                                conversionSystemFrom: conversionSystemFrom,
+                                conversionSystemTo: MeasurementSystemEnum.MetricSystem,
+                                dataFormat: attributeDefinitionLink.AttributeDefinition.DataFormat,
+                                value: decimalValue).Value;
+
+                            value = decimalValue.IsInteger() ? decimalValue.ToString("F0", CultureInfo.InvariantCulture)
+                                    : decimalValue.ToString("F2", CultureInfo.InvariantCulture);
+
+                        }
+                    }
+
+                    normalizedIdentifiers.Add(identifier.Key, (value, attributeDefinitionLink.Priority));
+                }
+            }
+
+            // Recupera l'insieme dei valori con cui calcolare l'hash Code
+            var normalizedValues = normalizedIdentifiers
+                .OrderBy(x => x.Value.Priority)
+                .Select(x => x.Value.Value)
+                .ToList();
+
+            if (parentId > 0)
+            {
+                normalizedValues.Add(parentId.ToString());
+            }
+
+
+            return string.Join("",normalizedValues).SHA256();
+        }
+
+        protected AttributeOverrideValue UpdateAttributeOverrideValueFromAttributeDetailItem(AttributeDetailItem source, MeasurementSystemEnum conversionSystemFrom, AttributeOverrideValue attributeOverrideValue)
+        {
+            attributeOverrideValue.Value = source.Value.CurrentOverrideValue.Value;
+            attributeOverrideValue.OverrideType = source.Value.CurrentOverrideValue.OverrideType;
+            return attributeOverrideValue;
+        }
+
+        protected AttributeValue UpdateAttributeValueFromAttributeDetailItem(AttributeDetailItem source,
+                                                                          MeasurementSystemEnum conversionSystemFrom,
+                                                                          AttributeValue attributeValue)
+        {
+            return UpdateAttributeValueFromValueItem(source.Value, source.AttributeKind, source.ItemDataFormat, conversionSystemFrom, attributeValue);
+        }
+
+
+        protected AttributeValue UpdateAttributeValueFromValueItem(AttributeValueItem source,
+                                                                AttributeKindEnum attributeKind,
+                                                                AttributeDataFormatEnum attributeDataFormat,
+                                                                MeasurementSystemEnum conversionSystemFrom,
+                                                                AttributeValue attributeValue)
+        {
+            switch (attributeKind)
+            {
+                case AttributeKindEnum.String:
+                    attributeValue.TextValue = source.CurrentValue?.ToString() ?? string.Empty;
+                    break;
+                case AttributeKindEnum.Bool:
+                    try
+                    {
+                        if (bool.TryParse(source.CurrentValue.ToString(), out bool boolres))
+                        {
+                            attributeValue.Value = boolres == true ? 1 : 0;//per stringhe "true o false"
+                        }
+                        else
+                        {
+                            if (decimal.TryParse(source.CurrentValue.ToString(), out var dresult))//per stringhe "0 o 1"
+                                attributeValue.Value = dresult;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    break;
+                case AttributeKindEnum.Number:
+                    {
+                        try
+                        {
+                            var decimalResult = Convert.ToDecimal(source.CurrentValue);
+                            var convertedItem = ConvertToHelper.Convert(conversionSystemFrom: conversionSystemFrom
+                                                     , conversionSystemTo: MeasurementSystemEnum.MetricSystem
+                                                     , attributeDataFormat
+                                                     , decimalResult);
+                            attributeValue.Value = Math.Round(convertedItem.Value, convertedItem.DecimalPrecision);
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    break;
+                case AttributeKindEnum.Enum:
+                    attributeValue.Value = source.CurrentValueId;
+                    if (source.ValueType == ValueTypeEnum.DynamicEnum)
+                    {
+                        attributeValue.TextValue = source.CurrentValue.ToString();
+                    }
+                    break;
+            }
+
+            return attributeValue;
         }
 
         #region < Apply Custom Mapping >

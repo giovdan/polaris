@@ -398,9 +398,6 @@
             if (!Enum.IsDefined(tool.ToolType))
                 return Result.Fail(new ErrorDetail(nameof(tool.ToolType), ErrorCodesEnum.ERR_TLM001.ToString()));
 
-            if (!Enum.IsDefined(tool.ConversionSystem))
-                return Result.Fail(new ErrorDetail(nameof(tool.ConversionSystem), ErrorCodesEnum.ERR_GEN010.ToString()));
-
             // Validazione identificatori
             if (tool.Identifiers.Any())
             {

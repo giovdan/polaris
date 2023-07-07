@@ -29,26 +29,40 @@
     {
         public const string CORS_POLICIES = "MitrolCorsPolicies";
 
+        /// <summary>
+        /// The SHA1 hash string is impossible to transform back to its original string.
+        /// </summary>
+        public static string SHA1(this string value)
+        {
+            var shaSHA1 = System.Security.Cryptography.SHA1.Create();
+            var inputEncodingBytes = Encoding.UTF8.GetBytes(value);
+            var hashString = shaSHA1.ComputeHash(inputEncodingBytes);
+
+            var stringBuilder = new StringBuilder();
+            for (var x = 0; x < hashString.Length; x++)
+            {
+                stringBuilder.Append(hashString[x].ToString("x2"));
+            }
+            return stringBuilder.ToString();
+        }
 
         /// <summary>
-        /// Calculate Tool HashCode
+        /// SHA 256 Encrypt
         /// </summary>
-        /// <param name="identifiers"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static string CalculateHash<T>(IEnumerable<T> values)
+        public static string SHA256(this string value)
         {
-            string hashCode = string.Empty;
-            foreach (var value in values)
-            {
-                if (decimal.TryParse(value.ToString(), out decimal decimalValue))
-                {
-                    hashCode += decimalValue.ToHex();
-                }
-                else
-                    hashCode += value.ToString().ToHex();
-            }
+            var shaSHA2 = System.Security.Cryptography.SHA256.Create();
+            var inputEncodingBytes = Encoding.UTF8.GetBytes(value);
+            var hashString = shaSHA2.ComputeHash(inputEncodingBytes);
 
-            return hashCode;
+            var stringBuilder = new StringBuilder();
+            for (var x = 0; x < hashString.Length; x++)
+            {
+                stringBuilder.Append(hashString[x].ToString("x2"));
+            }
+            return stringBuilder.ToString();
         }
 
         /// <summary>

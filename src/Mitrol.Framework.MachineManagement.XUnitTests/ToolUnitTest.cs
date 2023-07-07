@@ -199,6 +199,49 @@
 
             var result = service.CreateTool(toolDetail);
             result.Success.Should().BeTrue();
+            result.Value.Id.Should().BeGreaterThan(0);
+            result.Value.Attributes.Any().Should().BeTrue();
+        }
+
+        [Fact()]
+        public void RemoveToolReturnsOk()
+        {
+            using var scope = ServiceProvider.CreateScope();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var service = scope.ServiceProvider.GetRequiredService<IToolService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+
+            var toolId = service.GetAll().OrderByDescending(e => e.Id)
+                .FirstOrDefault().Id;
+
+            var result = service.Remove(toolId);
+            result.Success.Should().BeTrue();
+        }
+
+        [Fact()]
+        public void UpdateToolAttributeReturnsOk()
+        {
+            using var scope = ServiceProvider.CreateScope();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var service = scope.ServiceProvider.GetRequiredService<IToolService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+
+            var result = service.GetByToolManagementId(1);
+
+            result.Success.Should().BeTrue();
+
+            result.Value.Attributes.Select(a =>
+            {
+                if (a.AttributeKind == AttributeKindEnum.Number
+                    && decimal.TryParse(a.Value.CurrentValue.ToString(), out var decimalValue))
+                {
+                    a.Value.CurrentValue = decimalValue + (decimal)0.1;
+                }
+
+                return a;
+            });
+
+            service.UpdateTool(result.Value);
         }
     }
 }

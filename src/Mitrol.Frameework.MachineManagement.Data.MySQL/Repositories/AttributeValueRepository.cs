@@ -20,32 +20,17 @@
 
         }
 
-        public int BulkInsert(IEnumerable<AttributeValue> items)
-        {
-            try
-            {
-                StringBuilder insertQuery = new($"INSERT INTO `AttributeValue` (`EntityId`, `AttributeDefinitionLinkId`, `Value`, `TextValue`) VALUES ");
-
-                foreach (var item in items)
-                {
-                    insertQuery.Append($"({item.EntityId},{item.AttributeDefinitionLinkId}, {item.Value ?? 0}, '{item.TextValue}'),");
-                }
-
-                insertQuery.Length -= 1;
-
-                var result = UnitOfWork.Context.Database.ExecuteSqlRaw(insertQuery.ToString());
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
 
         public void Remove(AttributeValue entity)
         {
             UnitOfWork.Context.AttributeValues.Remove(entity);
+        }
+
+        public int Remove(Expression<Func<AttributeValue, bool>> predicate)
+        {
+            var attributeValues = UnitOfWork.Context.AttributeValues.Where(predicate);
+            UnitOfWork.Context.AttributeValues.RemoveRange(attributeValues);
+            return attributeValues.Count();
         }
 
         public AttributeValue Update(AttributeValue entity)
@@ -76,6 +61,17 @@
             return items.Count();
         }
 
+        public int BatchInsertOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues)
+        {
+            UnitOfWork.Context.AttributeOverrideValues.AddRange(attributeOverrideValues);
+            return attributeOverrideValues.Count();
+        }
+
+        public void BatchUpdateOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues)
+        {
+            UnitOfWork.Context.AttributeOverrideValues.UpdateRange(attributeOverrideValues);
+        }
+
         public IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(Expression<Func<ToolStatusAttribute, bool>> predicate)
         {
             return UnitOfWork.Context.ToolStatusAttributes.Where(predicate);
@@ -89,6 +85,14 @@
                         .ThenInclude(a => a.AttributeDefinition)
                         .Where(predicate);
         }
+
+        public IEnumerable<AttributeOverrideValue> FindAttributeOverridesBy(Expression<Func<AttributeOverrideValue, bool>> predicate)
+        {
+            return UnitOfWork.Context.AttributeOverrideValues
+                .Include(aov => aov.AttributeValue)
+                .Where(predicate);
+        }
+
 
         public Task<IEnumerable<AttributeValue>> FindByAsync(Expression<Func<AttributeValue, bool>> predicate)
         {
@@ -111,6 +115,38 @@
         public Task<AttributeValue> GetAsync(long id)
         {
             return Task.Factory.StartNew(() => Get(id));
+        }
+
+        public int BulkInsert(IEnumerable<AttributeValue> attributeValues)
+        {
+            StringBuilder insertQuery = new();
+
+            insertQuery.AppendLine("INSERT INTO attributevalue (AttributeDefinitionLinkId, DataFormatId, EntityId, Priority, Value, TextValue) VALUES");
+            foreach(var attributeValue in attributeValues)
+            {
+                insertQuery.AppendLine($"({attributeValue.AttributeDefinitionLinkId}, '{attributeValue.DataFormatId}', {attributeValue.EntityId}, {attributeValue.Priority}, {attributeValue.Value}, '{attributeValue.TextValue}'),");
+            }
+
+            insertQuery.Length -= 1;
+
+            var result = UnitOfWork.Context.Database.ExecuteSqlRaw(insertQuery.ToString());
+            return result;
+        }
+
+        public int BulkInsertOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues)
+        {
+            StringBuilder insertQuery = new();
+
+            insertQuery.AppendLine("INSERT INTO attributeoverridevalue (AttributeValueId, OverrideType, Value) VALUES");
+            foreach (var attributeOverrideValue in attributeOverrideValues)
+            {
+                insertQuery.AppendLine($"({attributeOverrideValue.AttributeValueId}, {attributeOverrideValue.OverrideType}, {attributeOverrideValue.Value}),");
+            }
+
+            insertQuery.Length -= 1;
+
+            var result = UnitOfWork.Context.Database.ExecuteSqlRaw(insertQuery.ToString());
+            return result;
         }
 
         public int BulkUpdate(IEnumerable<AttributeValue> attributeValues)
