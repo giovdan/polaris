@@ -9,6 +9,7 @@
     using Mitrol.Framework.MachineManagement.Application.Enums;
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -117,7 +118,7 @@
 
         }
 
-        private static IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(this ToolDetailItem toolDetail
+        public static IEnumerable<EntityStatusAttribute> GetToolStatusAttributes(this ToolDetailItem toolDetail
                                         , IToolStatus toolStatusHandler)
         {
             return toolDetail.Attributes.Where(a => a.IsStatusAttribute)
@@ -125,7 +126,7 @@
                         {
                             var attributeValue = a.GetAttributeValue(toolDetail.ConversionSystem);
 
-                            var toolStatusAttribute = new ToolStatusAttribute
+                            var toolStatusAttribute = new EntityStatusAttribute
                             {
                                 AttributeType = a.AttributeType,
                                 AttributeKind = a.AttributeKind,
@@ -137,7 +138,7 @@
                                 Id = a.Id,
                                 ProtectionLevel = a.ProtectionLevel,
                                 EntityId = toolDetail.Id,
-                                PlantUnitId = toolDetail.PlantUnit,
+                                SecondaryKey = (int)toolDetail.PlantUnit,
                                 Priority = a.Order
                             };
 
@@ -166,7 +167,8 @@
             {
                 // Setto lo stato del tool
                 (tool.Status, tool.StatusLocalizationKey) = toolStatusHandler.GetToolStatus(tool.Attributes);
-                (tool.Percentage, tool.LifeColor) = toolStatusHandler.GetBatteryStatus(tool.GetToolStatusAttributes(toolStatusHandler));
+                (tool.Percentage, tool.LifeColor) = toolStatusHandler.GetBatteryStatus(
+                                                    tool.GetToolStatusAttributes(toolStatusHandler));
 
                 var attributesInError = toolStatusHandler.GetAttributesInError(tool.Attributes).ToList();
                 if (attributesInError != null)

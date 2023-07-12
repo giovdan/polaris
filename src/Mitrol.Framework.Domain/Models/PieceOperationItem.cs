@@ -1,6 +1,7 @@
 ﻿namespace Mitrol.Framework.Domain.Production.Models
 {
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Interfaces;
     using Newtonsoft.Json;
     using System.Collections.Generic;
 

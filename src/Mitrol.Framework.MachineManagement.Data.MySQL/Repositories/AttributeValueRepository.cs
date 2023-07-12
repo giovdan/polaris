@@ -5,6 +5,7 @@
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -72,9 +73,9 @@
             UnitOfWork.Context.AttributeOverrideValues.UpdateRange(attributeOverrideValues);
         }
 
-        public IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(Expression<Func<ToolStatusAttribute, bool>> predicate)
+        public IEnumerable<EntityStatusAttribute> GetEntityStatusAttributes(Expression<Func<EntityStatusAttribute, bool>> predicate)
         {
-            return UnitOfWork.Context.ToolStatusAttributes.Where(predicate);
+            return UnitOfWork.Context.EntityStatusAttributes.Where(predicate);
         }
 
         public IEnumerable<AttributeValue> FindBy(Expression<Func<AttributeValue, bool>> predicate)

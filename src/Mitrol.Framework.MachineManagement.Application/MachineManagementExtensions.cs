@@ -190,17 +190,17 @@
             return identifier;
         }
 
-        public static DetailIdentifierMaster Convert(this DetailIdentifierMaster identifier,
+        public static DetailIdentifier Convert(this DetailIdentifier identifier,
                         MeasurementSystemEnum conversionSystem)
         {
             //Se l'identificativo è un numero allora lo converto se
             //il sistema di conversione è diverso da Metrico Decimale
-            if (identifier.AttributeKind == AttributeKindEnum.Number)
+            if (identifier.AttributeDefinitionLink.AttributeDefinition.AttributeKind == AttributeKindEnum.Number)
             {
                 var decimalValue = decimal.Parse(identifier.Value, CultureInfo.InvariantCulture);
                 var convertedItem = ConvertToHelper.Convert(conversionSystemFrom: MeasurementSystemEnum.MetricSystem
                                 , conversionSystemTo: conversionSystem
-                                                , identifier.DataFormat
+                                                , identifier.AttributeDefinitionLink.AttributeDefinition.DataFormat
                                                 , decimalValue);
                 identifier.Value = convertedItem.Value.ToString($"F{convertedItem.DecimalPrecision}", CultureInfo.InvariantCulture); ;
             }
@@ -925,6 +925,7 @@
             return identifiers;
         }
 
+        ///
         public static void SetUnitsEnabledMask(this ToolDetailItem tool)
         {
             var unitMaskAttributesEnumIds = new[]
@@ -970,6 +971,8 @@
             tool.UnitEnablingMask = toolMask;
                     
         }
+
+
 
 
     }

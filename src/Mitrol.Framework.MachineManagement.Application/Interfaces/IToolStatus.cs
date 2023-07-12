@@ -5,6 +5,7 @@
     using Mitrol.Framework.Domain.Interfaces;
     using Mitrol.Framework.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
     using System.Collections.Generic;
 
     public interface IToolAttributesStatus
@@ -16,7 +17,7 @@
 
     public interface IToolBatteryStatus
     {
-        (int? Percentage, StatusColorEnum StatusColor) GetBatteryStatus(IEnumerable<ToolStatusAttribute> toolStatusAttributes);
+        (int? Percentage, StatusColorEnum StatusColor) GetBatteryStatus(IEnumerable<EntityStatusAttribute> toolStatusAttributes);
     }
 
     public interface IToolStatus : IToolBatteryStatus, IToolAttributesStatus

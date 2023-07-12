@@ -1,48 +1,24 @@
 {
-  "gitCommitHash": "087bf28f49e111f16a6e0eadafb7260d1b1f3581",
-  "gitCommitDate": "Tue, 4 Jul 2023 12:18:45 +0200",
+  "gitCommitHash": "f21d0b5808861a350fd8db1aacc6ee2400b84319",
+  "gitCommitDate": "Wed, 12 Jul 2023 11:55:07 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Fri, 07 Jul 2023 15:39:43 +0200",
+  "buildDate": "Wed, 12 Jul 2023 12:13:49 +0200",
   "gitUncommittedFiles": [
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/002.CREATE_ACCESSORY_TABLES.sql"
-    },
-    {
-      "status": "M",
-      "filename": "bin/DBServer/migrations/XXX/003.ADD_ACCESSORY_FUNCTIONS.sql"
-    },
-    {
-      "status": "M",
-      "filename": "src/AssemblyInfo_Global.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Frameework.MachineManagement.Data.MySQL/Repositories/EntityRepostiory.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Extensions/CoreExtensions.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain.Core/Models/Database/BaseDbContext.cs"
-    },
-    {
-      "status": "M",
-      "filename": "src/Mitrol.Framework.Domain/Enums/EntityTypeEnum.cs"
-    },
     {
       "status": "M",
       "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolService.cs"
+      "filename": "src/Mitrol.Framework.GraphQL/Mitrol.Framework.GraphQL.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.GraphQL/Startup.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Interfaces/IToolStatus.cs"
     },
     {
       "status": "M",
@@ -50,27 +26,27 @@
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/MachineManagementBaseService.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/DrillStatus.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/ToolService.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/SawStatus.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IAttributeValueRepository.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/TorchOXYStatus.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IEntityRepository.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Resolvers/TorchPlaStatus.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Entity.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/ToolUnitTest.cs"
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/Mitrol.Framework.XUnitTests.csproj"
     }
   ]
 }

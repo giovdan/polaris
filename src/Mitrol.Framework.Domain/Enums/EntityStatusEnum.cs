@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mitrol.Framework.Domain.Core.Enums
+﻿namespace Mitrol.Framework.Domain.Enums
 {
     public enum EntityStatusEnum
     {

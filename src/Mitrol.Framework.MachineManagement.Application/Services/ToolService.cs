@@ -232,8 +232,8 @@
                                 { { DatabaseDisplayNameEnum.TS, entity.EntityTypeId.ToToolType() } });
 
             // Recupero gli attributi collegati allo stato
-            IEnumerable<ToolStatusAttribute> toolStatusAttributes =
-                    Mapper.ProjectTo<ToolStatusAttribute>(
+            IEnumerable<EntityStatusAttribute> toolStatusAttributes =
+                    Mapper.ProjectTo<EntityStatusAttribute>(
                             attributes.Where(a => a.IsStatusAttribute).AsQueryable())
                     .ToHashSet();
 
@@ -1101,6 +1101,103 @@
                 return Result.Fail<ToolDetailItem>(ex.InnerException?.Message ?? ex.Message);
             }
         }
+
+
         #endregion < Tool Management >
+
+        #region < IRemoteToolService>
+        public IEnumerable<ToolItem> GetToolIdentifiers() => GetToolIdentifiers(new());
+
+        public IEnumerable<ToolItem> GetToolIdentifiers(ToolItemIdentifiersFilter filter)
+        {
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            EntityRepository.Attach(uow);
+
+            // Per qualsiasi combinazione di filtro specificata,
+            // recupera solo i tool il cui type è managed
+            Expression<Func<Tool, bool>> predicate = x => x.IsManaged;
+
+            // Se è specificata l'unità di abilitazione allora filtra per l'unità di abilitazione
+            // recuperando solo i tool non presenti in altri slot
+            if (filter.ToolUnitMask != ToolUnitMaskEnum.All &&
+                filter.ToolUnitMask != ToolUnitMaskEnum.None)
+            {
+                predicate = predicate.AndAlso(x => x.ToolMask.HasFlag(filter.ToolUnitMask));
+            }
+
+            // Se è specificato il filtro unitType
+            if (filter.UnitType != PlantUnitEnum.All)
+            {
+                predicate = predicate.AndAlso(x => (x.PlantUnitId & filter.UnitType) == filter.UnitType);
+            }
+
+            // Recupero i tool senza attributi
+            var tools = EntityRepository.FindTools(predicate).OrderBy(x => x.Id);
+            if (tools.Any() is false)
+                return Array.Empty<ToolItem>();
+
+            // Recupero i ToolId dei tool richiesti per ottenere gli attributi
+            var toolIds = tools.ToDictionary(r => r.Id, r => r.ToolManagementId);
+
+            var hashCodes = tools.Select(r => r.HashCode).ToHashSet();
+
+            // Recupero gli identificatori
+            var attributeValuesLookup = AttributeValueRepository.FindBy(
+                a => a.AttributeDefinitionLink.GroupId == AttributeDefinitionGroupEnum.ProcessingToolFilter)
+                .Where(a => toolIds.ContainsKey(a.EntityId))
+                    .ToLookup(a => toolIds[a.EntityId]);// la chiave diventa il ToolManagementId
+
+            var identifiers = DetailIdentifierRepository.FindBy(di => hashCodes.Contains(di.HashCode));
+
+            var identifiersLookup = identifiers
+                .OrderBy(x => x.Priority)
+                .Select(identifier => Mapper.Map<IdentifierDetailItem>(identifier.Convert(filter.ConversionSystem)))
+                .ToLookup(identifier => identifier.HashCode);
+
+
+
+            var toolStatusAttributesLookup = EntityRepository.GetStatusAttributes(a => a.EntityTypeId.ToParentType() 
+                                                                                        == ParentTypeEnum.Tool 
+                                                                            && (PlantUnitEnum)a.SecondaryKey == filter.UnitType)
+               .GroupBy(x => x.EntityId)
+               .ToDictionary(x => x.Key, x => x.AsEnumerable());
+
+            var toolstatusHandler = ServiceFactory.Resolve<IToolStatus, PlantUnitEnum>(filter.UnitType);
+            if (toolstatusHandler == null)
+                throw new NotImplementedException();
+
+            var toolStatuses = toolStatusAttributesLookup.Select(item =>
+            {
+                var toolStatusAttributes = item.Value;
+
+                var attributes = Mapper.Map<IEnumerable<AttributeDetailItem>>(toolStatusAttributes)
+                    .Select(a => ApplyCustomMapping(a, conversionSystemFrom: MeasurementSystemEnum.MetricSystem
+                            , conversionSystemTo: MeasurementSystemEnum.MetricSystem));
+
+                (var status, _) = toolstatusHandler.GetToolStatus(attributes);
+
+                return new { ToolManagementId = toolIds[item.Key], Status = status };
+            }).ToDictionary(status => status.ToolManagementId);
+
+
+            return Mapper.Map<IEnumerable<ToolItem>>(tools).Select(tool =>
+            {
+                tool.Identifiers = identifiersLookup[tool.HashCode]
+                    .ToDictionary(x => Enum.Parse<DatabaseDisplayNameEnum>(x.DisplayName), x => (object)x.Value);
+
+                tool.Attributes = attributeValuesLookup[tool.ToolManagementId]
+                    .ToDictionary(x => Enum.Parse<DatabaseDisplayNameEnum>(x.AttributeDefinitionLink.AttributeDefinition.DisplayName), x => (object)x.Value);
+
+                tool.Status = toolStatuses[tool.ToolManagementId].Status;
+
+                return tool;
+            });
+        }
+
+        public ToolItem GetTool(ToolItemFilter filter)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

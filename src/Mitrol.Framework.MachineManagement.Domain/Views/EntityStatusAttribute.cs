@@ -1,16 +1,12 @@
-﻿namespace Mitrol.Framework.MachineManagement.Domain.Models
+﻿namespace Mitrol.Framework.MachineManagement.Domain.Views
 {
     using Mitrol.Framework.Domain.Enums;
-    using Mitrol.Framework.MachineManagement.Domain.Enums;
-    using System;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class ToolStatusAttribute
+    public class EntityStatusAttribute
     {
-        // from AttributeValue
         public long Id { get; set; }
         public long EntityId { get; set; }
-        public EntityTypeEnum EntityTypeId { get; set; }
         public AttributeDataFormatEnum DataFormatId { get; set; }
         public int Priority { get; set; }
         public decimal Value { get; set; }
@@ -27,17 +23,7 @@
         [Column(TypeName = "ENUM('Critical','High','Medium','Normal','ReadOnly')")]
         public ProtectionLevelEnum ProtectionLevel { get; set; }
         public AttributeDefinitionGroupEnum GroupId { get; set; }
-        public PlantUnitEnum PlantUnitId { get; set; }
-        
-        public override bool Equals(object obj)
-        {
-            return obj is ToolStatusAttribute attribute &&
-                   Id == attribute.Id && EntityId == attribute.EntityId;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, EntityId);
-        }
+        public int SecondaryKey { get; set; }
+        public EntityTypeEnum EntityTypeId { get; set; }
     }
 }

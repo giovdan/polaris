@@ -17,15 +17,14 @@ namespace Mitrol.Framework.GraphQL
     using Mitrol.Framework.GraphQL.Core.Types;
     using System;
     using HotChocolate.Types.Descriptors;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Models;
-    using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Services;
     using Mitrol.Framework.MachineManagement.Application.Mappings;
-    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Core.Helpers;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Repositories;
+    using Mitrol.Framework.MachineManagement.Data.MySQL.Models;
 
     public class Startup
     {
@@ -46,7 +45,7 @@ namespace Mitrol.Framework.GraphQL
             services.AddScoped<IToolService, ToolService>();
 
             //Scoped
-            services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, MachineManagement.Data.MySQL.Models.UnitOfWorkFactory>();
+            services.AddScoped<IUnitOfWorkFactory<IMachineManagentDatabaseContext>, UnitOfWorkFactory>();
             services.AddScoped<IServiceFactory, ServiceFactory>();
             services.AddScoped<IDatabaseContextFactory, DatabaseContextFactory>();
 

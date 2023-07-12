@@ -8,7 +8,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Interfaces
     using Mitrol.Framework.MachineManagement.Application.Models;
     using System.Collections.Generic;
 
-    public interface IToolService: IMachineManagementService, IBootableService
+    public interface IToolService: IMachineManagementService, IBootableService, IRemoteToolService
     {
         Result<ToolDetailItem> CreateTool(ToolDetailItem toolDetail);
         IEnumerable<ToolListItem> GetAll();

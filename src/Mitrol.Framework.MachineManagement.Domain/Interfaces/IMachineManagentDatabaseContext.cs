@@ -22,10 +22,11 @@
         DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
         DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
         DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
-        DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
         DbSet<AttributeOverrideValue> AttributeOverrideValues { get; set; }
         DbSet<MachineParameter> MachineParameters { get; set; }
         DbSet<MachineParameterLink> MachineParameterLinks { get; set; }
         DbSet<PlasmaToolMaster> PlasmaToolMasters { get; set; }
+        DbSet<Tool> Tools { get; set; }
+        DbSet<EntityStatusAttribute> EntityStatusAttributes { get; set; }
     }
 }

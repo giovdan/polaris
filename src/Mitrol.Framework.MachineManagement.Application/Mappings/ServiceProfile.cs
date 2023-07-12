@@ -91,7 +91,7 @@
                             opt => opt.MapFrom(s => $"{MachineManagementExtensions.LABEL_ATTRIBUTE}_{s.DisplayName.ToUpper()}"))
                 .ForMember(dest => dest.UMLocalizationKey, opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.DataFormat.ToString().ToUpper()}"));
 
-            CreateMap<AttributeDetailItem, ToolStatusAttribute>()
+            CreateMap<AttributeDetailItem, EntityStatusAttribute>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(s => 
                                                         s.AttributeKind == AttributeKindEnum.Enum
                                                         ? s.Value.CurrentValueId

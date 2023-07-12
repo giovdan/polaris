@@ -4,6 +4,7 @@
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Models.Views;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
@@ -15,6 +16,8 @@
         Entity GetBySecondaryKey(long secondaryKey, EntityTypeEnum entityType);
         #region < Tools Management >
         IEnumerable<PlasmaToolMaster> FindPlasmaToolMasters(Expression<Func<PlasmaToolMaster, bool>> predicate);
+        IEnumerable<Tool> FindTools(Expression<Func<Tool, bool>> predicate);
+        IEnumerable<EntityStatusAttribute>  GetStatusAttributes(Func<EntityStatusAttribute, bool> predicate);
         #endregion
     }
 }

@@ -5,10 +5,11 @@
     using System.Linq.Expressions;
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
 
     public interface IAttributeValueRepository: IRepository<AttributeValue, IMachineManagentDatabaseContext>
     {
-        IEnumerable<ToolStatusAttribute> GetToolStatusAttributes(Expression<Func<ToolStatusAttribute, bool>> predicate);
+        IEnumerable<EntityStatusAttribute> GetEntityStatusAttributes(Expression<Func<EntityStatusAttribute, bool>> predicate);
         AttributeOverrideValue GetOverrideValue(long attributeValueId);
         IEnumerable<AttributeOverrideValue> FindAttributeOverridesBy(Expression<Func<AttributeOverrideValue, bool>> predicate);
         void BatchUpdate(IEnumerable<AttributeValue> attributeValues);

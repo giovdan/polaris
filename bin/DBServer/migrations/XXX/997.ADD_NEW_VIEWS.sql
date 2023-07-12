@@ -1,3 +1,67 @@
+USE machine;
+
+DELIMITER //
+
+CREATE OR REPLACE FUNCTION GetBitMaskValue(iDisplayName VARCHAR(50), iValue INT)
+RETURNS INT
+BEGIN
+	DECLARE bitMaskValue INT DEFAULT 0;
+	
+	SET bitMaskValue =
+	CASE UPPER(iDisplayName) 
+		WHEN 'TOOLENABLEA' THEN 1
+		WHEN 'TOOLENABLEB' THEN 2
+		WHEN 'TOOLENABLEC' THEN 4	
+		WHEN 'TOOLENABLED' THEN 8
+	END;
+	
+	RETURN bitMaskValue;
+END //
+
+CREATE OR REPLACE FUNCTION GetToolMask(iToolId INT)
+RETURNS INT
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE attributeDisplayName VARCHAR(50);
+	DECLARE decimalValue DECIMAL(14,7);
+	DECLARE bitMaskValue INT;
+	DECLARE toolMask INT;
+	
+	DECLARE curToolEnabledAttributes CURSOR FOR 
+		SELECT ad.DisplayName, GetBitMaskValue(ad.DisplayName, av.Value) as BitMaskValue FROM attributevalue av 
+		INNER JOIN attributedefinitionlink adl ON adl.Id = av.AttributeDefinitionLinkId
+		INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
+		AND ad.EnumId IN (159,160,161,162) 
+		WHERE av.EntityId = iToolId AND av.Value = 1
+		ORDER BY av.Priority;
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+	
+	OPEN curToolEnabledAttributes;
+	
+	SET toolMask = 0;
+	
+	loop_values: LOOP
+		FETCH curToolEnabledAttributes INTO attributeDisplayName, bitMaskValue;
+		IF done THEN
+			LEAVE loop_values;
+		END IF;	
+		
+		SET toolMask = toolMask | bitMaskValue;
+	END LOOP;
+	CLOSE curToolEnabledAttributes;
+
+	RETURN toolMask;
+END //
+
+CREATE OR REPLACE VIEW tools
+AS
+SELECT e.Id, e.EntityTypeId, e.HashCode, e.SecondaryKey AS ToolManagementId, e.`Status`
+, et.IsManaged, et.SecondaryKey AS PlantUnitId, GetToolMask(e.Id) AS ToolMask
+FROM entity e
+INNER JOIN entitytype et ON e.EntityTypeId = et.Id
+WHERE et.ParentType = 'Tool' //
+
 CREATE OR REPLACE VIEW EntityLinks
 AS
 SELECT e.DisplayName AS RelatedEntityDisplayName, ec.DisplayName AS EntityDisplayName
@@ -5,7 +69,7 @@ SELECT e.DisplayName AS RelatedEntityDisplayName, ec.DisplayName AS EntityDispla
 , el.RelatedEntityHashCode, el.EntityHashCode
 , el.RelationType, el.RowNumber, el.`Level` FROM entitylink el
 INNER JOIN entity e ON e.HashCode = el.RelatedEntityHashCode
-INNER JOIN entity ec ON ec.HashCode = el.EntityHashCode;
+INNER JOIN entity ec ON ec.HashCode = el.EntityHashCode //
 
 
 CREATE OR REPLACE VIEW attributedefinitions
@@ -16,7 +80,22 @@ SELECT adl.Id, adl.EntityTypeId, adl.AttributeDefinitionId, ad.DisplayName
 , adl.AttributeScopeId, adl.DefaultBehavior, adl.LastInsertedValue, adl.LastInsertedTextValue
 , adl.ProtectionLevel, adl.GroupId, adl.Priority
   FROM attributedefinitionlink adl
-INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId;
+INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId //
+
+DROP VIEW IF EXISTS toolstatusattributesview //
+
+CREATE OR REPLACE VIEW EntityStatusAttributesView
+AS
+SELECT av.Id, av.EntityId, av.DataFormatId, av.Priority, av.Value, av.TextValue, av.AttributeDefinitionLinkId
+, ad.EnumId, ad.DisplayName, ad.AttributeType, adl.ControlType, ad.AttributeKind, adl.ProtectionLevel, adl.GroupId
+, adl.EntityTypeId, et.SecondaryKey
+FROM attributevalue av
+INNER JOIN attributedefinitionlink adl ON av.AttributeDefinitionLinkId = adl.Id
+INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
+INNER JOIN entitytype et ON et.Id = adl.EntityTypeId
+WHERE adl.IsStatusAttribute = 1 //
+
+DELIMITER ;
 
 
 

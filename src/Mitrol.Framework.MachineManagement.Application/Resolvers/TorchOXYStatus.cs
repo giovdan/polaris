@@ -8,6 +8,7 @@
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,7 +25,7 @@
             ServiceFactory = serviceFactory;
         }
 
-        public (int? Percentage, StatusColorEnum StatusColor) GetBatteryStatus(IEnumerable<ToolStatusAttribute> toolStatusAttributes)
+        public (int? Percentage, StatusColorEnum StatusColor) GetBatteryStatus(IEnumerable<EntityStatusAttribute> toolStatusAttributes)
         {
             var toolLifeMax = toolStatusAttributes.SingleOrDefault
                 (a => a.EnumId == AttributeDefinitionEnum.MaxNozzleLifeTime);

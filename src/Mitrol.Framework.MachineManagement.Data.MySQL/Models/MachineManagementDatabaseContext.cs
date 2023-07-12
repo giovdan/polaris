@@ -27,11 +27,12 @@
         public DbSet<AttributeDefinitionLink> AttributeDefinitionLinks { get; set; }
         public DbSet<DetailIdentifier> DetailIdentifiers { get; set; }
         public DbSet<DetailIdentifierMaster> DetailIdentifierMasters { get; set; }
-        public DbSet<ToolStatusAttribute> ToolStatusAttributes { get; set; }
         public DbSet<AttributeOverrideValue> AttributeOverrideValues { get; set; }
         public DbSet<MachineParameter> MachineParameters { get; set; }
         public DbSet<MachineParameterLink> MachineParameterLinks { get; set; }
         public DbSet<PlasmaToolMaster> PlasmaToolMasters { get; set; }
+        public DbSet<Tool> Tools { get; set; }
+        public DbSet<EntityStatusAttribute> EntityStatusAttributes { get; set; }
 
         public void SetEntity<TEntity>(TEntity entity, EntityState entityState)
             where TEntity: BaseEntity
@@ -90,8 +91,10 @@
 
             #region Views
             modelBuilder.Entity<DetailIdentifierMaster>().ToView("DetailIdentifiersView").HasNoKey();
-            modelBuilder.Entity<ToolStatusAttribute>().ToView("ToolStatusAttributesView").HasNoKey();
+            modelBuilder.Entity<EntityStatusAttribute>().ToView("EntityStatusAttributesView").HasNoKey();
             modelBuilder.Entity<PlasmaToolMaster>().ToView("PlasmaToolMasters").HasNoKey();
+            modelBuilder.Entity<Tool>().ToFunction("Tools").HasNoKey();
+
             #endregion
         }
 
