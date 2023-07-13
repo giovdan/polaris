@@ -67,19 +67,16 @@
         public Task<IEnumerable<Entity>> FindByAsync(Expression<Func<Entity, bool>> predicate) => Task.Factory.StartNew(() => FindBy(predicate));
 
         public Entity Get(long id) => UnitOfWork.Context.Entities
-            .Include(e => e.EntityType)
             .SingleOrDefault(e => e.Id == id);
 
         public Entity Get(string displayName) => UnitOfWork.Context.Entities
-            .Include(e => e.EntityType)
             .SingleOrDefault(e => e.DisplayName == displayName);
 
         public Entity GetBySecondaryKey(long secondaryKey, EntityTypeEnum entitType) 
-                    => UnitOfWork.Context.Entities.Include(e => e.EntityType)
+                    => UnitOfWork.Context.Entities
                             .SingleOrDefault(e => e.SecondaryKey == secondaryKey && e.EntityTypeId == entitType);
 
-        public IEnumerable<Entity> GetAll() => UnitOfWork.Context.Entities
-                                            .Include(e => e.EntityType);
+        public IEnumerable<Entity> GetAll() => UnitOfWork.Context.Entities;
 
         public Task<Entity> GetAsync(long id) => Task.Factory.StartNew(() => Get(id));
 
@@ -111,9 +108,10 @@
 
         public IEnumerable<Tool> FindTools(Expression<Func<Tool,bool>> predicate)
         {
-            return UnitOfWork.Context.Tools.Where(predicate);
+            var query = UnitOfWork.Context.Tools.Where(predicate);
+            Debug.WriteLine(query.ToQueryString());
+            return query;
         }
-
 
         #endregion
     }

@@ -93,7 +93,7 @@
             modelBuilder.Entity<DetailIdentifierMaster>().ToView("DetailIdentifiersView").HasNoKey();
             modelBuilder.Entity<EntityStatusAttribute>().ToView("EntityStatusAttributesView").HasNoKey();
             modelBuilder.Entity<PlasmaToolMaster>().ToView("PlasmaToolMasters").HasNoKey();
-            modelBuilder.Entity<Tool>().ToFunction("Tools").HasNoKey();
+            modelBuilder.Entity<Tool>().ToView("Tools").HasNoKey();
 
             #endregion
         }

@@ -74,6 +74,15 @@
                 .ForMember(dest => dest.UnitTypeLocalizationKey, opt => opt.Ignore())
                 .ForMember(dest => dest.StatusLocalizationKey, opt => opt.Ignore());
 
+            CreateMap<DetailIdentifier, IdentifierDetailItem>()
+                .ForMember(dest => dest.AttributeKind, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeDefinition.AttributeKind))
+                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeDefinition.DisplayName))
+                .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.AttributeDefinitionLink.EntityTypeId))
+                .ForMember(dest => dest.EnumId, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeDefinition.EnumId))
+                .ForMember(dest => dest.LocalizationKey, opt => opt.MapFrom(s => $"{MachineManagementExtensions.LABEL_IDENTIFIER}_{s.AttributeDefinitionLink.AttributeDefinition.DisplayName.ToUpper()}"))
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.Priority))
+                .ForMember(dest => dest.ItemDataFormat, opt => opt.MapFrom(s => s.AttributeDefinitionLink.AttributeDefinition.DataFormat));
+
             CreateMap<DetailIdentifierMaster, IdentifierDetailItem>()
                 .ForMember(dest => dest.LocalizationKey, opt => opt.MapFrom(s => $"{MachineManagementExtensions.LABEL_IDENTIFIER}_{s.DisplayName.ToUpper()}"))
                 .ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.Priority))
@@ -90,6 +99,9 @@
                 .ForMember(dest => dest.LocalizationKey,
                             opt => opt.MapFrom(s => $"{MachineManagementExtensions.LABEL_ATTRIBUTE}_{s.DisplayName.ToUpper()}"))
                 .ForMember(dest => dest.UMLocalizationKey, opt => opt.MapFrom(s => $"{DomainExtensions.GENERIC_LABEL}_{s.DataFormat.ToString().ToUpper()}"));
+
+            CreateMap<EntityStatusAttribute, AttributeDetailItem>()
+                .ForMember(dest => dest.Value, opt => opt.Ignore());
 
             CreateMap<AttributeDetailItem, EntityStatusAttribute>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(s => 
@@ -290,6 +302,10 @@
             #endregion < Configuration >
 
             #region < Tools >
+            CreateMap<Tool, ToolItem>()
+                .ForMember(dest => dest.Attributes, opt => opt.Ignore())
+                .ForMember(dest => dest.Identifiers, opt => opt.Ignore());
+
             CreateMap<ToolDetailItem, ToolImportItem<AttributeValueItem>>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(s => s.ToolType))
                 .ForMember(dest => dest.ToolManagementId, opt => opt.MapFrom(s => s.Id))

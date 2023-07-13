@@ -21,7 +21,5 @@
         [Column(TypeName = "ENUM ('Available','Unavailable','Warning','Alarm','NoIconToDisplay','ToBeDeleted','Original','ModifiedByCustomer','ModifiedByFICEP','ToBeSkipped','Empty','InProgress','Processed','Executed','RQLoad','RQAck','NotAvailable','Aborted','NotReady')")]
         public EntityStatusEnum Status { get; set; }
         public int Priority { get; set; }
-
-        public virtual EntityType EntityType { get; set; }
     }
 }

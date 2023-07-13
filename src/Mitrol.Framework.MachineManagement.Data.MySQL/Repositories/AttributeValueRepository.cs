@@ -8,6 +8,7 @@
     using Mitrol.Framework.MachineManagement.Domain.Views;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
@@ -80,11 +81,15 @@
 
         public IEnumerable<AttributeValue> FindBy(Expression<Func<AttributeValue, bool>> predicate)
         {
-            return UnitOfWork.Context.AttributeValues
+            var query = UnitOfWork.Context.AttributeValues
                         .Include(a => a.Entity)
                         .Include(a => a.AttributeDefinitionLink)
                         .ThenInclude(a => a.AttributeDefinition)
                         .Where(predicate);
+
+            Debug.WriteLine(query.ToQueryString());
+
+            return query;
         }
 
         public IEnumerable<AttributeOverrideValue> FindAttributeOverridesBy(Expression<Func<AttributeOverrideValue, bool>> predicate)

@@ -1112,6 +1112,8 @@
         {
             using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
             EntityRepository.Attach(uow);
+            AttributeValueRepository.Attach(uow);
+            DetailIdentifierRepository.Attach(uow);
 
             // Per qualsiasi combinazione di filtro specificata,
             // recupera solo i tool il cui type è managed
@@ -1147,7 +1149,7 @@
                 .Where(a => toolIds.ContainsKey(a.EntityId))
                     .ToLookup(a => toolIds[a.EntityId]);// la chiave diventa il ToolManagementId
 
-            var identifiers = DetailIdentifierRepository.FindBy(di => hashCodes.Contains(di.HashCode));
+            var identifiers = DetailIdentifierRepository.FindBy(di => hashCodes.Contains(di.HashCode), di => di.Priority);
 
             var identifiersLookup = identifiers
                 .OrderBy(x => x.Priority)

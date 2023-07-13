@@ -43,6 +43,7 @@
             services.AddScoped<IResolver<IBootableService>, ServiceForward<IBootableService, IMachineConfigurationService>>();
 
             services.AddTransient<IResolver<IToolStatus, PlantUnitEnum>, ToolStatusResolver>();
+            services.AddScoped<IResolver<IRemoteToolService>, ServiceForward<IRemoteToolService, IToolService>>();
             services.AddScoped<IToolService, ToolService>();
             services.AddScoped<IDetailIdentifierRepository, DetailIdentifierRepository>();
             services.AddScoped<IMachineParameterRepository, MachineParameterRepository>();
@@ -212,7 +213,7 @@
             service.SetSession(NullUserSession.InternalSessionInstance);
 
             var toolId = service.GetAll().OrderByDescending(e => e.Id)
-                .FirstOrDefault().Id;
+                .FirstOrDefault().InnerId;
 
             var result = service.Remove(toolId);
             result.Success.Should().BeTrue();
@@ -243,5 +244,24 @@
 
             service.UpdateTool(result.Value);
         }
+
+        #region < Remote Service Unit Tests >
+        [Fact()]
+        public void GetToolsIdentifiersReturnsSomething()
+        {
+            using var scope = ServiceProvider.CreateScope();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var service = scope.ServiceProvider.GetRequiredService<IToolService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+
+            var list = service.GetToolIdentifiers(new ToolItemIdentifiersFilter
+            { 
+                UnitType = PlantUnitEnum.DrillingMachine
+            });
+            list.Any().Should().BeTrue();
+            list.Select(item => item.Attributes.Count()).Should().HaveCountGreaterThan(0);
+            list.Select(item => item.Identifiers.Count()).Should().HaveCountGreaterThan(0);
+        }
+        #endregion
     }
 }
