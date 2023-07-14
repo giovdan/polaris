@@ -9,5 +9,11 @@
     {
         [JsonProperty("Attributes")]
         public Dictionary<DatabaseDisplayNameEnum, object> Attributes { get; set; }
+
+        public ToolItem()
+        {
+            Attributes = new Dictionary<DatabaseDisplayNameEnum, object>();
+            Identifiers = new Dictionary<DatabaseDisplayNameEnum, object>();
+        }
     }
 }

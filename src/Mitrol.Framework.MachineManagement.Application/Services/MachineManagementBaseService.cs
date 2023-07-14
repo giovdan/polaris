@@ -20,6 +20,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.Domain.Core.Extensions;
     using System.Text.RegularExpressions;
+    using Mitrol.Framework.MachineManagement.Application.Models;
 
     public class MachineManagementBaseService: BaseService
     {
@@ -29,10 +30,77 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                         => ServiceFactory.GetService<IAttributeDefinitionLinkRepository>();
         protected IUnitOfWorkFactory<IMachineManagentDatabaseContext> UnitOfWorkFactory => ServiceFactory
                     .GetService<IUnitOfWorkFactory<IMachineManagentDatabaseContext>>();
+        protected IDetailIdentifierRepository DetailIdentifierRepository =>
+                            ServiceFactory.GetService<IDetailIdentifierRepository>();
+
+        #region < ApplyCustomMapping >
+        /// <summary>
+        /// Custom Mapping from AttributeValue to AttributeDetailItem
+        /// </summary>
+        /// <param name="attributeValue"></param>
+        /// <param name="measurementSystemTo"></param>
+        /// <returns></returns>
+        private AttributeDetailItem ApplyCustomMapping(AttributeValue attributeValue, MeasurementSystemEnum measurementSystemTo)
+        {
+            var value = attributeValue.GetAttributeValue(measurementSystemTo);
+
+            var attributeDetailItem = Mapper.Map<AttributeDetailItem>(attributeValue);
+
+            attributeDetailItem.DbValue = attributeValue.GetAttributeValue();
+            attributeDetailItem.Value = new AttributeValueItem
+            {
+                CurrentValue = attributeValue.AttributeDefinitionLink.AttributeDefinition.AttributeKind != AttributeKindEnum.Enum
+                                ? value : null,
+                CurrentValueId = attributeValue.AttributeDefinitionLink.AttributeDefinition.AttributeKind == AttributeKindEnum.Enum
+                                ? Convert.ToInt32(value) : 0
+
+            };
+
+            return attributeDetailItem;
+        }
+        #endregion
 
         public MachineManagementBaseService(IServiceFactory serviceFactory) : base(serviceFactory)
         {
 
+        }
+
+        /// <summary>
+        /// Get entity identifiers by hashCode
+        /// </summary>
+        /// <param name="hashCode"></param>
+        /// <param name="conversionSystemTo"></param>
+        /// <returns></returns>
+        protected List<IdentifierDetailItem> GetIdentifiers(string hashCode
+                    , MeasurementSystemEnum conversionSystemTo)
+        {
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+            DetailIdentifierRepository.Attach(uow);
+            return Mapper.Map<IEnumerable<IdentifierDetailItem>>(
+                            DetailIdentifierRepository.FindBy(di => di.HashCode == hashCode, di => di.Priority))
+                            .Select(identifier => identifier.ConvertIdentifier(conversionSystemTo))
+                            .ToList();
+
+            
+        }
+
+        
+
+        /// <summary>
+        /// Get Attributes for specified entity
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <param name="conversionSystemTo"></param>
+        /// <returns></returns>
+        protected List<AttributeDetailItem> GetAttributes(long entityId
+                    , MeasurementSystemEnum conversionSystemTo)
+        {
+            using var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
+            AttributeValueRepository.Attach(unitOfWork);
+            return AttributeValueRepository
+                                    .FindBy(av => av.EntityId == entityId)
+                                    .Select(av => ApplyCustomMapping(av, conversionSystemTo))
+                                    .ToList();
         }
 
         /// <summary>

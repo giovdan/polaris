@@ -1198,7 +1198,24 @@
 
         public ToolItem GetTool(ToolItemFilter filter)
         {
-            throw new NotImplementedException();
+            using var uow = UnitOfWorkFactory.GetOrCreate(UserSession);
+
+            EntityRepository.Attach(uow);
+            AttributeValueRepository.Attach(uow);
+
+            var tool = EntityRepository.FindTools(entity => entity.ToolManagementId == filter.ToolManagementId)
+                                .SingleOrDefault();
+
+            // Recupero attributi di processi, identificatori e geometrici
+            // e gli identifiers
+            var attributes = FilterOnUnitEnabledAttributes(GetAttributes(tool.Id, filter.ConversionSystem)
+                                    , tool.EntityTypeId.GetPlantUnit());
+            var identifiers = GetIdentifiers(tool.HashCode, filter.ConversionSystem).ToList();
+
+            var toolItem = Mapper.Map<ToolItem>(tool);
+            toolItem.Attributes = attributes.ToDictionary(x => Enum.Parse<DatabaseDisplayNameEnum>(x.DisplayName), x => x.DbValue);
+            toolItem.Identifiers = identifiers.ToDictionary(x => Enum.Parse<DatabaseDisplayNameEnum>(x.DisplayName), x => (object)x.Value);
+            return toolItem;
         }
         #endregion
     }

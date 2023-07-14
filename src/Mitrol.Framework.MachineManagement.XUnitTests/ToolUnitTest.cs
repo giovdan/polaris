@@ -262,6 +262,24 @@
             list.Select(item => item.Attributes.Count()).Should().HaveCountGreaterThan(0);
             list.Select(item => item.Identifiers.Count()).Should().HaveCountGreaterThan(0);
         }
+
+        [Fact]
+        public void GetToolReturnsSomething()
+        {
+            using var scope = ServiceProvider.CreateScope();
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var service = scope.ServiceProvider.GetRequiredService<IToolService>();
+            service.SetSession(NullUserSession.InternalSessionInstance);
+            var result = service.GetTool(new ToolItemFilter
+            {
+                ToolManagementId = 1
+            });
+
+            result.Should().NotBeNull();
+            (result.ToolManagementId == 1).Should().BeTrue();
+            result.Identifiers.Values.Any().Should().BeTrue();
+            result.Attributes.Values.Any().Should().BeTrue();
+        }
         #endregion
     }
 }

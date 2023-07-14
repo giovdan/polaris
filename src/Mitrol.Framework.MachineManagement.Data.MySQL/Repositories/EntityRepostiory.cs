@@ -108,9 +108,7 @@
 
         public IEnumerable<Tool> FindTools(Expression<Func<Tool,bool>> predicate)
         {
-            var query = UnitOfWork.Context.Tools.Where(predicate);
-            Debug.WriteLine(query.ToQueryString());
-            return query;
+            return UnitOfWork.Context.Tools.Where(predicate);
         }
 
         #endregion

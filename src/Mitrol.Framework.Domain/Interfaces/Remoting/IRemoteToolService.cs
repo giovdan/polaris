@@ -7,7 +7,6 @@
     {
         IEnumerable<ToolItem> GetToolIdentifiers();
         IEnumerable<ToolItem> GetToolIdentifiers(ToolItemIdentifiersFilter filter);
-
         ToolItem GetTool(ToolItemFilter filter);
     }
 }

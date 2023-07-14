@@ -303,6 +303,7 @@
 
             #region < Tools >
             CreateMap<Tool, ToolItem>()
+                .ForMember(dest => dest.UnitEnablingMask, opt => opt.MapFrom(s => s.ToolMask))
                 .ForMember(dest => dest.Attributes, opt => opt.Ignore())
                 .ForMember(dest => dest.Identifiers, opt => opt.Ignore());
 

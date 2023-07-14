@@ -1,16 +1,32 @@
 {
-  "gitCommitHash": "a4a628c0c543d1d07dbe900a28db5bbd555af74c",
-  "gitCommitDate": "Wed, 12 Jul 2023 12:14:54 +0200",
+  "gitCommitHash": "2f62ead0797561fa573a401288a22bed655fc842",
+  "gitCommitDate": "Thu, 13 Jul 2023 17:22:15 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Wed, 12 Jul 2023 13:52:51 +0200",
+  "buildDate": "Fri, 14 Jul 2023 11:50:54 +0200",
   "gitUncommittedFiles": [
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
+      "filename": "src/Mitrol.Framework.Domain/Models/Remoting/ToolItem.cs"
     },
     {
       "status": "M",
-      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/Entity.cs"
+      "filename": "src/Mitrol.Framework.Gateway.Api/version.json"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Mappings/ServiceProfile.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/MachineManagementBaseService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/ToolService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/ToolUnitTest.cs"
     }
   ]
 }
