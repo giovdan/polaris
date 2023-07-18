@@ -25,12 +25,7 @@
     [Trait("TestType", "Tool")]
     public class ToolUnitTest: BaseUnitTest
     {
-        private Result Boot(IServiceScope scope)
-        {
-            var machineConfigurationService = scope.ServiceProvider.GetRequiredService<IMachineConfigurationService>();
-            machineConfigurationService.SetSession(NullUserSession.InternalSessionInstance);
-            return machineConfigurationService.Boot(NullUserSession.InternalSessionInstance);
-        }
+
 
         public ToolUnitTest():base()
         {
@@ -49,20 +44,12 @@
             services.AddScoped<IMachineParameterRepository, MachineParameterRepository>();
             services.AddScoped<IEntityValidator<ToolDetailItem>, ToolValidator>();
             services.AddScoped<IExecutionService, ExecutionService>();
-            services.AddScoped<IMachineConfigurationService, MachineConfigurationService>();
             services.AddScoped<IMachineParameterService, MachineParameterService>();
             services.AddSingleton<IEntityHandlerFactory, EntityHandlerFactory>();
             services.AddScoped<IResolver<IEntityRulesHandler<ToolDetailItem>>
                             , ToolRulesHandlerResolver>();
             services.AddTransient<ToolRulesHandler>();
             RegisterServices(services);
-
-            // Boot
-            using var scope = ServiceProvider.CreateScope();
-            Boot(scope)
-                .OnFailure(errors => Console.WriteLine(errors.ToString()));
-                        
-            
         }
 
         [Fact]

@@ -114,12 +114,14 @@ SELECT av.EntityId, adl.EntityTypeId, av.Id, CONCAT('LBL_ATTR_', UCASE(`ad`.`Dis
 , CAST(av.`Value` as DECIMAL(14,7)) as Value, av.TextValue, ad.DisplayName, av.AttributeDefinitionLinkId, ad.AttributeType
 , ad.AttributeKind, ad.EnumId, ad.DataFormat, adl.ControlType, adl.ProtectionLevel
 , adl.Priority, adl.ProcessingTechnology, adl.IsCodeGenerator, adl.AttributeScopeId, adl.GroupId AS AttributeDefinitionGroupId
-, adl.IsSubFilter,  adl.IsStatusAttribute, ad.TypeName AS EnumType, COALESCE(adgp.Priority,0) AS attributedefinitiongrouppriority
+, adl.IsSubFilter,  adl.IsStatusAttribute, ad.TypeName AS EnumType, COALESCE(adgp.Priority,0) AS GroupPriority
 , adl.HelpImage, ad.OverrideType
+, et.ParentType
 FROM 
 	attributevalue av
 INNER JOIN attributedefinitionlink adl ON adl.Id = av.AttributeDefinitionLinkId
 INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId	
+INNER JOIN entitytype et ON et.Id = adl.EntityTypeId
 LEFT JOIN attributedefinitiongrouppriority adgp ON adgp.AttributeDefinitionGroupId = adl.GroupId //
 
 

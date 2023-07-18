@@ -16,6 +16,7 @@
         void BatchUpdateOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues);
         int BatchInsertOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues);
         int Remove(Expression<Func<AttributeValue, bool>> predicate);
+        IEnumerable<EntityAttribute> FindEntityAttributes(Expression<Func<EntityAttribute, bool>> predicate);
         #region < Bulk operations >
         int BulkUpdate(IEnumerable<AttributeValue> attributeValues);
         int BulkInsertOverrides(IEnumerable<AttributeOverrideValue> attributeOverrideValues);

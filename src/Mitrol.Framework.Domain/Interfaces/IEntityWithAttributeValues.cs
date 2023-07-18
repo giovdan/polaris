@@ -1,4 +1,4 @@
-﻿namespace Mitrol.Framework.Domain.Interfaces
+﻿namespace Mitrol.Framework.Domain.Production.Models
 {
     using Mitrol.Framework.Domain.Enums;
     using System.Collections.Generic;

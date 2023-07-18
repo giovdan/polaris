@@ -28,7 +28,6 @@
 
         }
 
-        private IDetailIdentifierRepository DetailIdentifierRepository => ServiceFactory.GetService<IDetailIdentifierRepository>();
         private IMachineConfigurationService MachineConfigurationService => ServiceFactory.GetService<IMachineConfigurationService>();
 
         private IEntityValidator<ToolDetailItem> ToolValidator
@@ -1208,7 +1207,9 @@
 
             // Recupero attributi di processi, identificatori e geometrici
             // e gli identifiers
-            var attributes = FilterOnUnitEnabledAttributes(GetAttributes(tool.Id, filter.ConversionSystem)
+            var attributes = FilterOnUnitEnabledAttributes(GetAttributes(tool.Id, tool.EntityTypeId
+                                                            , onlyQuickAccess:false
+                                                            , filter.ConversionSystem).ToList()
                                     , tool.EntityTypeId.GetPlantUnit());
             var identifiers = GetIdentifiers(tool.HashCode, filter.ConversionSystem).ToList();
 

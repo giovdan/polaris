@@ -8,19 +8,16 @@
     using Mitrol.Framework.MachineManagement.Application.Models;
     using System.Linq;
 
-    public class ToolRulesHandler : IEntityRulesHandler<ToolDetailItem>
+    public class ToolRulesHandler : BaseEntityRulesHandler, IEntityRulesHandler<ToolDetailItem>
     {
-        private IEntityHandlerFactory _handlerFactory;
         private IServiceFactory _serviceFactory;
         private IMapper _mapper;
 
         private IMachineConfigurationService MachineConfigurationService 
                     => _serviceFactory.GetService<IMachineConfigurationService>();
 
-        public ToolRulesHandler(IEntityHandlerFactory handlerFactory, IServiceFactory serviceFactory)
+        public ToolRulesHandler(IServiceFactory serviceFactory): base(serviceFactory)
         {
-            _handlerFactory = handlerFactory;
-            _serviceFactory = serviceFactory;
             _mapper = serviceFactory.GetService<IMapper>();
         }
 

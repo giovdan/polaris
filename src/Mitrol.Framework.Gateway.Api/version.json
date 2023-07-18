@@ -1,9 +1,25 @@
 {
-  "gitCommitHash": "2f62ead0797561fa573a401288a22bed655fc842",
-  "gitCommitDate": "Thu, 13 Jul 2023 17:22:15 +0200",
+  "gitCommitHash": "9065c85aa8d59f70b0b02060de7a758b12646c7f",
+  "gitCommitDate": "Tue, 18 Jul 2023 16:56:03 +0200",
   "gitRefs": "HEAD -> master, origin/master, origin/HEAD",
-  "buildDate": "Fri, 14 Jul 2023 11:50:54 +0200",
+  "buildDate": "Tue, 18 Jul 2023 17:31:25 +0200",
   "gitUncommittedFiles": [
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain.Core/Interfaces/IHashcodeGenerator.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/EntityTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Enums/ParentTypeEnum.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.Domain/Interfaces/IEntityWithAttributeValues.cs"
+    },
     {
       "status": "M",
       "filename": "src/Mitrol.Framework.Domain/Models/Remoting/ToolItem.cs"
@@ -14,7 +30,15 @@
     },
     {
       "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/MachineManagementExtensions.cs"
+    },
+    {
+      "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Application/Mappings/ServiceProfile.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Application/RulesHandlers/ToolRulesHandler.cs"
     },
     {
       "status": "M",
@@ -23,6 +47,42 @@
     {
       "status": "M",
       "filename": "src/Mitrol.Framework.MachineManagement.Application/Services/ToolService.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Data.MySQL/Mitrol.Framework..MachineManagement.Data.MySQL.csproj"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Data.MySQL/Models/MachineManagementDatabaseContext.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Data.MySQL/Repositories/AttributeValueRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Data.MySQL/Repositories/EntityRepostiory.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IAttributeValueRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IEntityRepository.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Interfaces/IMachineManagentDatabaseContext.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.Domain/Models/AttributeDefinition.cs"
+    },
+    {
+      "status": "M",
+      "filename": "src/Mitrol.Framework.MachineManagement.XUnitTests/BaseUnitTest.cs"
     },
     {
       "status": "M",

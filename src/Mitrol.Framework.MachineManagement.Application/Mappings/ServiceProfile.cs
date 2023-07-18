@@ -14,6 +14,7 @@
     using Mitrol.Framework.MachineManagement.Domain.Models.Views;
     using Mitrol.Framework.MachineManagement.Application.Attributes;
     using Mitrol.Framework.Domain.Attributes;
+    using Mitrol.Framework.MachineManagement.Application.Models.Production;
 
     public class ServiceProfile: AutoMapper.Profile
     {
@@ -25,7 +26,7 @@
             CreateMap<EntityItem, Entity>()
                 .ForMember(dest => dest.EntityTypeId, opt => opt.MapFrom(s => s.EntityType));
 
-            CreateMap<Entity, EntityListItem>()
+            CreateMap<Entity, Models.EntityListItem>()
                 .ForMember(dest => dest.EntityType, opt => opt.MapFrom(s => s.EntityTypeId));
 
             CreateMap<AttributeValue, AttributeItem>()
@@ -164,6 +165,18 @@
                 .ForMember(dest => dest.HelpDescriptionCode, opt => opt.MapFrom(s => s.HelpLocalizationKey))
                 .ForMember(dest => dest.ProtectionLevel, opt => opt.MapFrom(s => s.ProtectionLevel.ToString()))
                 .ForMember(dest => dest.ItemDataFormat, opt => opt.MapFrom(s => (AttributeDataFormatEnum)s.DataFormatId));
+
+            CreateMap<EntityAttribute, ClusteredAttributeDetailItem>()
+                .ForMember(dest => dest.Value, opt => opt.Ignore())
+                .ForMember(dest => dest.DbValue, opt => opt.MapFrom(s => s.AttributeKind == AttributeKindEnum.String
+                                                                            ? (object)s.TextValue
+                                                                            : s.Value));
+
+            CreateMap<EntityAttribute, AttributeDetailItem>()
+                .ForMember(dest => dest.Value, opt => opt.Ignore())
+                .ForMember(dest => dest.DbValue, opt => opt.MapFrom(s => s.AttributeKind == AttributeKindEnum.String 
+                                                                            ? (object) s.TextValue
+                                                                            : s.Value));
 
             #region < Configuration >
 
@@ -326,6 +339,21 @@
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(s => s.PlasmaCurrent))
                 .ForMember(dest => dest.LocalizationKey, opt => opt.MapFrom(s => s.PlasmaCurrent));
             #endregion < Tools >
+
+            #region < Stock >
+            CreateMap<Entity, StockListItem>()
+                .ForMember(dest => dest.ImageCode, opt => opt.MapFrom(s => $"PRF_{(ProfileTypeEnum)s.SecondaryKey}"))
+                .ForMember(dest => dest.ProfileType, opt => opt.MapFrom(s => (ProfileTypeEnum)s.SecondaryKey))
+                .ForMember(dest => dest.Identifiers, opt => opt.Ignore())
+                .ForMember(dest => dest.StockType, opt => opt.Ignore())
+                .ForMember(dest => dest.TotalQuantity, opt => opt.Ignore());
+
+            CreateMap<Entity, StockDetailItem>()
+                .ForMember(dest => dest.ProfileTypeId, opt => opt.MapFrom(s => s.SecondaryKey))
+                .ForMember(dest => dest.ProfileType, opt => opt.MapFrom(s => (ProfileTypeEnum)s.SecondaryKey))
+                .ForMember(dest => dest.Groups, opt => opt.Ignore())
+                .ForMember(dest => dest.ProfileAttributes, opt => opt.Ignore());
+            #endregion
         }
     }
 }

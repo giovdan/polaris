@@ -92,6 +92,16 @@
             return query;
         }
 
+        public IEnumerable<EntityAttribute> FindEntityAttributes(Expression<Func<EntityAttribute, bool>> predicate)
+        {
+            var query = UnitOfWork.Context.EntityAttributes
+                    .Where(predicate);
+
+            Debug.WriteLine(query.ToQueryString());
+
+            return query;
+        }
+
         public IEnumerable<AttributeOverrideValue> FindAttributeOverridesBy(Expression<Func<AttributeOverrideValue, bool>> predicate)
         {
             return UnitOfWork.Context.AttributeOverrideValues

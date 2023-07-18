@@ -28,5 +28,8 @@
         DbSet<PlasmaToolMaster> PlasmaToolMasters { get; set; }
         DbSet<Tool> Tools { get; set; }
         DbSet<EntityStatusAttribute> EntityStatusAttributes { get; set; }
+        DbSet<EntityWithInfo> EntitiesWithInfo { get; set; }
+        DbSet<QuantityBackLog> QuantityBackLogs { get; set; }
+        DbSet<EntityAttribute> EntityAttributes { get; set; }
     }
 }

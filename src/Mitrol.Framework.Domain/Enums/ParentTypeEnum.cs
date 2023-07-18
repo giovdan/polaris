@@ -2,7 +2,9 @@
 {
     using Mitrol.Framework.Domain.Attributes;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     [Flags]
     public enum ParentTypeEnum : int
@@ -69,8 +71,6 @@
         [DatabaseDisplayName("MTR")]
         Material = 16384,
 
-
-
         [Description("OperationAdditionalItem")]
         [DatabaseDisplayName("OAI")]
         OperationAdditionalItem = 65536
@@ -78,6 +78,36 @@
 
     public static class ParentTypeEnumExtensions
     {
+        public static IEnumerable<EntityTypeEnum> GetEntityTypes(this ParentTypeEnum parentType)
+        {
+            var entityTypes = Enumerable.Empty<EntityTypeEnum>();
+
+            switch (parentType)
+            {
+                case ParentTypeEnum.StockItem:
+                    {
+                        entityTypes = new[]
+                        {
+                            EntityTypeEnum.StockProfileB,
+                            EntityTypeEnum.StockProfileC,
+                            EntityTypeEnum.StockProfileD,
+                            EntityTypeEnum.StockProfileF,
+                            EntityTypeEnum.StockProfileI,
+                            EntityTypeEnum.StockProfileL,
+                            EntityTypeEnum.StockProfileN,
+                            EntityTypeEnum.StockProfileP,
+                            EntityTypeEnum.StockProfileQ,
+                            EntityTypeEnum.StockProfileR,
+                            EntityTypeEnum.StockProfileT,
+                            EntityTypeEnum.StockProfileU,
+                            EntityTypeEnum.StockProfileV
+                        };
+                    }
+                    break;
+
+            }
+            return entityTypes;
+        }
         public static ToolRangeTypeEnum GetToolRangeType(this ParentTypeEnum parentType, PlantUnitEnum plantUnit)
         {
             var toolRangeType = ToolRangeTypeEnum.None;

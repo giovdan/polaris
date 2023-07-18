@@ -2,6 +2,7 @@
 {
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Production.Models;
     using Newtonsoft.Json;
     using System.Collections.Generic;
 

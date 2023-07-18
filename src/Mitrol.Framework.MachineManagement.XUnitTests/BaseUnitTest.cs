@@ -28,6 +28,8 @@
     using Mitrol.Framework.MachineManagement.Application.Interfaces;
     using Mitrol.Framework.MachineManagement.Application.Resolvers;
     using Mitrol.Framework.MachineManagement.Application.GeneralPurpose;
+    using Mitrol.Framework.Domain.Models;
+    using Mitrol.Framework.MachineManagement.Application.Services;
 
     public class BaseUnitTest
     {
@@ -46,6 +48,13 @@
                  ($"Server={mySQLSection.Server};port={mySQLSection.Port};Database=machine;Uid={mySQLSection.Username};Pwd={SimpleStringCipher.Instance.Decrypt(mySQLSection.Password)}");
 
             }
+        }
+
+        private Result Boot(IServiceScope scope)
+        {
+            var machineConfigurationService = scope.ServiceProvider.GetRequiredService<IMachineConfigurationService>();
+            machineConfigurationService.SetSession(NullUserSession.InternalSessionInstance);
+            return machineConfigurationService.Boot(NullUserSession.InternalSessionInstance);
         }
 
         public void RegisterServices(IServiceCollection services)
@@ -69,6 +78,7 @@
             services.AddScoped<IAttributeDefinitionRepository, AttributeDefinitionRepository>();
             services.AddScoped<IAttributeDefinitionLinkRepository, AttributeDefinitionLinkRepository>();
             services.AddScoped<IAttributeValueRepository, AttributeValueRepository>();
+            services.AddScoped<IMachineConfigurationService, MachineConfigurationService>();
 
             // Resolvers
             services.AddTransient<
@@ -92,6 +102,10 @@
             var container = containerBuilder.Build();
 
             ServiceProvider = new AutofacServiceProvider(container);
+            // Boot
+            using var scope = ServiceProvider.CreateScope();
+            Boot(scope)
+                .OnFailure(errors => Console.WriteLine(errors.ToString()));
         }
 
         #region < Start / Stop DbServer >

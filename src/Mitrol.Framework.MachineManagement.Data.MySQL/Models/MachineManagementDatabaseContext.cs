@@ -33,6 +33,9 @@
         public DbSet<PlasmaToolMaster> PlasmaToolMasters { get; set; }
         public DbSet<Tool> Tools { get; set; }
         public DbSet<EntityStatusAttribute> EntityStatusAttributes { get; set; }
+        public DbSet<EntityWithInfo> EntitiesWithInfo { get; set; }
+        public DbSet<QuantityBackLog> QuantityBackLogs { get; set; }
+        public DbSet<EntityAttribute> EntityAttributes { get; set; }
 
         public void SetEntity<TEntity>(TEntity entity, EntityState entityState)
             where TEntity: BaseEntity
@@ -94,7 +97,8 @@
             modelBuilder.Entity<EntityStatusAttribute>().ToView("EntityStatusAttributesView").HasNoKey();
             modelBuilder.Entity<PlasmaToolMaster>().ToView("PlasmaToolMasters").HasNoKey();
             modelBuilder.Entity<Tool>().ToView("Tools").HasNoKey();
-
+            modelBuilder.Entity<EntityWithInfo>().ToView("EntityListView").HasNoKey();
+            modelBuilder.Entity<EntityAttribute>().ToView("EntityAttributesView").HasNoKey();
             #endregion
         }
 

@@ -2,6 +2,7 @@
 {
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Enums;
+    using Mitrol.Framework.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Models.Views;
     using Mitrol.Framework.MachineManagement.Domain.Views;
@@ -14,6 +15,7 @@
         Entity RawUpdate(Entity entity);
         Entity Get(string displayName);
         Entity GetBySecondaryKey(long secondaryKey, EntityTypeEnum entityType);
+        Result BulkRemove(Expression<Func<EntityWithInfo,bool>> predicate);
         #region < Tools Management >
         IEnumerable<PlasmaToolMaster> FindPlasmaToolMasters(Expression<Func<PlasmaToolMaster, bool>> predicate);
         IEnumerable<Tool> FindTools(Expression<Func<Tool, bool>> predicate);

@@ -78,6 +78,17 @@
 
         #endregion < Costants >
 
+        /// <summary>
+        /// Calculate Tool HashCode
+        /// </summary>
+        /// <param name="identifiers"></param>
+        /// <returns></returns>
+        public static string CalculateHash<T>(this IEnumerable<T> values)
+        {
+            string hashCode = string.Empty;
+           
+            return hashCode;
+        }
         // TODO
         public static void SetSetupInfo(this ToolDetailItem toolDetail
             , IExecution execution, IRootConfiguration configurationRoot, PlantUnitEnum plantUnit)
@@ -688,22 +699,22 @@
         //    return attributes;
         //}
 
-        //public static IEnumerable<AttributeValueMaster> GetFilteredAttributes(
-        //     this IEnumerable<IEntityRulesHandler> rulesHandlers
-        //    , IEnumerable<AttributeValueMaster> attributeValues
-        //    , Dictionary<AttributeDefinitionEnum, object> additionalInfos)
-        //{
-        //    //La lista degli attributi prima di eseguire gli handlers deve essere concretizzata
-        //    //per evitare l'errore "MySQL connection is already in use"
-        //    IEnumerable<AttributeValueMaster> attributes = attributeValues.ToList();
-        //    foreach (var handler in rulesHandlers)
-        //    {
-        //        handler.Init(additionalInfos);
-        //        attributes = handler.HandleAll(attributes);
-        //    }
+        public static IEnumerable<EntityAttribute> GetFilteredAttributes(
+             this IEnumerable<IEntityRulesHandler> rulesHandlers
+            , IEnumerable<EntityAttribute> attributeValues
+            , Dictionary<AttributeDefinitionEnum, object> additionalInfos)
+        {
+            //La lista degli attributi prima di eseguire gli handlers deve essere concretizzata
+            //per evitare l'errore "MySQL connection is already in use"
+            IEnumerable<EntityAttribute> attributes = attributeValues.ToList();
+            foreach (var handler in rulesHandlers)
+            {
+                handler.Init(additionalInfos);
+                attributes = handler.HandleAll(attributes);
+            }
 
-        //    return attributes;
-        //}
+            return attributes;
+        }
 
         //public static IEnumerable<OperationAttributeValueMaster> GetFilteredAttributes(
         //             this IEnumerable<IEntityRulesHandler> rulesHandlers

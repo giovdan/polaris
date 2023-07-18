@@ -87,9 +87,54 @@ loop_entities: LOOP
 	COMMIT;	
 END //
 
+CREATE OR REPLACE PROCEDURE ReplaceMaterialCodeValues()
+BEGIN
+	DECLARE done BOOLEAN DEFAULT(false);
+	DECLARE recordsNumber INT DEFAULT(0);
+	DECLARE pMaterialId INT;
+	DECLARE pMaterialCode VARCHAR(50);
+	
+	DECLARE curEntities CURSOR FOR 	
+		SELECT e.Id, e.DisplayName FROM entity e
+		INNER JOIN entitytype et ON et.Id = e.EntityTypeId
+		WHERE et.ParentType = 'Material';
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	 BEGIN
+ 	     ROLLBACK;
+	     SHOW ERRORS;  
+	 END; 
+	 
+	OPEN curEntities;
+	
+	SELECT FOUND_ROWS() INTO recordsNumber;
+	
+	START TRANSACTION;		
+loop_entities: LOOP
+		FETCH curEntities INTO  pMaterialId, pMaterialCode;
+
+		IF done THEN
+			LEAVE loop_entities;		
+		END IF;
+
+		UPDATE attributevalue SET VALUE = pMaterialId WHERE TextValue = pMaterialCode;
+	END LOOP;
+
+	CLOSE curEntities;
+	
+
+	COMMIT;	
+END //
+
 CALL ConvertMaterials() //
 
+CALL ReplaceMaterialCodeValues() //
+
 DROP PROCEDURE IF EXISTS ConvertMaterials //
+
+DROP PROCEDURE IF EXISTS ReplaceMaterialCodeValues //
 
 DELIMITER ; 
 

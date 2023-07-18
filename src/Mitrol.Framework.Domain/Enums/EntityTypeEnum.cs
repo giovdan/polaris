@@ -261,7 +261,12 @@
         OperationToolTechnology = 248,
         OperationBHol = 249,
         OperationMSaw = 250,
-        Material = 251
+        Material = 251,
+        VertexPathC = 252,
+        VertexPathS = 253,
+        VertexPathM = 254,
+        OperationSense = 255,
+        VertexShape = 256
     }
 
     public static class EntityTypeExtensions

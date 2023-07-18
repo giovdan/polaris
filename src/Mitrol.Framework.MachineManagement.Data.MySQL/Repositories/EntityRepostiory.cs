@@ -4,6 +4,7 @@
     using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Enums;
     using Mitrol.Framework.Domain.Interfaces;
+    using Mitrol.Framework.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Interfaces;
     using Mitrol.Framework.MachineManagement.Domain.Models;
     using Mitrol.Framework.MachineManagement.Domain.Models.Views;
@@ -53,6 +54,28 @@
 
             var result = UnitOfWork.Context.Database.ExecuteSqlRaw(insertQuery.ToString());
             return result;
+        }
+
+        /// <summary>
+        /// Bulk Remove of entity list
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public Result BulkRemove(Expression<Func<EntityWithInfo, bool>> predicate)
+        {
+            try
+            {
+                var itemsToRemove = UnitOfWork.Context.EntitiesWithInfo.Where(predicate).Select(s => s.Id);
+
+                UnitOfWork.Context.Entities.RemoveRange(UnitOfWork.Context.Entities
+                                            .Where(s => itemsToRemove.Contains(s.Id)));
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+            }
         }
 
         public IEnumerable<Entity> FindBy(Expression<Func<Entity, bool>> predicate)

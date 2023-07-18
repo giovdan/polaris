@@ -22,7 +22,7 @@
         public AttributeKindEnum AttributeKind { get; set; }
         public string TypeName { get; set; }
         [DefaultValue(OverrideTypeEnum.None)]
-        [Column(TypeName = "ENUM ('None','DeltaValue','DeltaPercentage")]
+        [Column(TypeName = "ENUM ('None','DeltaValue','DeltaPercentage')")]
         public OverrideTypeEnum OverrideType { get; set; }
     }
 }

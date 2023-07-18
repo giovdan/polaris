@@ -21,6 +21,10 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
     using Mitrol.Framework.Domain.Core.Extensions;
     using System.Text.RegularExpressions;
     using Mitrol.Framework.MachineManagement.Application.Models;
+    using Mitrol.Framework.MachineManagement.Application.Models.Production;
+    using Mitrol.Framework.Domain.Attributes;
+    using Mitrol.Framework.MachineManagement.Domain.Views;
+    using System.Linq.Expressions;
 
     public class MachineManagementBaseService: BaseService
     {
@@ -82,25 +86,6 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                             .ToList();
 
             
-        }
-
-        
-
-        /// <summary>
-        /// Get Attributes for specified entity
-        /// </summary>
-        /// <param name="entityId"></param>
-        /// <param name="conversionSystemTo"></param>
-        /// <returns></returns>
-        protected List<AttributeDetailItem> GetAttributes(long entityId
-                    , MeasurementSystemEnum conversionSystemTo)
-        {
-            using var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
-            AttributeValueRepository.Attach(unitOfWork);
-            return AttributeValueRepository
-                                    .FindBy(av => av.EntityId == entityId)
-                                    .Select(av => ApplyCustomMapping(av, conversionSystemTo))
-                                    .ToList();
         }
 
         /// <summary>
@@ -591,6 +576,75 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
             return attribute;
         }
 
+        protected ClusteredAttributeDetailItem ApplyCustomMapping(EntityAttribute attributeValue
+                                                        , IEnumerable<ProtectionLevelEnum> protectionLevels
+                                                        , MeasurementSystemEnum measurementSystemTo)
+        {
+            var attributeDetail = Mapper.Map<ClusteredAttributeDetailItem>(attributeValue);
+            SetAttributeDetailValue(attributeDetail, protectionLevels, conversionSystemFrom: MeasurementSystemEnum.MetricSystem
+                                    , conversionSystemTo: measurementSystemTo);
+            attributeDetail.Hidden = (attributeDetail.EnumId == AttributeDefinitionEnum.Length);
+            return attributeDetail;
+        }
+
         #endregion < Apply Custom Mapping >
+
+
+
+        /// <summary>
+        /// Recupero attributi legati ad un tool
+        /// </summary>
+        /// <param name="toolId"></param>
+        /// <param name="conversionSystem"></param>
+        /// <returns></returns>
+        protected IEnumerable<AttributeDetailItem> GetAttributes(long entityId
+                                    , EntityTypeEnum entityType
+                                    , bool onlyQuickAccess
+                                    , MeasurementSystemEnum conversionSystemTo
+                                    , ProcessingTechnologyEnum processingTechnology = ProcessingTechnologyEnum.Default)
+        {
+            Expression<Func<EntityAttribute, bool>> predicate = a => a.EntityId == entityId;
+            if (onlyQuickAccess)
+                predicate = predicate.AndAlso(a => a.AttributeScopeId == AttributeScopeEnum.Fundamental);
+
+            var additionalInfos = new Dictionary<AttributeDefinitionEnum, object>();
+            var parentType = entityType.ToParentType();
+            if (parentType == ParentTypeEnum.Tool)
+            {
+                additionalInfos.Add(AttributeDefinitionEnum.ToolType, entityType.ToToolType());
+            }
+            else if (parentType == ParentTypeEnum.ToolRange)
+            {
+                // Recupero il plantUnit
+                var plantUnit =
+                    (entityType.ToToolType()).GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit 
+                                ?? PlantUnitEnum.None;
+
+                additionalInfos.Add(AttributeDefinitionEnum.ToolRangeType, parentType.GetToolRangeType(plantUnit));
+            }
+
+            var attributes = AttributeValueRepository.FindEntityAttributes(predicate)
+                                    .ToList();
+
+            return ServiceFactory.GetEntityRulesHandlers(entityType.ToParentType())
+                    .GetFilteredAttributes(attributes
+                            , additionalInfos)
+                    .OrderBy(a => a.Priority)
+                    .ToList()
+                .Select(attribute =>
+                {
+                    var attributeDetail = Mapper.Map<AttributeDetailItem>(attribute);
+                    SetAttributeDetailValue(attributeDetail
+                                    , UserSession.GetProtectionLevels()
+                                    , conversionSystemFrom: MeasurementSystemEnum.MetricSystem
+                                    , conversionSystemTo: conversionSystemTo);
+
+                    // PlasmaGas e ShieldGas sono attributi ReadOnly
+                    attributeDetail.IsReadonly = attributeDetail.EnumId is AttributeDefinitionEnum.PlasmaGas or AttributeDefinitionEnum.ShieldGas;
+                    return attributeDetail;
+                })
+                .OrderBy(a => a.Order);
+        }
+
     }
 }
