@@ -30,9 +30,9 @@ END //
 CREATE OR REPLACE PROCEDURE ConvertProductionRow(IN iProductionRow INT, pDataFormatId INT)
 BEGIN
 	DECLARE pHashCode CHAR(64);
-	DECLARE pRelatedHashCode CHAR(64);	
+	DECLARE pChildHashCode CHAR(64);	
 	DECLARE pEntityTypeId INT;
-	DECLARE pRelatedParentTypeId INT;
+	DECLARE pChildParentTypeId INT;
 	DECLARE newId INT;
 	DECLARE pParentTypeId INT;
 	DECLARE pNumberOfStation INT;
@@ -46,7 +46,7 @@ BEGIN
 	DECLARE pCreatedOn DATETIME;
 	DECLARE pUpdatedOn DATETIME;
 	DECLARE pProgramId INT;
-   DECLARE pExecutionDate DATETIME;
+	DECLARE pExecutionDate DATETIME;
 	DECLARE pOriginsCalculatedLinkId INT; 
 	DECLARE pExecutionDateLinkId INT;
 	DECLARE pOriginsCalculatedEnumId INT DEFAULT 395;
@@ -69,15 +69,15 @@ BEGIN
 			WHERE pr.Id = iProductionRow;
 				
 		SET pParentTypeId = 8192; 			# ProductionRow ParentType
-		SET pRelatedParentTypeId = 256;		# Program ParentType
+		SET pChildParentTypeId = 256;		# Program ParentType
 		SET pEntityTypeId = GetEntityType(pParentTypeId, pProfileTypeId);
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pHashCode = SHA2(CONCAT(pEntityTypeId,pDisplayName),256);
 		# Recupero HashCode dello stock associato
-		SELECT e.HashCode INTO pRelatedHashCode FROM entity e 
+		SELECT e.HashCode INTO pChildHashCode FROM entity e 
 			INNER JOIN migratedentity me ON me.EntityId = e.Id AND me.EntityTypeId = e.EntityTypeId
 			WHERE 
-				me.ParentId = pProgramId AND me.ParentTypeId = pRelatedParentTypeId;
+				me.ParentId = pProgramId AND me.ParentTypeId = pChildParentTypeId;
 
 		SET newId = 0;
 		# Inserimento record tabella
@@ -94,9 +94,9 @@ BEGIN
 		IF newId <> 0 THEN
 			INSERT INTO entitylink
 			(RelatedEntityHashCode, EntityHashCode, RelationType, RowNumber, `Level`)
-			SELECT pRelatedHashCode, pHashCode, 'ForeignKey', 1, 1 FROM DUAL
-				WHERE NOT EXISTS (SELECT Id FROM entitylink WHERE RelatedEntityHashCode = pRelatedHashCode
-															AND EntityHashCode = pHashCode AND RelationType = 'ForeignKey');		
+			SELECT pHashCode, pChildHashCode, 'ForeignKey', 1, 1 FROM DUAL
+				WHERE NOT EXISTS (SELECT Id FROM entitylink WHERE EntityHashCode = pChildHashCode
+															AND RelatedEntityHashCode = pHashCode AND RelationType = 'ForeignKey');		
 	
 			SELECT adl.Id INTO pOriginsCalculatedLinkId
 			FROM attributedefinitionlink adl

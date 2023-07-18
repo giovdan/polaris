@@ -25,7 +25,8 @@ BEGIN
 	DECLARE detailValue VARCHAR(50);
     
 	DECLARE curDetails CURSOR FOR 
-		SELECT `Value` FROM detailidentifier WHERE HashCode = iHashCode;
+		SELECT `Value` FROM detailidentifier WHERE HashCode = iHashCode
+		ORDER BY Priority;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
@@ -68,7 +69,8 @@ BEGIN
 	DECLARE detailValue VARCHAR(50);
     
 	DECLARE curDetails CURSOR FOR 
-		SELECT `Value` FROM detailidentifier WHERE HashCode = iHashCode;
+		SELECT `Value` FROM detailidentifier WHERE HashCode = iHashCode
+		ORDER BY Priority;
     
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
@@ -218,6 +220,7 @@ BEGIN
 		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 28 THEN 248
 		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 29 THEN 249
 		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 30 THEN 250
+		WHEN pParentTypeId = 4096 AND pSubParentTypeId = 15 THEN 256
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 1  THEN 211
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 2  THEN 212
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 3  THEN 213
@@ -231,10 +234,11 @@ BEGIN
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 12 THEN 221
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 13 THEN 222
 		WHEN pParentTypeId = 8192 AND pSubParentTypeId = 14 THEN 223
-		WHEN pParentTypeId = 16384 THEN 252
+		WHEN pParentTypeId = 16384 THEN 251
 		WHEN pParentTypeId = 65536 AND pSubParentTypeId = 6 THEN 252
 		WHEN pParentTypeId = 65536 AND pSubParentTypeId = 22 THEN 253
 		WHEN pParentTypeId = 65536 AND pSubParentTypeId = 23 THEN 254
+		WHEN pParentTypeId = 65536 AND pSubParentTypeId = 10 THEN 255
 		ELSE 0
 	END;	
 		
@@ -272,7 +276,7 @@ BEGIN
         WHEN iOperationTypeId = 24 THEN 242	
         WHEN iOperationTypeId = 25 THEN 245	
         WHEN iOperationTypeId = 26 THEN 246	
-			WHEN iOperationTypeId = 27 THEN 256
+		WHEN iOperationTypeId = 27 THEN 256
         WHEN iOperationTypeId = 28 THEN 248		
         WHEN iOperationTypeId = 29 THEN 249	
         WHEN iOperationTypeId = 30 THEN 251	
@@ -469,8 +473,9 @@ BEGIN
 	DECLARE curAttributeValues CURSOR FOR 	
 		SELECT av.Value, av.TextValue, ad.AttributeKindId
 		FROM attributevalue_old av 
-			INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
-		WHERE av.ParentId = iParentId AND av.ParentTypeId = iParentTypeId;
+		INNER JOIN attributedefinition_old ad ON ad.Id = av.AttributeDefinitionId AND ad.ParentTypeId = av.ParentTypeId
+		WHERE av.ParentId = iParentId AND av.ParentTypeId = iParentTypeId
+		ORDER BY av.Priority;
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
@@ -516,7 +521,8 @@ BEGIN
 	DECLARE done BOOLEAN DEFAULT(FALSE);
     
 	DECLARE curIdentifiers CURSOR FOR 	
-	SELECT di.Value FROM detailidentifier_old di WHERE di.MasterId = iMasterId;
+	SELECT di.Value FROM detailidentifier_old di WHERE di.MasterId = iMasterId
+	ORDER BY Priority;
 	
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
@@ -743,6 +749,7 @@ BEGIN
 	
 	RETURN UPPER(CONCAT(displayValuePrefix, displayValue));
 END //
+
 
 DELIMITER ;
 

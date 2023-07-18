@@ -12,10 +12,10 @@ BEGIN
 	DECLARE recordsNumber INT DEFAULT(0);
 	DECLARE oldId INT;
 	DECLARE pHashCode CHAR(64);
-	DECLARE pRelatedHashCode CHAR(64);	
+	DECLARE pChildHashCode CHAR(64);	
 	DECLARE pStockEntityId INT;	
 	DECLARE pEntityTypeId INT;
-	DECLARE pRelatedParentTypeId INT;
+	DECLARE pChildParentTypeId INT;
 	DECLARE newId INT;
 	DECLARE pParentTypeId INT;
 	DECLARE pProfileTypeId INT;
@@ -47,7 +47,7 @@ BEGIN
 	SELECT FOUND_ROWS() INTO recordsNumber;
 	
 	SET pParentTypeId = 256; 			# Program ParentType
-	SET pRelatedParentTypeId = 2048;	# StockItem ParentType
+	SET pChildParentTypeId = 2048;		# StockItem ParentType
 	
 	START TRANSACTION;		
 loop_entities: LOOP
@@ -62,10 +62,10 @@ loop_entities: LOOP
 		# Recupero gli identificatori tramite il masterId e creo HashCode
 		SET pHashCode = SHA2(CONCAT(pEntityTypeId,pDisplayName),256);
 		# Recupero HashCode dello stock associato
-		SELECT e.HashCode INTO pRelatedHashCode FROM entity e 
+		SELECT e.HashCode INTO pChildHashCode FROM entity e 
 			INNER JOIN migratedentity me ON me.EntityId = e.Id AND me.EntityTypeId = e.EntityTypeId
 			WHERE 
-				me.ParentId = pStockEntityId AND me.ParentTypeId = pRelatedParentTypeId;
+				me.ParentId = pStockEntityId AND me.ParentTypeId = pChildParentTypeId;
 
 		SET newId = 0;
 		# Inserimento record tabella
@@ -79,9 +79,9 @@ loop_entities: LOOP
 		IF newId <> 0 THEN
 			INSERT INTO entitylink
 			(RelatedEntityHashCode, EntityHashCode, RelationType, RowNumber, `Level`)
-			SELECT pRelatedHashCode, pHashCode, 'ForeignKey', 1, 1 FROM DUAL
-				WHERE NOT EXISTS (SELECT Id FROM entitylink WHERE RelatedEntityHashCode = pRelatedHashCode
-															AND EntityHashCode = pHashCode AND RelationType = 'ForeignKey');		
+			SELECT pHashCode, pChildHashCode, 'ForeignKey', 1, 1 FROM DUAL
+				WHERE NOT EXISTS (SELECT Id FROM entitylink WHERE EntityHashCode = pChildHashCode
+															AND RelatedEntityHashCode = pHashCode AND RelationType = 'ForeignKey');		
 	
 			INSERT INTO attributevalue
 			(EntityId, AttributeDefinitionLinkId, DataFormatId, `Value`, TextValue, Priority, RowVersion)

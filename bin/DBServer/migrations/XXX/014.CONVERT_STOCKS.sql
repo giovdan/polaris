@@ -38,9 +38,9 @@ BEGIN
 	SET pContext = CONCAT('Errore inserimento tabella entity, StockId: ',iStockId);				
 	SET newId = 0;
 	INSERT INTO entity
-	(`DisplayName`,`HashCode`, `EntityTypeId`, `RowVersion`)
+	(`DisplayName`,`HashCode`, `EntityTypeId`, `SecondaryKey`, `RowVersion`)
 	VALUES
-	(pDisplayName, pHashCode, pEntityTypeId, UUID()); 
+	(pDisplayName, pHashCode, pEntityTypeId, pProfileTypeId, UUID()); 
 	
 	SELECT Id INTO newId FROM entity WHERE HashCode = pHashCode;
 	

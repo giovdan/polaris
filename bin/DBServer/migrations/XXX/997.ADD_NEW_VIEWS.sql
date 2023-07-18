@@ -95,6 +95,34 @@ INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId
 INNER JOIN entitytype et ON et.Id = adl.EntityTypeId
 WHERE adl.IsStatusAttribute = 1 //
 
+CREATE OR REPLACE VIEW EntityListView
+AS
+WITH Links AS (SELECT COUNT(Id) AS LinksCount, EntityHashCode FROM entitylink GROUP BY EntityHashCode)
+SELECT e.Id, e.DisplayName, e.EntityTypeId, e.SecondaryKey, e.`Status` 
+, COALESCE(l.LinksCount,0) AS IsLinked
+, e.HashCode
+, COALESCE(qb.ExecutedQuantity, 0) AS ExecutedQuantity,  COALESCE(qb.TotalQuantity, 0) AS TotalQuantity
+, COALESCE(qb.TotalQuantity, 0) - COALESCE(qb.ExecutedQuantity, 0) AS ScheduledQuantity
+, e.CreatedOn
+FROM entity e
+LEFT JOIN Links l ON l.EntityHashCode = e.HashCode
+LEFT JOIN quantitybacklog qb ON qb.EntityId = e.Id;
+
+CREATE OR REPLACE VIEW EntityAttributesView
+AS
+SELECT av.EntityId, adl.EntityTypeId, av.Id, CONCAT('LBL_ATTR_', UCASE(`ad`.`DisplayName`)) AS `LocalizationKey`
+, CAST(av.`Value` as DECIMAL(14,7)) as Value, av.TextValue, ad.DisplayName, av.AttributeDefinitionLinkId, ad.AttributeType
+, ad.AttributeKind, ad.EnumId, ad.DataFormat, adl.ControlType, adl.ProtectionLevel
+, adl.Priority, adl.ProcessingTechnology, adl.IsCodeGenerator, adl.AttributeScopeId, adl.GroupId AS AttributeDefinitionGroupId
+, adl.IsSubFilter,  adl.IsStatusAttribute, ad.TypeName AS EnumType, COALESCE(adgp.Priority,0) AS attributedefinitiongrouppriority
+, adl.HelpImage, ad.OverrideType
+FROM 
+	attributevalue av
+INNER JOIN attributedefinitionlink adl ON adl.Id = av.AttributeDefinitionLinkId
+INNER JOIN attributedefinition ad ON ad.Id = adl.AttributeDefinitionId	
+LEFT JOIN attributedefinitiongrouppriority adgp ON adgp.AttributeDefinitionGroupId = adl.GroupId //
+
+
 DELIMITER ;
 
 

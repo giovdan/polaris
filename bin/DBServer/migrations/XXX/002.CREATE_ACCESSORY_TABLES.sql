@@ -106,6 +106,22 @@ CREATE TABLE IF NOT EXISTS `detailidentifier` (
 	CONSTRAINT `detailidentifier_fk` FOREIGN KEY (`AttributeDefinitionLinkId`) REFERENCES `machine`.`attributedefinitionlink` (`Id`)
 ) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
 
+CREATE TABLE IF NOT EXISTS `quantitybacklog` (
+	`Id` INT(11) NOT NULL AUTO_INCREMENT,
+	`EntityId` INT(11) NOT NULL,
+	`TotalQuantity` INT(11) NOT NULL,
+	`ExecutedQuantity` INT(11) NOT NULL,
+	`QuantityTobeLoaded` INT(11) NULL DEFAULT '0',
+	`QuantityLoaded` INT(11) NULL DEFAULT '0',
+	`CreatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL' COLLATE 'utf8mb4_unicode_ci',
+	`CreatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
+	`UpdatedBy` VARCHAR(32) NOT NULL DEFAULT 'MITROL' COLLATE 'utf8mb4_unicode_ci',
+	`UpdatedOn` DATETIME NOT NULL DEFAULT current_timestamp(),
+	`TimeZoneId` MEDIUMTEXT NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
+	PRIMARY KEY (`Id`) USING BTREE,
+	CONSTRAINT `quantitybacklog_fk` FOREIGN KEY (`EntityId`) REFERENCES `machine`.`entity` (`Id`)	
+) ENGINE=InnoDB DEFAULT COLLATE=UTF8MB4_BIN;
+
 
 CREATE TABLE IF NOT EXISTS migratedAttribute 
 (

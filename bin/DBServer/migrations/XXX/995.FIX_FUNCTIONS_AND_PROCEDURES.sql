@@ -2,6 +2,104 @@ USE machine;
 
 DELIMITER //
 
+UPDATE mysql.proc SET name = 'GetScheduledQuantity_old', specific_name = 'GetScheduledQuantity_old' WHERE name = 'GetScheduledQuantity' //
+UPDATE mysql.proc SET name = 'GetAttributeValue_old', specific_name = 'GetAttributeValue_old' WHERE name = 'GetAttributeValue';
+
+CREATE OR REPLACE FUNCTION GetAttributeValue_old(displayName VARCHAR(32), parentId INT, parentTypeId INT)
+RETURNS VARCHAR(50) 
+BEGIN
+	DECLARE attributeDefinitionId BIGINT;
+	DECLARE attributeStringValue VARCHAR(50) DEFAULT ('0');
+	DECLARE attributeKindId INT;
+	DECLARE controlTypeId INT;
+	
+	SELECT Id, ad.AttributeKindId, ad.ControlTypeId INTO attributeDefinitionId, attributeKindId, controlTypeId 
+		FROM attributedefinition_old ad
+		WHERE
+		ad.DisplayName = displayName AND ad.ParentTypeId = parentTypeId;
+	
+	IF attributeKindId = 2 OR controlTypeId = 16 THEN
+		SELECT 
+			COALESCE(av.TextValue, '')
+			INTO attributeStringValue
+		FROM attributevalue_old av
+			WHERE av.ParentId = parentId	
+			AND av.ParentTypeId = parentTypeId AND av.AttributeDefinitionId = attributeDefinitionId;	
+	ELSE
+		SELECT 
+			COALESCE(av.Value, '0')
+			INTO attributeStringValue
+		FROM attributevalue_old av
+			WHERE av.ParentId = parentId	AND av.ParentTypeId = parentTypeId AND av.AttributeDefinitionId = attributeDefinitionId;	
+	END IF;		
+	
+	IF attributeKindId = 2 OR controlTypeId = 16 AND attributeStringValue = '0' THEN
+		SET attributeStringValue = '';
+	END IF;
+	
+	RETURN attributeStringValue;
+END //
+
+CREATE OR REPLACE FUNCTION `GetScheduledQuantity_old`(
+	entityId INT,
+	entityTypeId INT
+	)
+RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE scheduledQuantity INT;
+	DECLARE repetitionAttributeDefinitionId INT;
+	
+	SET scheduledQuantity = 0;
+	SET repetitionAttributeDefinitionId = (SELECT Id FROM attributedefinition_old WHERE ParentTypeId = 512 AND DisplayName = 'RepetitionsNumber');
+	
+	IF entityTypeId = 256 THEN
+		SET scheduledQuantity = (SELECT SUM(TotalQuantity) - SUM(ExecutedQuantity) FROM productionlistview WHERE ProgramId = entityId);	
+	END IF;
+	
+	IF entityTypeId = 1024 THEN
+		CREATE TEMPORARY TABLE IF NOT EXISTS ProgramPieceQuantities (Id INT, ProgramId INT, Repetitions INT, TotalQuantity INT);
+		
+		INSERT INTO ProgramPieceQuantities
+		(Id, ProgramId, Repetitions, TotalQuantity)
+		SELECT ppl.Id,  ppl.ProgramId, COALESCE(av.Value,1) AS Repetitions, qb.TotalQuantity
+			FROM programpiecelink ppl 
+			INNER JOIN quantitybacklog qb ON qb.EntityId = ppl.ProgramId AND qb.EntityTypeId = 256
+			LEFT JOIN attributevalue_old av ON av.ParentId = ppl.Id AND av.ParentTypeId = 512 AND av.AttributeDefinitionId = repetitionAttributeDefinitionId
+		WHERE ppl.pieceId = entityId;
+		
+		SET @repetitions = 0;
+		SET @totalQuantity = 0;
+		SET @programId = 0;
+		SET @id = 0;
+		WHILE EXISTS(SELECT * FROM ProgramPieceQuantities) DO
+			SELECT Id, Repetitions,  TotalQuantity, ProgramId 
+				INTO @id, @repetitions, @totalQuantity, @programId
+			FROM ProgramPieceQuantities LIMIT 1;
+			
+			SET scheduledQuantity = scheduledQuantity + (@repetitions * @totalQuantity);
+			
+			DELETE FROM ProgramPieceQuantities WHERE Id = @id;
+		END WHILE;
+
+		DROP TEMPORARY TABLE IF EXISTS ProgramPieceQuantities; 
+	END IF;
+	
+	RETURN scheduledQuantity;	
+END //
+
+CREATE OR REPLACE FUNCTION GetScheduledQuantity(iEntityId INT)
+RETURNS INT
+BEGIN
+	DECLARE scheduledQuantity INT;
+	DECLARE repetitionAttributeDefinitionId INT;
+	
+	SET scheduledQuantity = 0;
+	SET repetitionAttributeDefinitionId = (SELECT Id FROM attributedefinition WHERE DisplayName = 'RepetitionsNumber');
+	
+	
+	RETURN scheduledQuantity;
+END //
+
 CREATE OR REPLACE FUNCTION GetCodeFromToolMasterId(toolMasterId INT, toolTypeId INT)
 RETURNS VARCHAR(200)
 BEGIN
