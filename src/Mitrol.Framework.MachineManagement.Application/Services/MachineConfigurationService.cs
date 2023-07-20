@@ -209,7 +209,7 @@
 
                 if (validationResult.IsValid is false)
                 {
-                    return Result.Fail(validationResult.Errors.GetErrorDetails());
+                    return Result.Fail(validationResult.Errors.ToErrorDetails());
                 }
 
                 //Recupero la regular expression per il nome file delle informazioni addizionali legate alle notifiche

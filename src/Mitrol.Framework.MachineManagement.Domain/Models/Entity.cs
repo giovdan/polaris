@@ -1,14 +1,7 @@
 ﻿namespace Mitrol.Framework.MachineManagement.Domain.Models
 {
-    using Mitrol.Framework.Domain;
-    using Mitrol.Framework.Domain.Attributes;
-    using Mitrol.Framework.Domain.Core.Enums;
-    using Mitrol.Framework.Domain.Core.Interfaces;
     using Mitrol.Framework.Domain.Core.Models.Database;
     using Mitrol.Framework.Domain.Enums;
-    using Mitrol.Framework.MachineManagement.Domain.Models.General;
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("Entity")]

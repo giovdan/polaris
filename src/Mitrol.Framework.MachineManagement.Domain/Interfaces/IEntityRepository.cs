@@ -16,10 +16,11 @@
         Entity Get(string displayName);
         Entity GetBySecondaryKey(long secondaryKey, EntityTypeEnum entityType);
         Result BulkRemove(Expression<Func<EntityWithInfo,bool>> predicate);
+        IEnumerable<EntityType> FindEntityTypes(Expression<Func<EntityType, bool>> predicate);
+        IEnumerable<EntityStatusAttribute> FindStatusAttributes(Func<EntityStatusAttribute, bool> predicate);
         #region < Tools Management >
         IEnumerable<PlasmaToolMaster> FindPlasmaToolMasters(Expression<Func<PlasmaToolMaster, bool>> predicate);
         IEnumerable<Tool> FindTools(Expression<Func<Tool, bool>> predicate);
-        IEnumerable<EntityStatusAttribute>  GetStatusAttributes(Func<EntityStatusAttribute, bool> predicate);
         #endregion
     }
 }

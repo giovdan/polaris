@@ -86,9 +86,14 @@
         public static string CalculateHash<T>(this IEnumerable<T> values)
         {
             string hashCode = string.Empty;
-           
+            
+            foreach(var value in values)
+            {
+                hashCode += value.ToString();
+            }
             return hashCode;
         }
+
         // TODO
         public static void SetSetupInfo(this ToolDetailItem toolDetail
             , IExecution execution, IRootConfiguration configurationRoot, PlantUnitEnum plantUnit)

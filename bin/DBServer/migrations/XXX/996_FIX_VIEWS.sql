@@ -22,6 +22,7 @@ DROP VIEW IF EXISTS plasmatoolmasters;
 DROP VIEW IF EXISTS tootypeattributedefinitionsview;
 DROP VIEW IF EXISTS stockattributesview;
 DROP VIEW IF EXISTS stocksview;
+DROP VIEW IF EXISTS profiletypeattributedefinitionview;
 
 CREATE OR REPLACE VIEW stockattributesview_old
 AS
@@ -202,7 +203,23 @@ INNER JOIN `attributedefinition_old` `ad` ON `av`.`AttributeDefinitionId` = `ad`
 INNER JOIN `quickaccess` `qa` ON `qa`.`ParentTypeId` = `av`.`ParentTypeId` AND `av`.`AttributeDefinitionId` = `qa`.`AttributeDefinitionId` AND `av`.`SubParentTypeId` = `qa`.`SubParentTypeId`
 WHERE `ad`.`AttributeTypeId` in (1,2,8);
 			
-
+CREATE OR REPLACE VIEW profiletypeattributedefinitionview_old
+AS
+SELECT `ad`.`Id` AS `Id`,`ad`.`EnumId` AS `EnumId`,`ad`.`Code` AS `Code`,`ad`.`DisplayName` AS `DisplayName`,`ad`.`AttributeTypeId` AS `AttributeTypeId`,`pta`.`ParentTypeId` AS `ParentTypeId`,`pta`.`Priority` AS `Priority`
+,`pta`.`ProfileTypeId` AS `ProfileTypeId`,`ad`.`ControlTypeId` AS `ControlTypeId`
+,`ad`.`OverrideTypeId` AS `OverrideTypeId`,`ad`.`DataFormatId` AS `DataFormatId`
+,`ad`.`AttributeKindId` AS `AttributeKindId`,`pta`.`AttributeDefinitionGroupId` AS `GroupId`
+,`pta`.`AttributeScopeId` AS `AttributeScopeId`
+,`pta`.`IsCodeGenerator` AS `IsCodeGenerator`
+,`ad`.`TypeName` AS `TypeName`,`adgp`.`Priority` AS `GroupPriority`
+, CONCAT('LBL_ATTR_', UCASE(`ad`.`DisplayName`)) AS `LocalizationKey`
+, `ad`.`ProtectionLevel` AS `ProtectionLevel`
+, `pta`.`UseLastInsertedAsDefault` AS `UseLastInsertedAsDefault`,`pta`.`LastInsertedValue` AS `LastInsertedValue`
+, `pta`.`LastInsertedTextValue` AS `LastInsertedTextValue`
+FROM `attributedefinition_old` `ad`
+INNER JOIN `profiletypeattribute` `pta` ON `pta`.`AttributeDefinitionId` = `ad`.`Id`
+INNER JOIN `attributedefinitiongrouppriority_old` `adgp` ON `adgp`.`AttributeDefinitionGroupId` = `pta`.`AttributeDefinitionGroupId` AND `adgp`.`ParentTypeId` = `pta`.`ParentTypeId` AND `adgp`.`SubParentTypeId` = `pta`.`ProfileTypeId`
+WHERE `ad`.`ControlTypeId` <> 1
 			
 COMMIT;	  
 

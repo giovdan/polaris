@@ -15,6 +15,7 @@
     using Mitrol.Framework.MachineManagement.Application.Attributes;
     using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.MachineManagement.Application.Models.Production;
+    using Mitrol.Framework.MachineManagement.Application.Models.General;
 
     public class ServiceProfile: AutoMapper.Profile
     {
@@ -116,6 +117,10 @@
                                                     ? s.Value.CurrentValue.ToString()
                                                     : string.Empty));
 
+            CreateMap<AttributeDetailItem, AttributeValue>()
+                .ForMember(dest => dest.Value, opt => opt.Ignore())
+                .ForMember(dest => dest.TextValue, opt => opt.Ignore());
+
             CreateMap<AttributeValue, AttributeDetailItem>()
                 .ForMember(dest => dest.Value, opt => opt.Ignore())
                 .ForMember(dest => dest.AttributeKind
@@ -142,6 +147,7 @@
                 .ForMember(dest => dest.ProtectionLevel, opt => opt.MapFrom(s => s.AttributeDefinitionLink.ProtectionLevel));
 
             CreateMap<AttributeDefinitionLink, AttributeDetailItem>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.AttributeDefinitionLinkId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(dest => dest.AttributeKind, opt => opt.MapFrom(s => s.AttributeDefinition.AttributeKind))
                 .ForMember(dest => dest.AttributeStatus, opt => opt.Ignore())
@@ -353,7 +359,14 @@
                 .ForMember(dest => dest.ProfileType, opt => opt.MapFrom(s => (ProfileTypeEnum)s.SecondaryKey))
                 .ForMember(dest => dest.Groups, opt => opt.Ignore())
                 .ForMember(dest => dest.ProfileAttributes, opt => opt.Ignore());
+
+            CreateMap<StockItemToAdd, Entity>()
+                .ForMember(dest => dest.SecondaryKey, opt => opt.MapFrom(s => s.ProfileTypeId))
+                .ForMember(dest => dest.EntityTypeId, opt => opt.Ignore());
             #endregion
+
+            CreateMap<QuantityBackLogItem, QuantityBackLog>()
+                .ForMember(dest => dest.QuantityTobeLoaded, opt => opt.MapFrom(s => s.QuantityToBeLoaded));
         }
     }
 }

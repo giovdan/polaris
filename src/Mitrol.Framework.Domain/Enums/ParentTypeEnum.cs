@@ -78,6 +78,73 @@
 
     public static class ParentTypeEnumExtensions
     {
+        public static EntityTypeEnum GetEntityType(this ParentTypeEnum parentType, long? secondaryKey = null)
+        {
+            var entityType =  EntityTypeEnum.NotDefined;
+
+            switch(parentType)
+            {
+                case ParentTypeEnum.StockItem:
+                    {
+                        if (secondaryKey.HasValue)
+                        {
+                            switch(secondaryKey)
+                            {
+                                case 1:
+                                    entityType = EntityTypeEnum.StockProfileL;
+                                    break;
+                                case 2:
+                                    entityType = EntityTypeEnum.StockProfileV;
+                                    break;
+                                case 3:
+                                    entityType = EntityTypeEnum.StockProfileB;
+                                    break;
+                                case 4:
+                                    entityType = EntityTypeEnum.StockProfileI;
+                                    break;
+                                case 5:
+                                    entityType = EntityTypeEnum.StockProfileD;
+                                    break;
+                                case 6:
+                                    entityType = EntityTypeEnum.StockProfileT;
+                                    break;
+                                case 7:
+                                    entityType = EntityTypeEnum.StockProfileU;
+                                    break;
+                                case 8:
+                                    entityType = EntityTypeEnum.StockProfileQ;
+                                    break;
+                                case 9:
+                                    entityType = EntityTypeEnum.StockProfileC;
+                                    break;
+                                case 11:
+                                    entityType = EntityTypeEnum.StockProfileF;
+                                    break;
+                                case 12:
+                                    entityType = EntityTypeEnum.StockProfileN;
+                                    break;
+                                case 13:
+                                    entityType = EntityTypeEnum.StockProfileP;
+                                    break;
+                                case 14:
+                                    entityType = EntityTypeEnum.StockProfileR;
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                case ParentTypeEnum.Material:
+                    entityType = EntityTypeEnum.Material;
+                    break;
+                case ParentTypeEnum.Profile:
+                    {
+                        entityType = (EntityTypeEnum)secondaryKey.Value;
+                    }
+                    break;
+            }
+
+            return entityType;
+        }
         public static IEnumerable<EntityTypeEnum> GetEntityTypes(this ParentTypeEnum parentType)
         {
             var entityTypes = Enumerable.Empty<EntityTypeEnum>();
@@ -103,6 +170,30 @@
                             EntityTypeEnum.StockProfileV
                         };
                     }
+                    break;
+                case ParentTypeEnum.Material:
+                    entityTypes = new[]
+                    {
+                        EntityTypeEnum.Material
+                    };
+                    break;
+                case ParentTypeEnum.Profile:
+                    entityTypes = new[]
+                    {
+                        EntityTypeEnum.ProfileB,
+                        EntityTypeEnum.ProfileC,
+                        EntityTypeEnum.ProfileD,
+                        EntityTypeEnum.ProfileF,
+                        EntityTypeEnum.ProfileI,
+                        EntityTypeEnum.ProfileL,
+                        EntityTypeEnum.ProfileN,
+                        EntityTypeEnum.ProfileP,
+                        EntityTypeEnum.ProfileQ,
+                        EntityTypeEnum.ProfileR,
+                        EntityTypeEnum.ProfileT,
+                        EntityTypeEnum.ProfileU,
+                        EntityTypeEnum.ProfileV
+                    };
                     break;
 
             }

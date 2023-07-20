@@ -21,6 +21,7 @@
 
         #region Definitions
         public DbSet<Entity> Entities { get; set; }
+        public DbSet<EntityType> EntityTypes { get; set; }
         public DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         public DbSet<AttributeValue> AttributeValues { get; set; }
         public DbSet<EntityLink> EntityLinks { get; set; }

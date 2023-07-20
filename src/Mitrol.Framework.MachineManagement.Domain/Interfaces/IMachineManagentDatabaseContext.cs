@@ -16,6 +16,7 @@
         void SetEntity<TEntity>(TEntity entity, EntityState entityState) where TEntity : BaseEntity;
         
         DbSet<Entity> Entities { get; set; }
+        DbSet<EntityType> EntityTypes { get; set; }
         DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         DbSet<AttributeValue> AttributeValues { get; set; }
         DbSet<EntityLink> EntityLinks { get; set; }

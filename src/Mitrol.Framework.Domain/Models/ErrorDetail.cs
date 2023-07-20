@@ -62,7 +62,7 @@
             return builder.ToString().Trim();
         }
 
-        public static IEnumerable<ErrorDetail> GetErrorDetails(this IList<ValidationFailure> failures)
+        public static IEnumerable<ErrorDetail> ToErrorDetails(this IList<ValidationFailure> failures)
         {
             return failures.Select(failure => new ErrorDetail
             {

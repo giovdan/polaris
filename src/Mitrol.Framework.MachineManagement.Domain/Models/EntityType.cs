@@ -1,5 +1,4 @@
-﻿
-namespace Mitrol.Framework.MachineManagement.Domain.Models.General
+﻿namespace Mitrol.Framework.MachineManagement.Domain.Models
 {
     using Mitrol.Framework.Domain.Core.Models;
     using Mitrol.Framework.Domain.Enums;
@@ -13,6 +12,6 @@ namespace Mitrol.Framework.MachineManagement.Domain.Models.General
         [Column(TypeName = "ENUM('Profile','Tool','ToolRange','ToolHolder','ToolSubRangeBevel','ToolSubRangeTrueHole','ToolRangeMarking','ProgramCode','ProgramItem','ProgramPiece','Piece','StockItem','OperationType','ProductionRow','Material','HandlingElement','OperationAdditionalItem')")]
         public ParentTypeEnum ParentType { get; set; }
         public string InternalCode { get; set; }
-        public long SecondaryKey { get; set; }
+        public long? SecondaryKey { get; set; }
     }
 }

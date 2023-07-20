@@ -42,7 +42,7 @@
             services.AddScoped<IToolService, ToolService>();
             services.AddScoped<IDetailIdentifierRepository, DetailIdentifierRepository>();
             services.AddScoped<IMachineParameterRepository, MachineParameterRepository>();
-            services.AddScoped<IEntityValidator<ToolDetailItem>, ToolValidator>();
+            services.AddScoped<IEntityWithAttributesValidator<ToolDetailItem>, ToolValidator>();
             services.AddScoped<IExecutionService, ExecutionService>();
             services.AddScoped<IMachineParameterService, MachineParameterService>();
             services.AddSingleton<IEntityHandlerFactory, EntityHandlerFactory>();
@@ -111,7 +111,9 @@
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var service = scope.ServiceProvider.GetRequiredService<IToolService>();
             service.SetSession(NullUserSession.InternalSessionInstance);
-            var attributeDefinitons = service.GetAttributeDefinitions(entityType);
+            var attributeDefinitons = service.GetAttributeDefinitions(entityType
+                            , MeasurementSystemEnum.MetricSystem
+                            , MeasurementSystemEnum.MetricSystem);
             attributeDefinitons.Should().NotBeEmpty();
             attributeDefinitons.Any(a => !string.IsNullOrEmpty(a.DisplayName)).Should().BeTrue();
         }

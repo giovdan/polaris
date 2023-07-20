@@ -7,6 +7,8 @@
 
     public interface IMachineManagementService: IApplicationService
     {
-        IEnumerable<AttributeDetailItem> GetAttributeDefinitions(EntityTypeEnum entityType);
+        IEnumerable<AttributeDetailItem> GetAttributeDefinitions(EntityTypeEnum entityType
+                        , MeasurementSystemEnum measurementSystemFrom
+                        , MeasurementSystemEnum measurementSystemTo);
     }
 }

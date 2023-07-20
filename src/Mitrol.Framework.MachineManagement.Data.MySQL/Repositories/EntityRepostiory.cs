@@ -120,8 +120,12 @@
                 => UnitOfWork.Context.Entities.Where(predicate)
                         .OrderBy(orderBy);
 
-        public IEnumerable<EntityStatusAttribute> GetStatusAttributes(Func<EntityStatusAttribute, bool> predicate)
+        public IEnumerable<EntityStatusAttribute> FindStatusAttributes(Func<EntityStatusAttribute, bool> predicate)
             => UnitOfWork.Context.EntityStatusAttributes.Where(predicate);
+
+        public IEnumerable<EntityType> FindEntityTypes(Expression<Func<EntityType, bool>> predicate) 
+            => UnitOfWork.Context.EntityTypes.Where(predicate);
+
 
         #region < Tools Management >
         public IEnumerable<PlasmaToolMaster> FindPlasmaToolMasters(Expression<Func<PlasmaToolMaster, bool>> predicate)

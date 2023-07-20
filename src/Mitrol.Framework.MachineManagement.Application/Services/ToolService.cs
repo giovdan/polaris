@@ -30,8 +30,8 @@
 
         private IMachineConfigurationService MachineConfigurationService => ServiceFactory.GetService<IMachineConfigurationService>();
 
-        private IEntityValidator<ToolDetailItem> ToolValidator
-                => ServiceFactory.GetService<IEntityValidator<ToolDetailItem>>();
+        private IEntityWithAttributesValidator<ToolDetailItem> ToolValidator
+                => ServiceFactory.GetService<IEntityWithAttributesValidator<ToolDetailItem>>();
 
 
         #region < Private Methods >
@@ -1157,7 +1157,7 @@
 
 
 
-            var toolStatusAttributesLookup = EntityRepository.GetStatusAttributes(a => a.EntityTypeId.ToParentType() 
+            var toolStatusAttributesLookup = EntityRepository.FindStatusAttributes(a => a.EntityTypeId.ToParentType() 
                                                                                         == ParentTypeEnum.Tool 
                                                                             && (PlantUnitEnum)a.SecondaryKey == filter.UnitType)
                .GroupBy(x => x.EntityId)

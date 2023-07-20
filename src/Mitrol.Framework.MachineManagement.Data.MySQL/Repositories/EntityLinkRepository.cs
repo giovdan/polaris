@@ -28,11 +28,11 @@
 
         public int BulkInsert(IEnumerable<EntityLink> EntityLinks)
         {
-            StringBuilder insertQuery = new($"INSERT INTO `EntityLink` (`ParentId`, `ChildId`, `Level`, `RowNumber`) VALUES ");
+            StringBuilder insertQuery = new($"INSERT INTO `entitylink` ( `RelatedEntityHashCode`, `EntityHashCode`, `RelationType`, `RowNumber`, `Level`) VALUES ");
 
             foreach (var item in EntityLinks)
             {
-                insertQuery.Append($"({item.EntityId},{item.RelatedEntityId},{item.Level},{item.RowNumber}");
+                insertQuery.Append($"({item.RelatedEntityHashCode},{item.EntityHashCode},{item.Level},{item.RowNumber}");
             }
 
             insertQuery.Length -= 1;

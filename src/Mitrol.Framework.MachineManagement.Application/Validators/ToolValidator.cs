@@ -17,7 +17,7 @@
     /// <summary>
     /// Class for tool validation
     /// </summary>
-    public class ToolValidator : IEntityValidator<ToolDetailItem>
+    public class ToolValidator : IEntityWithAttributesValidator<ToolDetailItem>
     {
         private Dictionary<DatabaseDisplayNameEnum, object> AdditionalInfos { get; set; }
         private IServiceFactory ServiceFactory { get; set; }
@@ -418,7 +418,7 @@
             if (!validationResults.IsValid)
             {
                 result = Result.Fail(validationResults.Errors
-                                    .GetErrorDetails());
+                                    .ToErrorDetails());
             }
 
  

@@ -25,18 +25,25 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
     using Mitrol.Framework.Domain.Attributes;
     using Mitrol.Framework.MachineManagement.Domain.Views;
     using System.Linq.Expressions;
+    using Mitrol.Framework.MachineManagement.Application.Models.General;
+    using Mitrol.Framework.Domain.Core.Enums;
 
-    public class MachineManagementBaseService: BaseService
+    public class MachineManagementBaseService : BaseService
     {
         protected IEntityRepository EntityRepository => ServiceFactory.GetService<IEntityRepository>();
         protected IAttributeValueRepository AttributeValueRepository => ServiceFactory.GetService<IAttributeValueRepository>();
-        protected IAttributeDefinitionLinkRepository AttributeDefinitionLinkRepository 
-                        => ServiceFactory.GetService<IAttributeDefinitionLinkRepository>();
-        protected IUnitOfWorkFactory<IMachineManagentDatabaseContext> UnitOfWorkFactory => ServiceFactory
-                    .GetService<IUnitOfWorkFactory<IMachineManagentDatabaseContext>>();
+        protected IAttributeDefinitionLinkRepository AttributeDefinitionLinkRepository =>
+                        ServiceFactory.GetService<IAttributeDefinitionLinkRepository>();
+        protected IUnitOfWorkFactory<IMachineManagentDatabaseContext> UnitOfWorkFactory => 
+                        ServiceFactory.GetService<IUnitOfWorkFactory<IMachineManagentDatabaseContext>>();
         protected IDetailIdentifierRepository DetailIdentifierRepository =>
                             ServiceFactory.GetService<IDetailIdentifierRepository>();
 
+        protected IQuantityBackLogRepository QuantityBackLogRepository =>
+                            ServiceFactory.GetService<IQuantityBackLogRepository>();
+
+        protected IEntityLinkRepository EntityLinkRepository =>
+                            ServiceFactory.GetService<IEntityLinkRepository>();
         #region < ApplyCustomMapping >
         /// <summary>
         /// Custom Mapping from AttributeValue to AttributeDetailItem
@@ -65,10 +72,9 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
         #endregion
 
         public MachineManagementBaseService(IServiceFactory serviceFactory) : base(serviceFactory)
-        {
+        { }
 
-        }
-
+        #region < Protected Methods >
         /// <summary>
         /// Get entity identifiers by hashCode
         /// </summary>
@@ -85,20 +91,57 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                             .Select(identifier => identifier.ConvertIdentifier(conversionSystemTo))
                             .ToList();
 
-            
+
         }
 
+        /// <summary>
+        /// Add Quantity backlogs for a specific entity
+        /// </summary>
+        /// <param name="quantiyBackLog"></param>
+        /// <param name="uow"></param>
+        /// <returns></returns>
+        protected Result AddQuantityBackLog(QuantityBackLogItem quantiyBackLog, IUnitOfWork<IMachineManagentDatabaseContext> uow)
+        {
+            try
+            {
+                QuantityBackLogRepository.Attach(uow);
+                QuantityBackLogRepository.Add(Mapper.Map<QuantityBackLog>(quantiyBackLog));
+                uow.Commit();
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+            }
+        }
+
+        protected IEnumerable<AttributeDetailItem> InnerGetAttributeDefinitions(
+            EntityTypeEnum entityType
+            , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+            , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem
+            , IUnitOfWork<IMachineManagentDatabaseContext> uow = null)
+        {
+            var unitOfWork = uow ?? UnitOfWorkFactory.GetOrCreate(UserSession);
+            AttributeDefinitionLinkRepository.Attach(unitOfWork);
+            return Mapper.Map<IEnumerable<AttributeDetailItem>>(AttributeDefinitionLinkRepository
+                        .FindBy(adl => adl.EntityTypeId == entityType))
+                .Select(a => ApplyCustomMapping(a, conversionSystemFrom
+                                                    , conversionSystemTo));
+
+        }
         /// <summary>
         /// Get attribute definitions for specified entityType
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        public IEnumerable<AttributeDetailItem> GetAttributeDefinitions(EntityTypeEnum entityType)
+        public IEnumerable<AttributeDetailItem> GetAttributeDefinitions(EntityTypeEnum entityType
+                        , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+                        , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem)
         {
             using var unitOfWork = UnitOfWorkFactory.GetOrCreate(UserSession);
-            AttributeDefinitionLinkRepository.Attach(unitOfWork);
-            return Mapper.Map<IEnumerable<AttributeDetailItem>>(AttributeDefinitionLinkRepository
-                        .FindBy(adl => adl.EntityTypeId == entityType));
+            return InnerGetAttributeDefinitions(entityType, conversionSystemFrom
+                                                        , conversionSystemTo, unitOfWork);
         }
 
         protected virtual void SetAttributeDetailValue(AttributeDetailItem attribute
@@ -121,6 +164,225 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
 
             attribute.IsReadonly = isReadOnly &&
                     (attribute.ProtectionLevel == ProtectionLevelEnum.ReadOnly || !protectionLevels.Contains(attribute.ProtectionLevel));
+        }
+
+        /// <summary>
+        /// Crea il record AttributeValue e gli assegna il valore passato in input
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="subParentTypeId"></param>
+        /// <param name="parentTypeId"></param>
+        /// <param name="attributeDefinition"></param>
+        /// <param name="value">Valore da assegnare all'attributo</param>
+        /// <param name="conversionSystemFrom"></param>
+        /// <param name="conversionSystemTo"></param>
+        /// <returns></returns>
+        protected AttributeValue CreateAttributeValueFromSingle(
+                                         long entityId
+                                         , AttributeDetailItem attributeDetailItem
+                                         , object value
+                                         , MeasurementSystemEnum conversionSystemFrom = MeasurementSystemEnum.MetricSystem
+                                         , MeasurementSystemEnum conversionSystemTo = MeasurementSystemEnum.MetricSystem)
+        {
+            var attributeToAdd = CreateAttributeValueFromDefinition(attributeDetailItem, entityId);
+
+            if (value != null)
+            {
+                attributeToAdd = UpdateAttributeValueFromObject(attributeDetailItem
+                                                    , value
+                                                    , conversionSystemFrom
+                                                    , conversionSystemTo
+                                                    , attributeToAdd);
+            }
+
+
+            return attributeToAdd;
+        }
+
+        /// <summary>
+        /// Crea il record AttributeValue e gli assegna il valore di default
+        /// </summary>
+        /// <param name="attributeDefinitionLink"></param>
+        /// <param name="entityId"></param>
+        /// <returns></returns>
+        protected AttributeValue CreateAttributeValueFromDefinition(
+                AttributeDetailItem attributeDetailItem
+                , long entityId)
+        {
+            var attributeValue = Mapper.Map<AttributeValue>(attributeDetailItem);
+            attributeValue.EntityId = entityId;
+
+            switch (attributeDetailItem.AttributeKind)
+            {
+                case AttributeKindEnum.String:
+                    attributeValue.TextValue = "";
+                    break;
+                case AttributeKindEnum.Enum:
+                    //Recupero il valore di Default del tipo di enumerativo rappresentato dall'attributo "attributeDefinition" 
+                    IAttributeDefinitionEnumManagement SourcesService = ServiceFactory
+                                    .Resolve<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>
+                                        (attributeDetailItem.EnumId);
+                    var attributeDefault = SourcesService.GetDefaultValue();
+                    if ((attributeDefault != null) && (int.TryParse(attributeDefault.Value.ToString(), out var enumValue)))
+                    {
+                        attributeValue.Value = enumValue;
+                        attributeValue.TextValue = string.Empty;
+                    }
+                    break;
+                case AttributeKindEnum.Number:
+                    attributeValue.Value = 0;
+                    attributeValue.TextValue = string.Empty;
+                    break;
+                case AttributeKindEnum.Bool:
+                    attributeValue.Value = 0;
+                    attributeValue.TextValue = string.Empty;
+                    break;
+            }
+            return attributeValue;
+        }
+
+        protected AttributeValue UpdateAttributeValueFromObject(AttributeDetailItem attributeDetailItem
+                                                    , object Value
+                                                    , MeasurementSystemEnum ConversionSystemFrom
+                                                    , MeasurementSystemEnum ConversionSystemTo
+                                                    , AttributeValue attribute)
+        {
+            switch (attributeDetailItem.AttributeKind)
+            {
+                case AttributeKindEnum.String:
+                    attribute.TextValue = Value?.ToString() ?? string.Empty;
+                    break;
+                case AttributeKindEnum.Bool:
+                    try
+                    {
+                        if (Value != null)
+                        {
+                            if (bool.TryParse(Value.ToString(), out bool boolres))
+                                attribute.Value = boolres == true ? 1 : 0;//per stringhe "true o false"
+                            else
+                            {
+                                if (decimal.TryParse(Value.ToString(), out var dresult))//per stringhe "0 o 1"
+                                    attribute.Value = dresult;
+                            }
+                        }
+                        else
+                            attribute.Value = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                    break;
+                case AttributeKindEnum.Number:
+                    if (Value != null)
+                    {
+                        var value = Value;
+                        if (attributeDetailItem.ControlType == ClientControlTypeEnum.Override)
+                        {
+                            try
+                            {
+                                var OvValue = OverrideValueItem.GetOverrideObject(Value.ToString());
+                                value = OvValue.Value ?? 0;
+                            }
+                            catch (Exception exc)
+                            {
+                                throw;
+                            }
+                        }
+                        try
+                        {
+                            var decimalResult = Convert.ToDecimal(value);
+                            attribute.Value = ConvertToHelper.Convert(conversionSystemFrom: ConversionSystemFrom
+                                                        , conversionSystemTo: ConversionSystemTo
+                                                        , attributeDetailItem.ItemDataFormat
+                                                        , decimalResult).Value;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw;
+                        }
+                    }
+                    else
+                        attribute.Value = 0;
+                    break;
+                case AttributeKindEnum.Enum:
+                    if (Value != null)
+                    {
+                        try
+                        {
+                            var v = JsonConvert.DeserializeObject<BaseInfoItem<long, string>>(Value.ToString());
+                            attribute.Value = v.Id;
+                            attribute.TextValue = v.Value;
+                        }
+                        catch (Exception exc)
+                        {
+
+                            //Programma i dati arrivano dal FE sotto forma di Dizionario e gli enumerativi possono arrivare anche come stringhe.. 
+                            if (decimal.TryParse(Value.ToString(), out var decimalValue))
+                                attribute.Value = decimalValue;
+                            else
+                            {
+                                IAttributeDefinitionEnumManagement enumManagement = ServiceFactory
+                                     .Resolve<IAttributeDefinitionEnumManagement, AttributeDefinitionEnum>(
+                                        attributeDetailItem.EnumId);
+                                var enumfound = enumManagement.GetEnumFromStringValue(Value.ToString());
+                                if (enumfound != null)
+                                    attribute.Value = Convert.ToDecimal(enumfound);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        IAttributeDefinitionEnumManagement enumManagement = ServiceFactory
+                                                             .Resolve<IAttributeDefinitionEnumManagement
+                                                             , AttributeDefinitionEnum>(attributeDetailItem.EnumId);
+                        var attributeDefault = enumManagement.GetDefaultValue();
+                        if ((attributeDefault != null) && (int.TryParse(attributeDefault.Value.ToString(), out var enumValue)))
+                        {
+                            attribute.Value = enumValue;
+                            attribute.TextValue = string.Empty;
+                        }
+                    }
+                    break;
+            }
+            return attribute;
+        }
+
+
+        /// <summary>
+        /// Crea un record AttributeValue 
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="subParentTypeId"></param>
+        /// <param name="parentType">Identificativo Parent</param>
+        /// <param name="attributeDefinition"></param>
+        /// <param name="values"></param>
+        /// <param name="conversionSystem"></param>
+        /// <returns></returns>
+        protected AttributeValue CreateAttributeValue(
+                                            long entityId
+                                            , AttributeDetailItem attributeDetailItem
+                                            , Dictionary<DatabaseDisplayNameEnum, object> values
+                                            , MeasurementSystemEnum conversionSystemFrom
+                                            , MeasurementSystemEnum conversionSystemTo)
+        {
+            if (values != null)
+            {
+                if (Enum.TryParse<DatabaseDisplayNameEnum>(attributeDetailItem.DisplayName
+                                , true, out var displayName)
+                    && values.TryGetValue(displayName, out var attributeValue))
+                {
+
+                    return CreateAttributeValueFromSingle(entityId
+                                                        , attributeDetailItem
+                                                        , attributeValue
+                                                        , conversionSystemFrom
+                                                        , conversionSystemTo);
+                }
+            }
+
+            // attributoValue con valori di default
+            return CreateAttributeValueFromDefinition(attributeDetailItem, entityId);
         }
 
         protected virtual (AttributeValueItem AttributeValue, ConvertedItem ConvertedItem)
@@ -156,7 +418,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                         IAttributeDefinitionEnumManagement sourcesService
                             = ServiceFactory.Resolve<IAttributeDefinitionEnumManagement
                                     , AttributeDefinitionEnum>(attribute.EnumId);
-                        
+
                         var attributeSourceList = sourcesService.FindAttributeSourceValues();
 
                         //Se il controllo è una ComboBox applico i filtri sui valori in base al parentType
@@ -318,7 +580,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                 displayName += serializationNameAttribute.Description.ToUpper();
             }
 
-            foreach(var identifier in identifiers)
+            foreach (var identifier in identifiers)
             {
                 if (identifier.Value.IsNotNullOrEmpty() && identifier.Value.ToUpper() != "BEVEL")
                 {
@@ -346,7 +608,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
         /// <param name="parentId"> Specified only for tool subranges</param>
         /// <returns></returns>
         protected string CalculateHashCode(EntityTypeEnum entityType
-                                            , Dictionary<string,string> identifiers
+                                            , Dictionary<string, string> identifiers
                                             , MeasurementSystemEnum conversionSystemFrom
                                             , long parentId = 0
                                             , IAttributeDefinitionLinkRepository attributeLinkDefinitionRepository = null
@@ -358,17 +620,17 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
 
             var uow = unitOfWork ?? UnitOfWorkFactory.GetOrCreate(UserSession);
 
-            attributeLinkDefinitionRepository = attributeLinkDefinitionRepository 
+            attributeLinkDefinitionRepository = attributeLinkDefinitionRepository
                                                 ?? AttributeDefinitionLinkRepository;
             attributeLinkDefinitionRepository.Attach(uow);
 
-            var attributeDefinitionLinks = 
+            var attributeDefinitionLinks =
                             attributeLinkDefinitionRepository.FindBy(al => al.EntityTypeId == entityType
                                 && al.AttributeDefinition.AttributeType == AttributeTypeEnum.Identifier)
                             .ToDictionary(a => a.AttributeDefinition.DisplayName);
 
             // Normalizzazione degli identifiers
-            foreach(var identifier in identifiers)
+            foreach (var identifier in identifiers)
             {
                 string value = identifier.Value;
 
@@ -418,7 +680,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
             }
 
 
-            return string.Join("",normalizedValues).SHA256();
+            return string.Join("", normalizedValues).SHA256();
         }
 
         protected AttributeOverrideValue UpdateAttributeOverrideValueFromAttributeDetailItem(AttributeDetailItem source, MeasurementSystemEnum conversionSystemFrom, AttributeOverrideValue attributeOverrideValue)
@@ -617,7 +879,7 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
             {
                 // Recupero il plantUnit
                 var plantUnit =
-                    (entityType.ToToolType()).GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit 
+                    (entityType.ToToolType()).GetEnumAttribute<PlantUnitAttribute>()?.PlantUnit
                                 ?? PlantUnitEnum.None;
 
                 additionalInfos.Add(AttributeDefinitionEnum.ToolRangeType, parentType.GetToolRangeType(plantUnit));
@@ -645,6 +907,39 @@ namespace Mitrol.Framework.MachineManagement.Application.Services
                 })
                 .OrderBy(a => a.Order);
         }
+
+        /// <summary>
+        /// Remove single entity
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <param name="unitOfWork"></param>
+        /// <returns></returns>
+        protected Result RemoveEntity(long entityId
+                            , IUnitOfWork<IMachineManagentDatabaseContext> unitOfWork)
+        {
+            try
+            {
+                EntityRepository.Attach(unitOfWork);
+                AttributeValueRepository.Attach(unitOfWork);
+
+                var dbEntity = EntityRepository.Get(entityId);
+                if (dbEntity == null)
+                {
+                    return Result.Fail(ErrorCodesEnum.ERR_GEN002.ToString());
+                }
+
+                AttributeValueRepository.Remove(a => a.EntityId == entityId);
+                EntityRepository.Remove(dbEntity);
+                unitOfWork.Commit();
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+            }
+        }
+        #endregion
 
     }
 }

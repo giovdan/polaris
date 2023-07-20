@@ -2,6 +2,6 @@
 {
     public interface IHashCodeGenerator
     {
-        string CalculateHashcode();
+        string CalculateHashCode();
     }
 }
