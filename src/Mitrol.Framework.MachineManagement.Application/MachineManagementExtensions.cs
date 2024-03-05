@@ -98,6 +98,7 @@
         public static void SetSetupInfo(this ToolDetailItem toolDetail
             , IExecution execution, IRootConfiguration configurationRoot, PlantUnitEnum plantUnit)
         {
+            
             //In base alla tipologia di unità associata al tool 
             //recupera le informazioni della posizione dal Setup corrente
             //switch (plantUnit)
